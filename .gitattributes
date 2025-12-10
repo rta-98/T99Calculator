@@ -1,0 +1,2 @@
+62tfab.fchk filter=lfs diff=lfs merge=lfs -text
+*.fchk filter=lfs diff=lfs merge=lfs -text
