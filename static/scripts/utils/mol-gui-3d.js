@@ -22,6 +22,7 @@ function webglAvailable() {
         return false;
     }
 }
+
 var renderer;
 if (webglAvailable()) {
     renderer = new THREE.WebGLRenderer({
