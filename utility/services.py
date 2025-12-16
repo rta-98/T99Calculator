@@ -1,125 +1,86 @@
-from fastapi import FastAPI, Form, Request
+from fastapi import FastAPI, Form, Request, HTTPException
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles 
-# from starlette.middleware.sessions import SessionMiddleware
-from pydantic import BaseModel, ConfigDict 
-from typing import Optional 
-import numpy as np
+from pydantic import BaseModel, ConfigDict, Field, field_validator 
+from typing import Optional, List  
+import io 
+import csv
 import os
 import rdkit
+import requests
 import glob
 import pandas as pd
-from rdkit import Chem
-from rdkit.Chem import PandasTools
-from rdkit import DataStructs
-from rdkit.Chem import rdchem
-from rdkit.Chem import Draw
+import numpy as np
+from rdkit import Chem, DataStructs
+from rdkit.Chem import rdchem, Draw, PandasTools
 import subprocess
 import re
 import pubchempy as pubpy
-
-app = FastAPI()
-# app.add_middleware() 
-app.mount("/static", StaticFiles(directory="static"), name="static")
-templates = Jinja2Templates(directory="templates") 
-
-# class UserProfie(BaseModel):
-#     def __init__(self, user_id=None, is_auth=False):
-#         self.user_id = user_id
-#         self.is_auth = is_auth
-#     def save_result     
-
+from pathlib import Path
+from openpyxl import Workbook
+from openpyxl.drawing.image import Image as pyxl_img
+from openpyxl.utils import get_column_letter as col_char
+from PIL import Image as pil_img
 #|%%--%%| <KnOGX2r6W3|DyftkKJNz8>
-class User(BaseModel):
-    user_id: Optional[str] = None 
-    smi_in: Optional[str] = None
-    smi_canon: Optional[str] = None
-    mol_in: Optional[rdchem.Mol] = None
-    mol_out: Optional[rdchem.Mol] = None
+class InputValid(BaseModel):
+    smi_in: str = Field(..., min_length=1)
 
-    model_config = ConfigDict(arbitrary_types_allowed=True) 
-
-    class UserInput:
-        def __init__(self, smi_in: str):
-            self.smi_in = smi_in
-            self.user_id = user_id
-
-        def udir(self):
-            directory = f"user_{user_id}"
-            os.makedirs(directory, 
-        def veri_smi(self):
-            self.smi_in.strip() == "":
-            if not self.smi_in: 
-                print("Blank field")
-                return
-            try:
-                smi_mol  = Chem.CannonSmiles(self.smi_in)
-                return smi_mol
-            except Exception as e: 
-                print({f"Invalid SMILES: {e}"}) 
-                return None 
-        
-        def smi_2_mol(self):
-            verid_smi = self.veri_smi()
-            if verid_smi is None:
-                return None
-            else:
-                mol_obj = Chem.MolFromSmiles(verid_smi) 
-                if mol_obj is not None:
-                    return verid_smi, mol_obj
-                else: 
-                    return None
-
-        def mol_2_img(self):
-            verid_smi = self.veri_smi()
-
-            try:
-                smi_2_iupac = pubpy.get_compounds(self.smi_in, 'smiles')
-            except Exception as e:
-                return None:
-          
-           
+    @field_validator('smi_in')
+    @classmethod 
+    def veri_smi(cls, v):
+        v = v.strip()
+        if not v: 
+            raise TypeError('SMILES are of type str, not None') 
+        smi_2_mol = Chem.MolFromSmiles(v)
+        if smi_2_mol is not None:
+            cannon_smi = Chem.MolToSmiles(smi_2_mol) 
+            return cannon_smi
+        else: 
+            raise ValueError(f'Invalid SMILES string: {v}')
             
-            
-#|%%--%%| <DyftkKJNz8|f3uF9mS9gd>
+#|%%--%%| <DyftkKJNz8|MrLEK7p93w>
+class MolData:
+    mol_data = []
+    
+    def img_2_bytes(self, smi_in):
+        mol_obj = Chem.MolFromSmiles(smi_in) 
+        if mol_obj is None: 
+            raise ValueError(f'Failed to parse SMILES: {smi_in}')
+        try: 
+            mol_img = Draw.MolToImage(mol_obj, size=(100,100)) 
+            img_bytes = io.BytesIO()
+            mol_img.save(img_bytes, format="PNG")
+            img_bytes.seek(0)
+            return img_bytes.getvalue()
+        except Exception as e:
+            raise RuntimeError(f'General Error: {e}')
 
+    def get_iupac(self, smi_in) -> Optional[str]:
+        try:
+            smi_iupac = pubpy.get_compounds(smi_in, 'smiles')
+            return smi_iupac[0].iupac_name
+        except Exception as e:
+            return RuntimeError(f'Failed to determine IUPAC from SMILES: {e}') 
 
-#|%%--%%| <f3uF9mS9gd|ngfGKgl8C5>
-obj = User.UserInput("test") 
-p1 = obj.veri_smi("test")
-print(p1)
-#|%%--%%| <ngfGKgl8C5|tKnZ0ck33L>
-# Serve "Home" as page 0 
-@app.get("/", response_class=HTMLResponse)
-async def root(request: Request): 
-    return templates.TemplateResponse(
-        "index.html", {
-        "request": request
-        "page": {0: "Home"}
-    })
-
-@app.post("/input-smiles")
-async def grab_smi(
-        request: Request,
-        in_smi: string = Form(...),
-        '''
-        in_smi_csv: string = Form(...),
-        ''' 
-        note_smile: bool = Form(False)
-): 
-    '''/input-smiles'''
+    def append_mol_data(self, smi_in: str) -> dict:
+        col_iupac = self.get_iupac(smi_in)
+        col_img_bytes = self.img_2_bytes(smi_in)
         
-        molStruct = Chem.MolFromSmiles(
-        smiles = Chem.MolToSmiles(       
-#|%%--%%| <tKnZ0ck33L|UJDrNroodF>
+        dict_mol_data = {
+            "smi_in": smi_in,
+            "iupac": col_iupac or "Unk",
+            "img_bytes": col_img_bytes or "Unk"
+        }
 
-
-
-#|%%--%%| <UJDrNroodF|NU92Cne6FE>
-
-
-#|%%--%%| <NU92Cne6FE|h6D92NwjoB>
-
-
-
+        self.mol_data.append(dict_mol_data)
+        return dict_mol_data 
+    def remove_mol_data(self):
+        self.mol_data = []
+#|%%--%%| <MrLEK7p93w|8EIFGRuXUj>
+valid_smi = InputValid(smi_in="OC(C)C") 
+print(valid_smi)
+mol_obj = MolData()
+mol_obj.img_2_bytes(valid_smi.smi_in)
+mol_obj.get_iupac(valid_smi.smi_in)
+mol_obj.append_mol_data(valid_smi.smi_in)
