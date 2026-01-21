@@ -1,0 +1,1 @@
+{"cmd":"function = FileParser()\nprint(function.pdb_to_smi(str('/data') ) ","cmd_opts":"","import_complete":1,"terminal":"tmux"}
