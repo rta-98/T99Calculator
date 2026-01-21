@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+  <title>{% block title %}T99 Calculator{% endblock %}</title> 
+  <link rel="stylesheet" href="../static/styles/style_1.css">
+</head>
+<body>
+  <div class="container"> 
+    <div class="home-title">
+      <h1>T99 Calculator</h1>
+    </div>
+    <div class="home-about">
+      <h2>SMILES to Molecular Structure</h2>
+      <p>Ensure SMILES are canonicalized<br>for accuracy!</p> 
+    </div> 
+    <div id="input-title">
+      <input type="text" id="smiles-input" placeholder="Enter SMILES"> 
+      <button type="button" onclick="ajaxMol()">Submit</button>
+      <div id = "error-message"></div>
+      <div id="canon-smi"></div> 
+      <img id="img"/> 
+    </div> 
+    <button id="toggle-btn">Display Grid</button> 
+    {% block content %}{% endblock %} 
+  </div> 
+  <script type="module" src="../static/scripts/main.js"></script> 
+</body>
+<footer></footer> 
+</html>
