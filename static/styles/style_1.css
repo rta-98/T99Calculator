@@ -1,0 +1,183 @@
+body {
+/*    height: 100vh;*/
+    display: flex;
+    justify-content: center;
+    align-items: center;
+/*    color: white;*/
+/*    font-size: 120px;*/
+    font-family: monospace;
+}
+
+.container {
+    max-width: 500px;
+    margin: 50px auto;
+    background-color: gray;
+    padding: 20px;
+/*    text-align: center;*/
+}
+
+#canon-smi {
+  font-weight: bold; 
+}
+
+#canon-smi.result {
+  display: block;
+  color: green;
+}
+
+#canon-smi.error {
+  display: block;
+  color: red;
+}
+
+#error-message {
+  font-weight: bold;
+  color: red; 
+} 
+
+#error-message:not(:empty) {
+  display:block;
+}
+
+h1 {
+   font-family: monospace;
+   font-size: 40px;
+}
+
+.home-title {
+    display: block;
+    min-height: 1em;
+    width: fit-content;
+    max-width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    text-align: center;
+}
+
+.home-about {
+    background: white;
+    text-align: center;
+}
+
+#smiles-input {
+  border: 2px solid gray;
+  background-color: blue;
+}
+/**/
+/*#smiles-input.result {*/
+/*  background-color: green;*/
+/*} */
+/**/
+/*#smiles-input.error {*/
+/*  background-color: red;*/
+/*}*/
+/**/
+input {
+  padding: 8px;
+  font-size: 14px;
+  width: 100%;
+}
+
+#input-title {
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 20px;
+  margin: 20px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+#input-title input {
+  border: 2px solid #ddd;
+  background-color: #f9f9f9;
+  color: #333;
+  transition: border-color 0.3s ease;
+}
+
+#input-title input:focus {
+  outline: none;
+  border-color: #007bff;
+  background-color: #fff;
+}
+
+#toggle-btn {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-family: monospace;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+  align-self: flex-end;
+  margin-top: 10px;
+}
+
+#toggle-btn:hover {
+  background-color: #0056b3;
+}
+
+.grid-info {
+  text-align: center;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 15px;
+  margin: 20px 0;
+  font-family: monospace;
+  font-size: 16px;
+  color: #333;
+}
+
+.grid-disp {
+  text-align: center;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 20px;
+  margin: 20px 0;
+}
+
+.grid-disp img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+button {
+  padding: 8px 16px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+#img {
+  max-width: 400px;
+  margin-top: 20px;
+}
+/**/
+/*/* Block: base styling for the note */*/
+/*.note-smile {*/
+/*  font-size: 0.9rem;*/
+/*  color: #856404;*/
+/*  background-color: #fff3cd;*/
+/*  border: 1px solid #ffeeba;*/
+/*  padding: 0.75rem 1rem;*/
+/*  border-radius: 4px;*/
+/*  margin-top: 0.5rem;*/
+/*  transition: opacity 0.3s ease, visibility 0.3s ease;*/
+/*}*/
+/**/
+/*/* Modifier: visible state */*/
+/*.note--appear {*/
+/*  opacity: 1;*/
+/*  visibility: visible;*/
+/*}*/
+/**/
+/*/* Modifier: hidden state */*/
+/*.note--disappear {*/
+/*  opacity: 0;*/
+/*  visibility: hidden;*/
+/*}*/
