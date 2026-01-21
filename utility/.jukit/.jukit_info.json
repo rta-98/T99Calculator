@@ -1,1 +1,0 @@
-{"cmd":"valid_smi = InputValid(smi_in=\"OC(C)C\") \nprint(valid_smi)\nmol_obj = MolData()\nmol_obj.img_2_bytes(valid_smi.smi_in)\nmol_obj.get_iupac(valid_smi.smi_in)\nmol_obj.append_mol_data(valid_smi.smi_in)","cmd_opts":" --cell_id=8EIFGRuXUj -s","import_complete":1,"terminal":"tmux"}
