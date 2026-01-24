@@ -71,11 +71,11 @@ async def display_image(usrStr: InputValid):
 async def grid_page(request: Request): 
     try: 
 #         data_dir = Path(__file__).parent / "data" # equivalent to os.path.join(parent, "data") 
-        data_dir = Path('./data') 
-        parser = FileParser(str(data_dir)) 
-        parser.parse() 
-        grid_png = parser.smi_to_png()
-        grid_png.save("./static/storage/imgs/tmp_grid.png") 
+        data_dir = Path('./data') # name the path 
+        parser = FileParser(str(data_dir)) # assign   
+        parser.parse() # instance of FileParser created  
+        grid_png = parser.smi_to_png() # a single png of the different mols created 
+        grid_png.save("./static/storage/imgs/tmp_grid.png") # save the dir  
     
         return templates.TemplateResponse(
             "display.html",
