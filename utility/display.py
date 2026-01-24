@@ -51,5 +51,5 @@ class FileParser:
             return grid_png 
         except Exception as e:
             raise RuntimeError(f'Error in smi_to_png(): {e}') 
-
-
+    
+    def 

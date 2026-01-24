@@ -11,10 +11,45 @@
   <p>Number of Mols Listed: {{ count }}</p> 
 </div> 
 <div class="grid-disp">
-  <img src="{{ grid_png }}" alt="Should be a grid or something here, I think..."> 
+  <img src="{{ grid_png }}" alt="Should be a grid"> 
 </div>
 
-{% endblock %}
+<!-- Parent Categories -->
+<!--<div id="filterParents" class="btn-bar"> -->
+<!--  <button class="filterBtn parent group-pfca active" data-parent="all">All Groups</button> -->
+<!--  <button class="filterBtn parent group-pfca" data-parent="group-pfca">PFCAs</button>-->
+<!--  <button class="filterBtn parent group-pfsa" data-parent="group-pfsa">PFSAs</button>-->
+<!--  <button class="filterBtn parent group-telomer" data-parent="group-telomer">Fluorotelomers</button> -->
 
-                           
+<!-- Filterable elements. -->
+<!--<div id="filterChildren" class="btn-bar"> -->
+<!--  <button class="filterBtn active" data-group="all">Display All</button> -->
+<!--  <button class="filterBtn" data-group="fasa">FASA</button> -->
+<!--  <button class="filterBtn" data-group="pfca">PFCA</button> -->
+<!--  <button class="filterBtn" data-group="fts">FTS</button> -->
+<!--  <button class="filterBtn" data-group="ftca">FTCA</button> -->
+<!--  <button class="filterBtn" data-group="mefasaa">MeFASAA</button> -->
+<!--  <button class="filterBtn" data-group="ftoh">FTOH</button> -->
+<!--  <button class="filterBtn" data-group="pfsa">PFSA</button> -->
+<!--  <button class="filterBtn" data-group="pfeca">PFECA</button> -->
+<!--</div> -->
+<!---->
+
+<div id="filterChildren" class="btn-bar">
+  <button class="btn filterBtn active" data-filter="all">All Molecules</button>
+  {% for opt in categories %}
+    <button class="btn filterBtn" data-filter="{{ opt }}">{{ opt|title }}</button>
+  {% endfor %}
+</div>
+
+<div class="all-pngs">
+  {% for i in items %}
+    <img class="single-pngs{{ i.category }}"
+         src="{{ url_for('molimgs', path=item.filename) }}"
+         alt="{{ i.label }}">
+  {% endfor %}
+</div>
+
+
                       
+
