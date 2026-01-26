@@ -9,7 +9,7 @@ function filterPNG(c) {
     setTheAllBtn(); 
   } 
   
-  let pngs = document.getElementsByClassName("filterBtn");
+  let pngs = document.querySelectorAll(".all-pngs .filterBtn");
   let actives = getActives() 
 
   for (i = 0; i < pngs.length; i++) { 
@@ -101,20 +101,4 @@ function hasClass(element, name) {
   return (" " + element.className + " ").indexOf(" " + name + " ") > -1;
 } 
 
-let filterContainer = document.getElementById("filterChildren");
-let filterBtns = filterContainer.getElementsByClassName("btn-bar");
-for (let i = 0; i < filterBtns.length; i++) {
-  filterBtns[i].addEventListener("click", function(){
-    let filter = this.getAttribute("data-filter") || "all";
-    if (filter === "all") {
-      clearActives();
-      addClass(this, "active");
-    } else {
-      clearTheAllBtn();
-      toggleClass(this, "active");
-    }
-    filterPNG();
-  });
-}
-
-
+export { addClass, hasClass, removeClass, toggleClass, clearTheAllBtn, setTheAllBtn, clearActives, getActives, filterPNG };   

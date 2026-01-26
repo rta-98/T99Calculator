@@ -2,7 +2,7 @@ function canonIn(smiIn) {
  const usrStr = { smi_in: smiIn };
  const canonDisRef = document.getElementById('canon-smi');
  const inputBox = document.getElementById('smiles-input');
- const errorMsg = document.getElementById('error-msg')
+ const errorMsg = document.getElementById('error-message')
 
  return fetch('/canonical-smiles', {
    method: 'POST',
