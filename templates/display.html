@@ -2,17 +2,18 @@
 {% block title %}Mol Display{% endblock %}
 {% block content %}
 
-<div class="home-title"> 
-  <h4>Mol Img Display</h4> 
-</div> 
+<!--<div class="home-title"> -->
+<!--  <h4>Mol Img Display</h4> -->
+<!--</div> -->
 <div class="grid-info"> 
-  <p>Number of Mols Listed: {{ count }}</p> 
+  <h4>Number of Mols Listed: {{ count }}</h4> 
 </div> 
-<div class="grid-disp">
-  {% if grid_png %}
-    <img src="{{ grid_png }}">
-  {% endif %} 
-</div>
+
+{% if grid_png %}
+  <div class="grid-disp">
+      <img src="{{ grid_png }}">
+  </div>
+{% endif %} 
 
 <!-- Parent Categories -->
 <!--<div id="filterParents" class="btn-bar"> -->
@@ -38,7 +39,7 @@
 <div id="filterChildren" class="btn-bar">
   <button class="btn-bar filterBtn active" data-filter="all">All Molecules</button>
   {% for opt in categories %}
-    <button class="btn filterBtn" data-filter="{{ opt }}">{{ opt|title }}</button>
+    <button class="btn filterBtn" data-filter="{{ opt }}">{{ opt }}</button>
   {% endfor %}
 </div>
 
