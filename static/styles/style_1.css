@@ -9,8 +9,8 @@ body {
 }
 
 .container {
-    max-width: 500px;
-    margin: 50px auto;
+    max-width: auto;
+    margin: 0 auto;
     background-color: gray;
     padding: 20px;
 /*    text-align: center;*/
@@ -40,24 +40,25 @@ body {
 }
 
 h1 {
-   font-family: monospace;
-   font-size: 40px;
+  text-align: center;
+  font-family: monospace;
+  font-size: 40px;
 }
 
 .home-title {
-    display: block;
-    min-height: 1em;
-    width: fit-content;
-    max-width: 100%;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    text-align: center;
+  display: block;
+  min-height: 1em;
+  width: fit-content;
+  max-width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  text-align: center;
 }
 
 .home-about {
-    background: white;
-    text-align: center;
+  background: white;
+  text-align: center;
 }
 
 #smiles-input {
@@ -73,6 +74,7 @@ h1 {
 /*  background-color: red;*/
 /*}*/
 /**/
+
 input {
   padding: 8px;
   font-size: 14px;
@@ -103,7 +105,9 @@ input {
   background-color: red;
 }
 
+
 #toggle-btn {
+/*  text-align: center;*/
   background-color: #007bff;
   color: white;
   border: none;
@@ -112,15 +116,27 @@ input {
   font-weight: bold;
   transition: background-color 0.3s ease;
   align-self: flex-end;
-  margin-top: 10px;
+  margin-top: auto;
+  display: flex;
+  justify-content: center;
+  background-color: #0056b3;
 }
-
+#toggle-btn-cont {
+  display: flex;
+  justify-content: center;
+/*  align: center;*/
+/*  padding: 10px 20px 30px 40px;*/
+}
 #toggle-btn:hover {
+  display: flex;
+  justify-content: center;
   background-color: #0056b3;
 }
 
 .grid-info {
-  text-align: center;
+  display: grid;;
+  justify-content: center;
+  align-items: center;
   background: white;
   border: 1px solid #ccc;
   border-radius: 4px;
@@ -129,6 +145,18 @@ input {
   font-family: monospace;
   font-size: 16px;
   color: #333;
+  height: auto;
+  line-height: auto;
+  padding-top: auto;
+  padding-bottom: auto;
+  resize: none;
+}
+
+h4 {
+  font-size: 20px;
+  margin: auto;
+  align-items: center;
+  justify-content: center;
 }
 
 .grid-disp {
@@ -143,6 +171,8 @@ input {
 .grid-disp img {
   max-width: 100%;
   height: auto;
+  width: auto;
+  margin: 10px 10px; 
   border-radius: 4px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
@@ -162,7 +192,7 @@ button {
 .btn-bar {
   border: none;
   padding: 8px 12px;
-  margin: 0 6px 6px 0;
+  margin: 10px auto;
   background: #f1f1f1;
   cursor: pointer;
 }
@@ -178,8 +208,18 @@ button {
   gap: 8px;
 }
 
+.all-pngs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 2fr)); 
+  gap: 16px;
+  justify-items: center; 
+  opacity: 0.7; 
+  background-color: gray;
+  margin: auto;
+} 
 .all-pngs .filterBtn {
   display: none;
+  margin: auto;
   width: 120px;
   height: 120px;
   object-fit: contain;
@@ -187,6 +227,9 @@ button {
 
 .all-pngs .filterBtn.show {
   display: inline-block;
+  width: 90%;
+  display: block;
+  object-fit: contain;
 }
 
 .filterBtn.active {
