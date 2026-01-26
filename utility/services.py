@@ -22,6 +22,11 @@ from openpyxl import Workbook
 from openpyxl.drawing.image import Image as pyxl_img
 from openpyxl.utils import get_column_letter as col_char
 from PIL import Image as pil_img
+from rdkit import DataStructs
+from utility.display import FileParser 
+import json
+
+
 
 class InputValid(BaseModel):
 
@@ -84,11 +89,109 @@ class MolData:
     def clear_mol_data(self):
         self.mol_data = []
 
+class SubstMatch: 
+ 
+    sub_mol_pfeca = Chem.MolFromSmarts('[O]C(C(O)=O)F') 
+    sub_mol_pfsa = Chem.MolFromSmarts('O=[S](O)=O')
+    sub_mol_ftoh = Chem.MolFromSmarts('OC[CH2]') 
+    sub_mol_mefasaa = Chem.MolFromSmarts('CN(CC(O)=O)[S](=O)=O')
+    sub_mol_ftca = Chem.MolFromSmarts('[CH2]CC(O)=O')
+    sub_mol_fts = Chem.MolFromSmarts('[CH2]CS(=O)(O)=O') 
+    sub_mol_pfca = Chem.MolFromSmarts('O=[C]O')
+    sub_mol_fasa = Chem.MolFromSmarts('N[S](=O)=O')
 
-# valid_smi = InputValid(smi_in="OC(C)C") 
-# print(valid_smi)
-# mol_obj = MolData()
-# mol_obj.img_2_bytes(valid_smi.smi_in)
-# mol_obj.get_iupac(valid_smi.smi_in)
-# mol_obj.append_mol_data(valid_smi.smi_in)
+    def __init__(self) -> None:
+        self.pfeca: List[tuple] = []
+        self.fasa: List[tuple] = []
+        self.pfca: List[tuple] = []
+        self.fts: List[tuple] = []
+        self.ftca: List[tuple] = []
+        self.mefasaa: List[tuple] = []
+        self.ftoh: List[tuple] = []
+        self.pfsa: List[tuple] = []
 
+    def match_pfeca(self, mol_in) -> bool:
+        if mol_in and mol_in.HasSubstructMatch(self.sub_mol_pfeca):
+            matched_smiles = Chem.MolToSmiles(mol_in)
+            self.pfeca.append((matched_smiles, mol_in))
+            return True
+        return False
+
+    def match_fasa(self, mol_in) -> bool:
+        if mol_in and mol_in.HasSubstructMatch(self.sub_mol_fasa):
+            matched_smiles = Chem.MolToSmiles(mol_in)
+            self.fasa.append((matched_smiles, mol_in))
+            return True
+        return False
+
+    def match_pfca(self, mol_in) -> bool:
+        if mol_in and mol_in.HasSubstructMatch(self.sub_mol_pfca):
+            matched_smiles = Chem.MolToSmiles(mol_in)
+            self.pfca.append((matched_smiles, mol_in))
+            return True
+        return False
+
+    def match_fts(self, mol_in) -> bool:
+        if mol_in and mol_in.HasSubstructMatch(self.sub_mol_fts):
+            matched_smiles = Chem.MolToSmiles(mol_in)
+            self.fts.append((matched_smiles, mol_in))
+            return True
+        return False
+
+    def match_ftca(self, mol_in) -> bool:
+        if mol_in and mol_in.HasSubstructMatch(self.sub_mol_ftca):
+            matched_smiles = Chem.MolToSmiles(mol_in)
+            self.ftca.append((matched_smiles, mol_in))
+            return True
+        return False
+
+    def match_mefasaa(self, mol_in) -> bool:
+        if mol_in and mol_in.HasSubstructMatch(self.sub_mol_mefasaa):
+            matched_smiles = Chem.MolToSmiles(mol_in)
+            self.mefasaa.append((matched_smiles, mol_in))
+            return True
+        return False
+
+    def match_ftoh(self, mol_in) -> bool:
+        if mol_in and mol_in.HasSubstructMatch(self.sub_mol_ftoh):
+            matched_smiles = Chem.MolToSmiles(mol_in)
+            self.ftoh.append((matched_smiles, mol_in))
+            return True
+        return False
+
+    def match_pfsa(self, mol_in) -> bool:
+        if mol_in and mol_in.HasSubstructMatch(self.sub_mol_pfsa):
+            matched_smiles = Chem.MolToSmiles(mol_in)
+            self.pfsa.append((matched_smiles, mol_in))
+            return True
+        return False
+
+    def classify(self, mol_in) -> List[str]:
+        mol_cats: List[str] = []
+        if self.match_pfeca(mol_in):
+            mol_cats.append("PFECA")
+        if self.match_fasa(mol_in):
+            mol_cats.append("FASA")
+        if self.match_pfca(mol_in):
+            mol_cats.append("PFCA")
+        if self.match_fts(mol_in):
+            mol_cats.append("FTS")
+        if self.match_ftca(mol_in):
+            mol_cats.append("FTCA")
+        if self.match_mefasaa(mol_in):
+            mol_cats.append("MeFASAA")
+        if self.match_ftoh(mol_in):
+            mol_cats.append("FTOH")
+        if self.match_pfsa(mol_in):
+            mol_cats.append("PFSA")
+        return mol_cats
+         
+    def create_images(self, mol_array):
+        try: 
+            for smi, mol in self.mol_array: 
+                fname_match = f"{smi}.png" 
+                path = OUTPUT_DIR / fname_match 
+                img_match = Draw.MolToImage(mol, size=SIZE)
+                img_match.save(path)
+        except Exception as e: 
+            raise RuntimeError(f'Error in create_images(): {e}') 
