@@ -89,16 +89,30 @@ class MolData:
     def clear_mol_data(self):
         self.mol_data = []
 
-class SubstMatch: 
- 
-    sub_mol_pfeca = Chem.MolFromSmarts('[O]C(C(O)=O)F') 
-    sub_mol_pfsa = Chem.MolFromSmarts('O=[S](O)=O')
-    sub_mol_ftoh = Chem.MolFromSmarts('OC[CH2]') 
-    sub_mol_mefasaa = Chem.MolFromSmarts('CN(CC(O)=O)[S](=O)=O')
-    sub_mol_ftca = Chem.MolFromSmarts('[CH2]CC(O)=O')
-    sub_mol_fts = Chem.MolFromSmarts('[CH2]CS(=O)(O)=O') 
-    sub_mol_pfca = Chem.MolFromSmarts('O=[C]O')
-    sub_mol_fasa = Chem.MolFromSmarts('N[S](=O)=O')
+class InternalValid: 
+    @staticmethod
+    def validator(non_canon): 
+        non_canon = non_canon.strip()
+        if not non_canon: 
+            raise TypeError('SMILES are of type str, not None') 
+        canoning = Chem.MolFromSmarts(non_canon)
+        if canoning is not None:
+            canon = Chem.MolToSmiles(canoning) 
+            return canon
+        else: 
+            raise ValueError(f'Invalid SMILES string: {v}')
+         
+
+class SubstMatch(InternalValid):
+
+    sub_mol_pfeca = Chem.MolFromSmarts(InternalValid.validator('[O]C(C(O)=O)F')) 
+    sub_mol_pfsa = Chem.MolFromSmarts(InternalValid.validator('O=[S](O)=O'))
+    sub_mol_ftoh = Chem.MolFromSmarts(InternalValid.validator('OC[CH2]')) 
+    sub_mol_mefasaa = Chem.MolFromSmarts(InternalValid.validator('CN(CC(O)=O)[S](=O)=O'))
+    sub_mol_ftca = Chem.MolFromSmarts(InternalValid.validator('[CH2]CC(O)=O'))
+    sub_mol_fts = Chem.MolFromSmarts(InternalValid.validator('[CH2]CS(=O)(O)=O')) 
+    sub_mol_pfca = Chem.MolFromSmarts(InternalValid.validator('O=[C]O'))
+    sub_mol_fasa = Chem.MolFromSmarts(InternalValid.validator('N[S](=O)=O'))
 
     def __init__(self) -> None:
         self.pfeca: List[tuple] = []

@@ -12,9 +12,9 @@
 </head>
 <body>
   <div class="container"> 
-    <div class="home-title">
-      <h1>T99 Calculator</h1>
-    </div>
+<!--    <div class="home-title">-->
+<!--      <h1>T99 Calculator</h1>-->
+<!--    </div>-->
     <div class="home-about">
       <h2>SMILES to Molecular Structure</h2>
       <p>Ensure SMILES are canonicalized<br>for accuracy!</p> 
@@ -26,7 +26,9 @@
       <div id="canon-smi"></div> 
       <img id="img"/> 
     </div> 
-    <button id="toggle-btn">Display Grid</button> 
+    <div id="toggle-btn-cont">
+      <button id="toggle-btn">Display Grid</button> 
+    </div>
     {% block content %}{% endblock %} 
   </div> 
   <script type="module" src="{{ url_for('static', path='scripts/main.js') }}"></script> 
