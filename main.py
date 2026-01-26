@@ -22,8 +22,12 @@ from openpyxl import Workbook
 from openpyxl.drawing.image import Image as pyxl_img
 from openpyxl.utils import get_column_letter as col_char
 from PIL import Image as pil_img
-from utility.services import InputValid, MolData 
+from utility.services import InputValid, MolData, SubstMatch 
 from utility.display import FileParser  
+
+OUTPUT_DIR = Path("static/storage/imgs") 
+OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+SIZE = (200,200)
 
 app = FastAPI()
 # app.add_middleware() 
@@ -51,8 +55,8 @@ async def note_smile(usrStr: InputValid):
     try:
         result = usrStr.smi_in 
         return {"result": result, "error": None}
-    except:
-        return {"result": None, "error": error} 
+    except Exception as e:
+        return {"result": None, "error": str(e)} 
 
 # Return a mol image from the SMILES string in real time as the user types
 @app.post("/smiles-structure")
@@ -88,6 +92,42 @@ async def grid_page(request: Request):
 
     except Exception as e: 
         raise RuntimeError(f'Error in grid_page(): {e}') 
+
+
+# Return a grid of mol pngs which have been filtered 
+@app.get("/filter-grid", response_class=HTMLResponse) 
+async def filter_grid_page(request: Request): 
+    data_dir = Path('./data') # name the path 
+    parser = FileParser(str(data_dir)) # assign   
+    parser.parse() # instance of FileParser created  
+    matcher = SubstMatch() 
+    items = []
+    categories = set() 
+    for zed, (mol, smi) in enumerate(zip(parser.mols, parser.smiles)): 
+        if mol is None: 
+            continue
+        cats = matcher.classify(mol) 
+        if not cats:
+            cats = ["unclassified"]
+        categories.update(cats) 
+        pdb_fnames = parser.pdb_fname[zed] 
+        mol_fname = f"{Path(pdb_fnames).stem}.png" 
+        path = OUTPUT_DIR / mol_fname
+        Draw.MolToImage(mol, size=SIZE).save(path) 
+        items.append({
+            "filename": f"/static/storage/imgs/{mol_fname}",
+            "label": smi,
+            "category": " ".join(cats), 
+        }) 
+    return templates.TemplateResponse(
+        "display.html",
+        {
+            "request": request,
+            "items": items, 
+            "categories": sorted(categories),
+            "count": len(items), 
+        } 
+    ) 
 
 @app.post("/append-molecule")
 async def add_molecule(

@@ -1,7 +1,5 @@
 {% extends "base.html" %} 
-
 {% block title %}Mol Display{% endblock %}
-
 {% block content %}
 
 <div class="home-title"> 
@@ -11,7 +9,9 @@
   <p>Number of Mols Listed: {{ count }}</p> 
 </div> 
 <div class="grid-disp">
-  <img src="{{ grid_png }}" alt="Should be a grid"> 
+  {% if grid_png %}
+    <img src="{{ grid_png }}">
+  {% endif %} 
 </div>
 
 <!-- Parent Categories -->
@@ -36,7 +36,7 @@
 <!---->
 
 <div id="filterChildren" class="btn-bar">
-  <button class="btn filterBtn active" data-filter="all">All Molecules</button>
+  <button class="btn-bar filterBtn active" data-filter="all">All Molecules</button>
   {% for opt in categories %}
     <button class="btn filterBtn" data-filter="{{ opt }}">{{ opt|title }}</button>
   {% endfor %}
@@ -44,11 +44,13 @@
 
 <div class="all-pngs">
   {% for i in items %}
-    <img class="single-pngs{{ i.category }}"
-         src="{{ url_for('molimgs', path=item.filename) }}"
-         alt="{{ i.label }}">
+    <img class="filterBtn {{ i.category }}"
+         src="{{ i.filename }}"
+         alt="{{ i.label }}"
+         title="{{ i.label }}">
   {% endfor %}
 </div>
+{% endblock %}
 
 
                       

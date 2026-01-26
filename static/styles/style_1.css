@@ -80,7 +80,7 @@ input {
 }
 
 #input-title {
-  background: white;
+  background: gray;
   border: 1px solid #ccc;
   border-radius: 4px;
   padding: 20px;
@@ -100,7 +100,7 @@ input {
 #input-title input:focus {
   outline: none;
   border-color: #007bff;
-  background-color: #fff;
+  background-color: red;
 }
 
 #toggle-btn {
@@ -154,30 +154,42 @@ button {
 }
 
 #img {
-  max-width: 400px;
-  margin-top: 20px;
+  opacity: 0.4;
+  max-width: 200px;
+  margin: auto;
 }
-/**/
-/*/* Block: base styling for the note */*/
-/*.note-smile {*/
-/*  font-size: 0.9rem;*/
-/*  color: #856404;*/
-/*  background-color: #fff3cd;*/
-/*  border: 1px solid #ffeeba;*/
-/*  padding: 0.75rem 1rem;*/
-/*  border-radius: 4px;*/
-/*  margin-top: 0.5rem;*/
-/*  transition: opacity 0.3s ease, visibility 0.3s ease;*/
-/*}*/
-/**/
-/*/* Modifier: visible state */*/
-/*.note--appear {*/
-/*  opacity: 1;*/
-/*  visibility: visible;*/
-/*}*/
-/**/
-/*/* Modifier: hidden state */*/
-/*.note--disappear {*/
-/*  opacity: 0;*/
-/*  visibility: hidden;*/
-/*}*/
+
+.btn-bar {
+  border: none;
+  padding: 8px 12px;
+  margin: 0 6px 6px 0;
+  background: #f1f1f1;
+  cursor: pointer;
+}
+
+.btn-bar.active {
+  background: #666;
+  color: #fff; 
+}
+
+.items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.all-pngs .filterBtn {
+  display: none;
+  width: 120px;
+  height: 120px;
+  object-fit: contain;
+}
+
+.all-pngs .filterBtn.show {
+  display: inline-block;
+}
+
+.filterBtn.active {
+background: #666; color: #fff; 
+}
+

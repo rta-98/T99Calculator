@@ -11,6 +11,7 @@ class FileParser:
         self.dir = dir_path
         self.smiles = []
         self.mols = [] 
+        self.pdb_fname = [] 
     def parse(self):
         for fname in os.listdir(self.dir): 
             if fname.endswith('.pdb'):
@@ -20,9 +21,10 @@ class FileParser:
                     smi, mol_obj = self.pdb_to_smi(fpath)
                 except Exception as e:
                     raise RuntimeError(f'Error in parse(): {e}')  
-                self.smiles.append(smi) 
+                parsed_smiles = self.smiles.append(smi) 
                 self.mols.append(Chem.MolFromSmiles(smi)) 
-    
+                self.pdb_fname.append(fname) 
+
     def pdb_to_smi(self, fpath): 
         try:
             try:
@@ -40,7 +42,7 @@ class FileParser:
         except Exception as e: 
             raise RuntimeError(f'Error in pdb_to_smi(): {e}') 
         
-    def smi_to_png(self, molsPerRow=5, subImgSize=(400,400)): 
+    def smi_to_png(self, molsPerRow=5, subImgSize=(200,200)): 
         try: 
             grid_png = Draw.MolsToGridImage(
                 self.mols,
@@ -52,4 +54,3 @@ class FileParser:
         except Exception as e:
             raise RuntimeError(f'Error in smi_to_png(): {e}') 
     
-    def 

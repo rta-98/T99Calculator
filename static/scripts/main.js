@@ -1,23 +1,23 @@
-// Modules Glossary:
+// modules glossary:
 // utilities.js - shared helper functions
-// smiles-api.js - handles AJAX requests, submission, verification
+// smiles-api.js - handles ajax requests, submission, verification
 // mol-display.js - displays single mol image
 // gallery.js - displays gallery of mol images; molecular info as well
-// input-form.js - SMILES input box and submit button 
-// display.js - 3D Gui molecule visualization  
+// input-form.js - smiles input box and submit button 
+// display.js - 3d gui molecule visualization  
 
-// Exporting Rules: 
-// Only export var, let, const, and functions -- only export top level. The best way to approach this is to export functions at the end of a file like so: 
+// exporting rules: 
+// only export var, let, const, and functions -- only export top level. the best way to approach this is to export functions at the end of a file like so: 
 // 
 //
-// export { name, draw, reportArea, reportPerimeter }; 
+// export { name, draw, reportarea, reportperimeter }; 
 //
-// Importing Rules:  
-// Use the import statement followed by a comma-separated list of the features you want to import wrapped in curly braces, followed by the keyword from, followed by a module specifier. Use dot syntax to signify current location. 
-// import { name, draw, reportArea, reportPerimeter } from "./modules/square.js"; 
+// importing rules:  
+// use the import statement followed by a comma-separated list of the features you want to import wrapped in curly braces, followed by the keyword from, followed by a module specifier. use dot syntax to signify current location. 
+// import { name, draw, reportarea, reportperimeter } from "./modules/square.js"; 
 //
-// -- Once Imported ...
-// you can use them just like they were defined inside the same file. For example inside of main.js: 
+// -- once imported ...
+// you can use them just like they were defined inside the same file. for example inside of main.js: 
 //
 // const myCanvas = create("myCanvas", document.body, 480, 320);
 // const reportList = createReportList(myCanvas.id);
@@ -35,7 +35,7 @@
 import { showMol } from './modules/mol-display.js';
 import { canonIn } from './modules/smiles-api.js';
 import { toggle } from './modules/toggle.js'; 
-
+import { addClass, hasClass, removeClass, toggleClass, clearTheAllBtn, setTheAllBtn, clearActives, getActives, filterPNG } from './modules/gallery.js';    
 window.ajaxMol = function() {
 
   const smiIn = document.getElementById('smiles-input').value;
@@ -44,6 +44,31 @@ window.ajaxMol = function() {
   canonIn(smiIn);  
 
 }
+
+let filterContainer;
+let filterBtns;
+document.addEventListener("DOMContentLoaded", () => {
+  filterContainer = document.getElementById("filterChildren");
+  if (!filterContainer) return;
+
+  filterBtns = filterContainer.getElementsByClassName("filterBtn");
+
+  filterPNG("all");
+
+  for (let i = 0; i < filterBtns.length; i++) {
+    filterBtns[i].addEventListener("click", function(){
+      let filter = this.getAttribute("data-filter") || "all";
+      if (filter === "all") {
+        clearActives();
+        addClass(this, "active");
+      } else {
+        clearTheAllBtn();
+        toggleClass(this, "active");
+      }
+      filterPNG();
+    });
+  }
+});
 
 document.getElementById('toggle-btn').addEventListener('click', () => toggle()); 
 
