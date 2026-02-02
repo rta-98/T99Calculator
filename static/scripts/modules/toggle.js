@@ -1,14 +1,27 @@
-function toggle(homePath = {
+function toggleGrid(homePath = {
 
     '/' : 'grid', 
-    '/grid': '/filter-grid', 
-    '/filter-grid': '/'
+    '/grid': '/', 
+//    '/filter-grid': '/'
 
   }) {
 
-      const dir = window.location.pathname;
-      window.location.href = homePath[dir] || '/';  
+      const dir1 = window.location.pathname;
+      window.location.href = homePath[dir1] || '/';  
 
 }
 
-export  { toggle };
+function toggleFilterGrid(homePath = {
+
+    '/' : 'filter-grid', 
+    '/filter-grid': '/', 
+//    '/filter-grid': '/'
+
+  }) {
+
+      const dir2 = window.location.pathname;
+      window.location.href = homePath[dir2] || '/';  
+
+}
+
+export  { toggleGrid, toggleFilterGrid };
