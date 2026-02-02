@@ -14,16 +14,17 @@ class SmileFileParser(InternalValid):
         self.mols_list = []
         self.smi_fname = []
         self.smiles_dud_list = []
+        self.pdb_files = []
 
     def smi_populate(self):
         for smi_file in Path(self.dir).rglob('*.smi'): 
+            pdb_file = smi_file.with_suffix('.pdb') 
             with open(smi_file) as f: 
                 for line in f: 
                     tmp_smile = line.split()
                     if not tmp_smile: 
                         continue 
                     smiles = tmp_smile[0]
-                     
                     try:
                         canon_smi = InternalValid.validator(smiles)  
                         if canon_smi is None: 
@@ -35,6 +36,7 @@ class SmileFileParser(InternalValid):
                             self.smiles_list.append(canon_smi)
                             self.mols_list.append(mol)
                             self.smi_fname.append(smi_file) 
+                            self.pdb_files.append(pdb_file) 
                         else: 
                             self.smiles_dud_list.append(smiles)
 #                         for i in self.smiles_dud_list:

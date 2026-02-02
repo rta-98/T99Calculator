@@ -126,14 +126,15 @@ class InternalValid:
 class SubstMatch(InternalValid):
 
     sub_mol_pfeca = Chem.MolFromSmarts('[*]-[#8]-[#6](-[#6](=[#8])-[#8]-[#1])(-[#9])-[*]') 
-    sub_mol_pfsa = Chem.MolFromSmarts('[#8]=[#16](-[#8]-[#1])(=[#8])-[*]')
+    sub_mol_pfsa = Chem.MolFromSmarts('[#8]=[#16](-[#8]-[#1])(=[#8])-[#6](-[#9])(-[#9])-[*]')
     sub_mol_ftoh = Chem.MolFromSmarts('[#8](-[#6](-[#6](-[#1])(-[#1])-[*])(-[#1])-[#1])-[#1]')
     sub_mol_pfoh = Chem.MolFromSmarts('[#8](-[#6](-[#6](-[*])(-[#9])-[#9])(-[#9])-[#9])-[#1]')
-    sub_mol_mefasaa = Chem.MolFromSmarts('[#6]-[#7](-[#6]-[#6](-[#8]-[#1])=[#8])-[#16](=[#8])(=[#8])-[*]')
+    sub_mol_mefasaa = Chem.MolFromSmarts('[#8](-[#1])-[#6](=[#8])-[#6](-[#1])(-[#1])-[#7](-[#1])-[#16](=[#8])(=[#8])-[#6](-[#9])(-[#9])-[*]')
     sub_mol_ftca = Chem.MolFromSmarts('[#6](-[#1])(-[#1])(-[#6](-[#6](-[#8]-[#1])=[#8])(-[#1])-[#1])-[*]')
     sub_mol_fts = Chem.MolFromSmarts('[#6](-[#1])(-[#1])(-[#6](-[#16](=[#8])(-[#8]-[#1])=[#8])(-[#1])-[#1])-[*]') 
-    sub_mol_pfca = Chem.MolFromSmarts('[#6](=[#8])(-[#8]-[#1])-[*]')
-    sub_mol_fasa = Chem.MolFromSmarts('[#7](-[#16](=[#8])(=[#8])-[*])(-[#1])-[#1]')
+    sub_mol_pfca = Chem.MolFromSmarts('[#6](=[#8])(-[#8]-[#1])-[#6](-[*])(-[#9])-[#9]')
+    sub_mol_pfasa = Chem.MolFromSmarts('[#7](-[#16](=[#8])(=[#8])-[#6](-[#9])(-[#9])-[*])(-[#1])-[#1]')
+    sub_mol_fasa = Chem.MolFromSmarts('[#7](-[#16](=[#8])(=[#8])-[#6](-[#6](-[*])(-[#1])-[#1])(-[#1])-[#1])(-[#1])-[#1]')
     sub_mol_pfal = Chem.MolFromSmarts('[#6](=[#8])(-[#9])-[#6](-[#9])(-[#9])-[*]') 
  
 #     sub_mol_pfeca = Chem.MolFromSmarts('[O]C(C(O)=O)F')
@@ -151,6 +152,7 @@ class SubstMatch(InternalValid):
     def __init__(self) -> None:
         self.pfeca: List[tuple] = []
         self.fasa: List[tuple] = []
+        self.pfasa: List[tuple] = []
         self.pfca: List[tuple] = []
         self.fts: List[tuple] = []
         self.ftca: List[tuple] = []
@@ -172,6 +174,13 @@ class SubstMatch(InternalValid):
         if mol_in and mol_in.HasSubstructMatch(self.sub_mol_fasa):
             matched_smiles = Chem.MolToSmiles(mol_in)
             self.fasa.append((matched_smiles, mol_in))
+            return True
+        return False
+
+    def match_pfasa(self, mol_in) -> bool:
+        if mol_in and mol_in.HasSubstructMatch(self.sub_mol_pfasa):
+            matched_smiles = Chem.MolToSmiles(mol_in)
+            self.pfasa.append((matched_smiles, mol_in))
             return True
         return False
 
@@ -242,6 +251,8 @@ class SubstMatch(InternalValid):
         mol_cats: List[str] = []
         if self.match_pfeca(mol_in):
             mol_cats.append("PFECA")
+        if self.match_pfasa(mol_in):
+            mol_cats.append("PFASA") 
         if self.match_fasa(mol_in):
             mol_cats.append("FASA")
         if self.match_pfca(mol_in):

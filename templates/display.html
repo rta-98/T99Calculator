@@ -43,12 +43,18 @@
   {% endfor %}
 </div>
 
+<div id="model3d_container" class="viewer-hidden">
+  <div id="model3d"></div>
+</div>
+
 <div class="all-pngs">
   {% for i in items %}
     <img class="filterBtn {{ i.category }}"
          src="{{ i.filename }}"
          alt="{{ i.label }}"
-         title="{{ i.label }}">
+         title="{{ i.label }}"
+         data-smiles="{{ i.label | e }}"
+         data-pdb="{{ i.pdb_url }}">
   {% endfor %}
 </div>
 {% endblock %}

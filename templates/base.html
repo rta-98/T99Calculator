@@ -16,11 +16,11 @@
 <!--      <h1>T99 Calculator</h1>-->
 <!--    </div>-->
     <div class="home-about">
-      <h2>SMILES to Molecular Structure</h2>
-      <p>Ensure SMILES are canonicalized<br>for accuracy!</p> 
+      <h2>T99 Calculator</h2>
+<!--      <p>Ensure SMILES are canonicalized<br>for accuracy!</p> -->
     </div> 
     <div id="input-title">
-      <input type="text" id="smiles-input" placeholder="Enter SMILES"> 
+      <input type="text" id="smiles-input" placeholder="Enter SMARTS"> 
       <button type="button" onclick="ajaxMol()">Submit</button>
       <div id = "error-message"></div>
       <div id="canon-smi"></div> 
@@ -28,6 +28,7 @@
     </div> 
     <div class="btn-container">
       <button id="toggle-btn">Toggle All</button> 
+      <button id="toggle-btn-display" type="button">Toggle Display</button> 
       <button id="toggle-btn-filter">Toggle Filter</button>
     </div>
     {% block content %}{% endblock %} 
