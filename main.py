@@ -146,7 +146,7 @@ async def filter_grid_page(request: Request):
             continue
         cats = matcher.classify(mol) 
         if not cats:
-            cats = ["unclassified"]
+            cats = ["Fluorocarbon Chain"]
         categories.update(cats) 
         pdb_fnames = parser_1.smi_fname[zed] 
         mol_fname = f"{Path(pdb_fnames).stem}.png" 
