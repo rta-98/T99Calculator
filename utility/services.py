@@ -23,10 +23,9 @@ from openpyxl.drawing.image import Image as pyxl_img
 from openpyxl.utils import get_column_letter as col_char
 from PIL import Image as pil_img
 from rdkit import DataStructs
+from rdkit.Chem.MolStandardize import rdMolStandardize 
 from utility.display import FileParser 
 import json
-
-
 
 class InputValid(BaseModel):
 
@@ -51,7 +50,7 @@ class MolData:
         self.mol_data = []
 
     def img_2_bytes(self, smi_in):
-        mol_obj = Chem.MolFromSmiles(smi_in) 
+        mol_obj = Chem.MolFromSmarts(smi_in) 
         if mol_obj is None: 
             raise ValueError(f'Failed to parse SMILES: {smi_in}')
         try: 
@@ -90,29 +89,62 @@ class MolData:
         self.mol_data = []
 
 class InternalValid: 
-    @staticmethod
-    def validator(non_canon): 
-        non_canon = non_canon.strip()
-        if not non_canon: 
-            raise TypeError('SMILES are of type str, not None') 
-        canoning = Chem.MolFromSmarts(non_canon)
-        if canoning is not None:
-            canon = Chem.MolToSmiles(canoning) 
-            return canon
-        else: 
-            raise ValueError(f'Invalid SMILES string: {v}')
-         
+     @staticmethod
+     def validator(non_canon): 
+           custom_SO3 = (
+               "SULFONIC_ACID\t"
+               "[S:1]([O:2])([O:3])([O:4])[#6:5]>>"
+               "[S:1](=[O:2])(=[O:3])([O:4])[#6:5]\n"
+           )
+           params = rdMolStandardize.CleanupParameters()
+           norm_SO3 = rdMolStandardize.NormalizerFromData(custom_SO3,
+           params)
+           if not isinstance(non_canon, str):
+               raise TypeError("SMILES must be a string")
+           smi = non_canon.strip()
+           mol = Chem.MolFromSmiles(smi) 
+           if mol is None:
+               raise ValueError(f"Bad SMILES: {smi}")
+           mol = norm_SO3.normalize(mol)
+           mol = rdMolStandardize.Cleanup(mol)
+           return Chem.MolToSmiles(mol, canonical=True)
+
+# class InternalValid: 
+#     @staticmethod
+#     def validator(non_canon): 
+#         non_canon = non_canon.strip()
+#         if not non_canon: 
+#             raise TypeError('SMILES are of type str, not None') 
+#         try:
+#             canoning = Chem.MolFromSmiles(non_canon)
+#             if canoning is not None:
+#                 canon = Chem.MolToSmiles(canoning)
+#                 return canon
+#         except Exception as v: 
+#             raise ValueError(f'Invalid SMILES string: {v}')
 
 class SubstMatch(InternalValid):
 
-    sub_mol_pfeca = Chem.MolFromSmarts(InternalValid.validator('[O]C(C(O)=O)F')) 
-    sub_mol_pfsa = Chem.MolFromSmarts(InternalValid.validator('O=[S](O)=O'))
-    sub_mol_ftoh = Chem.MolFromSmarts(InternalValid.validator('OC[CH2]')) 
-    sub_mol_mefasaa = Chem.MolFromSmarts(InternalValid.validator('CN(CC(O)=O)[S](=O)=O'))
-    sub_mol_ftca = Chem.MolFromSmarts(InternalValid.validator('[CH2]CC(O)=O'))
-    sub_mol_fts = Chem.MolFromSmarts(InternalValid.validator('[CH2]CS(=O)(O)=O')) 
-    sub_mol_pfca = Chem.MolFromSmarts(InternalValid.validator('O=[C]O'))
-    sub_mol_fasa = Chem.MolFromSmarts(InternalValid.validator('N[S](=O)=O'))
+    sub_mol_pfeca = Chem.MolFromSmarts('[*]-[#8]-[#6](-[#6](=[#8])-[#8]-[#1])(-[#9])-[*]') 
+    sub_mol_pfsa = Chem.MolFromSmarts('[#8]=[#16](-[#8]-[#1])(=[#8])-[*]')
+    sub_mol_ftoh = Chem.MolFromSmarts('[#8](-[#6](-[#6](-[#1])(-[#1])-[*])(-[#1])-[#1])-[#1]')
+    sub_mol_mefasaa = Chem.MolFromSmarts('[#6]-[#7](-[#6]-[#6](-[#8]-[#1])=[#8])-[#16](=[#8])(=[#8])-[*]')
+    sub_mol_ftca = Chem.MolFromSmarts('[#6](-[#1])(-[#1])(-[#6](-[#6](-[#8]-[#1])=[#8])(-[#1])-[#1])-[*]')
+    sub_mol_fts = Chem.MolFromSmarts('[#6](-[#1])(-[#1])(-[#6](-[#16](=[#8])(-[#8]-[#1])=[#8])(-[#1])-[#1])-[*]') 
+    sub_mol_pfca = Chem.MolFromSmarts('[#6](=[#8])(-[#8]-[#1])-[*]')
+    sub_mol_fasa = Chem.MolFromSmarts('[#7](-[#16](=[#8])(=[#8])-[*])(-[#1])-[#1]')
+ 
+#     sub_mol_pfeca = Chem.MolFromSmarts('[O]C(C(O)=O)F')
+#     sub_mol_pfsa = Chem.MolFromSmarts('O=[S](O)=O')
+#     sub_mol_ftoh = Chem.MolFromSmarts('OC[CH2]')
+#     sub_mol_mefasaa = Chem.MolFromSmarts('CN(CC(O)=O)[S](=O)=O')
+#     sub_mol_ftca = Chem.MolFromSmarts('[CH2]CC(O)=O')
+#     sub_mol_fts = Chem.MolFromSmarts('[CH2]CS(=O)(O)=O')
+#     sub_mol_pfca = Chem.MolFromSmarts('O=[C]O')
+#     sub_mol_fasa = Chem.MolFromSmarts('N[S](=O)=O')
+
+    if sub_mol_pfeca is None: 
+        print("ERROR") 
 
     def __init__(self) -> None:
         self.pfeca: List[tuple] = []

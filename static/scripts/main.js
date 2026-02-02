@@ -34,7 +34,7 @@
  
 import { showMol } from './modules/mol-display.js';
 import { canonIn } from './modules/smiles-api.js';
-import { toggle } from './modules/toggle.js'; 
+import { toggleGrid, toggleFilterGrid } from './modules/toggle.js'; 
 import { addClass, hasClass, removeClass, toggleClass, clearTheAllBtn, setTheAllBtn, clearActives, getActives, filterPNG } from './modules/gallery.js';    
 window.ajaxMol = function() {
 
@@ -70,7 +70,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
-document.getElementById('toggle-btn').addEventListener('click', () => toggle()); 
-
+document.getElementById('toggle-btn').addEventListener('click', () => toggleGrid()); 
+document.getElementById('toggle-btn-filter').addEventListener('click', () => toggleFilterGrid());
 
 
