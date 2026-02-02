@@ -24,15 +24,19 @@ from openpyxl.utils import get_column_letter as col_char
 from PIL import Image as pil_img
 from utility.services import InputValid, MolData, SubstMatch 
 from utility.display import FileParser  
+from rdkit.Chem.Draw import MolDrawOptions
+from utility.smiles import SmileFileParser
 
 OUTPUT_DIR = Path("static/storage/imgs") 
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 SIZE = (200,200)
+BG_COLOR = (.29, .31, .33)
 
 app = FastAPI()
-# app.add_middleware() 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates") 
+drawOptions = MolDrawOptions() 
+drawOptions.setBackgroundColour(BG_COLOR) 
 
 async def user_valid(smi_in = Form(...)) -> InputValid:
     return InputValid.model_validate({"smi_in": smi_in})
@@ -95,25 +99,59 @@ async def grid_page(request: Request):
 
 
 # Return a grid of mol pngs which have been filtered 
+# @app.get("/filter-grid", response_class=HTMLResponse) 
+# async def filter_grid_page(request: Request): 
+#     data_dir = Path('./data') # name the path 
+#     parser = FileParser(str(data_dir)) # assign   
+#     parser.parse() # instance of FileParser created  
+#     matcher = SubstMatch() 
+#     items = []
+#     categories = set() 
+#     for zed, (mol, smi) in enumerate(zip(parser.mols, parser.smiles)): 
+#         if mol is None: 
+#             continue
+#         cats = matcher.classify(mol) 
+#         if not cats:
+#             cats = ["unclassified"]
+#         categories.update(cats) 
+#         pdb_fnames = parser.pdb_fname[zed] 
+#         mol_fname = f"{Path(pdb_fnames).stem}.png" 
+#         path = OUTPUT_DIR / mol_fname
+#         Draw.MolToImage(mol, size=SIZE, options=drawOptions).save(path) 
+#         items.append({
+#             "filename": f"/static/storage/imgs/{mol_fname}",
+#             "label": smi,
+#             "category": " ".join(cats), 
+#         }) 
+#     return templates.TemplateResponse(
+#         "display.html",
+#         {
+#             "request": request,
+#             "items": items, 
+#             "categories": sorted(categories),
+#             "count": len(items), 
+#         } 
+#     ) 
+
 @app.get("/filter-grid", response_class=HTMLResponse) 
 async def filter_grid_page(request: Request): 
-    data_dir = Path('./data') # name the path 
-    parser = FileParser(str(data_dir)) # assign   
-    parser.parse() # instance of FileParser created  
+    data_dir = Path('/home/tau/projects/sandbox/tutorials/git_dir/Jinja2/data') # name the path 
+    parser_1 = SmileFileParser(str(data_dir)) # assign   
+    parser_1.smi_populate() # instance of FileParser created  
     matcher = SubstMatch() 
     items = []
     categories = set() 
-    for zed, (mol, smi) in enumerate(zip(parser.mols, parser.smiles)): 
+    for zed, (mol, smi) in enumerate(zip(parser_1.mols_list, parser_1.smiles_list)): 
         if mol is None: 
             continue
         cats = matcher.classify(mol) 
         if not cats:
             cats = ["unclassified"]
         categories.update(cats) 
-        pdb_fnames = parser.pdb_fname[zed] 
+        pdb_fnames = parser_1.smi_fname[zed] 
         mol_fname = f"{Path(pdb_fnames).stem}.png" 
         path = OUTPUT_DIR / mol_fname
-        Draw.MolToImage(mol, size=SIZE).save(path) 
+        Draw.MolToImage(mol, size=SIZE, options=drawOptions).save(path) 
         items.append({
             "filename": f"/static/storage/imgs/{mol_fname}",
             "label": smi,
