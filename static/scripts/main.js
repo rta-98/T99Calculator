@@ -36,6 +36,60 @@ import { showMol } from './modules/mol-display.js';
 import { canonIn } from './modules/smiles-api.js';
 import { toggleGrid, toggleFilterGrid } from './modules/toggle.js'; 
 import { addClass, hasClass, removeClass, toggleClass, clearTheAllBtn, setTheAllBtn, clearActives, getActives, filterPNG } from './modules/gallery.js';    
+import Basic3DViewer from './modules/basic-viewer.js';
+
+function getInitialSmiles() {
+  const container = document.getElementById('model3d_container') ||
+    document.getElementById('model3d');
+  if (container && container.dataset && container.dataset.smiles) {
+    return container.dataset.smiles.trim();
+  }
+
+  if (typeof window !== 'undefined') {
+    if (window.__SMILES__) {
+      return String(window.__SMILES__).trim();
+    }
+    if (window.SMILES) {
+      return String(window.SMILES).trim();
+    }
+  }
+
+  const input = document.getElementById('smilesString');
+  if (input && input.value) {
+    return input.value.trim();
+  }
+
+  return '';
+}
+
+function initViewer() {
+  const container = document.getElementById('model3d');
+  if (!container) {
+    return;
+  }
+
+  Basic3DViewer.initializeViewer({
+    containerId: 'model3d',
+    containerOuterId: 'model3d_container'
+  });
+
+  const smiles = getInitialSmiles();
+  if (smiles) {
+    Basic3DViewer.loadSmiles(smiles)
+      .catch((err) => {
+        console.error('Failed to load SMILES:', err);
+      });
+  }
+}
+
+document.addEventListener('DOMContentLoaded', initViewer);
+
+export function loadSmilesString(smiles) {
+  if (!smiles) {
+    return Promise.resolve();
+  }
+  return Basic3DViewer.loadSmiles(String(smiles));
+}
 window.ajaxMol = function() {
 
   const smiIn = document.getElementById('smiles-input').value;
@@ -47,6 +101,7 @@ window.ajaxMol = function() {
 
 let filterContainer;
 let filterBtns;
+
 document.addEventListener("DOMContentLoaded", () => {
   filterContainer = document.getElementById("filterChildren");
   if (!filterContainer) return;
@@ -70,7 +125,31 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
+document.addEventListener('DOMContentLoaded', () => {
+  const grid = document.querySelector('.all-pngs');
+  if (!grid) return;
+  grid.addEventListener('click', (e) => {
+    const tile = e.target.closest('[data-pdb], [data-smiles]');
+    if (!tile) return;
+    const pdbUrl = tile.dataset.pdb;
+    const smiles = (tile.dataset.smiles || '').trim();
+    if (pdbUrl) {
+      Basic3DViewer.loadPDBFromUrl(pdbUrl).catch(console.error);
+    } else if (smiles) {
+      loadSmilesString(smiles).catch(console.error);
+    }
+    const viewer = document.getElementById('model3d_container') ||
+document.getElementById('model3d');
+    if (viewer) viewer.scrollIntoView({ behavior: 'smooth' });
+  });
+});
+
 document.getElementById('toggle-btn').addEventListener('click', () => toggleGrid()); 
 document.getElementById('toggle-btn-filter').addEventListener('click', () => toggleFilterGrid());
+document.getElementById('toggle-btn-display')?.addEventListener('click', () => {
+  const viewer = document.getElementById('model3d_container');
+  if (!viewer) return;
+  viewer.classList.toggle('viewer-hidden');
+});
 
 

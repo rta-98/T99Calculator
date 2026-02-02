@@ -141,20 +141,23 @@ async def filter_grid_page(request: Request):
     matcher = SubstMatch() 
     items = []
     categories = set() 
-    for zed, (mol, smi) in enumerate(zip(parser_1.mols_list, parser_1.smiles_list)): 
+    for zed, (mol, smi, pdb) in enumerate(zip(parser_1.mols_list, parser_1.smiles_list, parser_1.pdb_files)): 
         if mol is None: 
             continue
         cats = matcher.classify(mol) 
         if not cats:
             cats = ["Fluorocarbon Chain"]
         categories.update(cats) 
-        pdb_fnames = parser_1.smi_fname[zed] 
-        mol_fname = f"{Path(pdb_fnames).stem}.png" 
+        smi_fnames = parser_1.smi_fname[zed] 
+        mol_fname = f"{Path(smi_fnames).stem}.png" 
+        pdb_path = parser_1.pdb_files[zed]
+        pdb_url = f"/static/storage/pdbs/{Path(pdb_path).name}"
         path = OUTPUT_DIR / mol_fname
         Draw.MolToImage(mol, size=SIZE, options=drawOptions).save(path) 
         items.append({
             "filename": f"/static/storage/imgs/{mol_fname}",
             "label": smi,
+            "pdb_url": pdb_url,
             "category": " ".join(cats), 
         }) 
     return templates.TemplateResponse(
@@ -163,7 +166,8 @@ async def filter_grid_page(request: Request):
             "request": request,
             "items": items, 
             "categories": sorted(categories),
-            "count": len(items), 
+            "count": len(items),
+            "show_viewer": False,
         } 
     ) 
 
