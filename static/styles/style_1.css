@@ -117,10 +117,6 @@ input {
   background-color: #ADA7DC;
 }
 
-.viewer-hidden {
-  display: none;
-}
-
 #model3d_container {
   width: 90%;
   height: 70%;
@@ -262,7 +258,7 @@ button {
 }
 
 #img {
-  opacity: 0.4;
+/*  opacity: 0.4;*/
   max-width: 200px;
   margin: auto;
 }
