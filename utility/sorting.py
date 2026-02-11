@@ -47,34 +47,44 @@ class BytesPDB:
                 "PDB Bytes": [],
                 "PDB Files": [],
                 "PDB Posix": [],
-                "PDB IUPAC": [],
+                "IUPAC": [],
                 "PDB Bytes": [],
-                "None Idxs": []
+                "IDX": []
         }
 
     def bookeeper(self):
         self.fparse = SmileFileParser(str(data_path)) 
         self.fparse.smi_populate()
-        for i, (smiles, pdbs) in enumerate(zip_longest(self.fparse.smiles_list, self.fparse.pdb_files)):
-            self.smi_pdb_dict[i] = {
-                "SMILES": smiles,
-                "PDB Files": str(pdbs),
-                "PDB Posix": [pdbs],
-                "None Idxs": [
-                    i for i, (smiles, pdbs) in enumerate(zip_longest(self.fparse.smiles_list, self.fparse.pdb_files)) if smiles is None or pdbs is None
-                ]
-            }
+        for idx, (smiles, pdbs) in enumerate(zip_longest(self.fparse.smiles_list, self.fparse.pdb_files)):
+            self.smi_pdb_dict["IDX"].append(idx) 
+            self.smi_pdb_dict["SMILES"].append(smiles) 
+            self.smi_pdb_dict["PDB Files"].append(str(pdbs)) 
+            self.smi_pdb_dict["PDB Posix"].append(pdbs) 
+            self.smi_pdb_dict["IUPAC"].append(pdbs.stem) 
+            
+#             self.smi_pdb_dict["PDB Bytes"].append(pdbs.read_bytes()) 
+#             self.smi_pdb_dict[i] = {
+#                 "SMILES": smiles,
+#                 "PDB Files": str(pdbs),
+#                 "PDB Posix": [pdbs],
+#                 "None Idxs": [
+#                     i for i, (smiles, pdbs) in enumerate(zip_longest(self.fparse.smiles_list, self.fparse.pdb_files)) if smiles is None or pdbs is None
+#                 ]
+#             }
 #            self.pdb_posix.append(pdbs) 
 
     def correlator(self): 
         pass 
         
+    
+  
+#|%%--%%| <02x1QgN63r|xeQWkYYp1c>
 
-    def pdbs_to_bytes(self): 
-        pass
 
-#|%%--%%| <02x1QgN63r|7wgqOXTKKq>
+#|%%--%%| <xeQWkYYp1c|9OGAofAeBD>
+
+#|%%--%%| <9OGAofAeBD|7wgqOXTKKq>
 zed = BytesPDB(data_path) 
 zed.bookeeper()
-zed.smi_pdb_dict 
-zed.pdb_posix
+d = zed.smi_pdb_dict
+print(d["IDX"], d["SMILES"])
