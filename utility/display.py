@@ -32,7 +32,7 @@ class FileParser:
                 conv = obab.OBConversion() # conversion object 
                 conv.SetInAndOutFormats('pdb', 'smi')
             except Exception as e:
-                raise ValueError(f'Some shid aint right: {e}') 
+                raise ValueError(f'Something is not right: {e}') 
             mol_pdb = conv.ReadFile(mol_obj, fpath) 
             if mol_pdb:
                 smi_pdb = conv.WriteString(mol_obj).strip() 
