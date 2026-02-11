@@ -5,8 +5,8 @@ db_path = "/mnt/d/academic/tmp/test_1.db"
 # if os.path.exists(db_path):
 #     os.remove(db_path)
 
-conn = sqlite3.connect(db_path) 
-cursor = conn.cursor()
+conn = sqlite3.connect(db_path) # creates a new connection
+cursor = conn.cursor() # creates a new cursor
 cursor.execute("DROP TABLE IF EXISTS test_1") 
 # --- End goal ---
 # cursor.execute(""" 
@@ -35,12 +35,10 @@ CREATE TABLE test_1 (
 )  
 """)
 
-
-
 rows = [
     ("PFOA_linear", None, 700, 890, 940, "[#6](=[#8])(-[#9])-[*]"),
     ("PFOA_branched", None, 650, 810, 750, "[#6](=[#8])(-[#9])-[*]"),
-    ("PFBA", 700, None, 890, 920, "[#6](=[#8])(-[#9])-[*]"), 
+    ("PFBA", None, 700, 890, 920, "[#6](=[#8])(-[#9])-[*]"), 
     ("HFPO-DA", None, 480, 860, 890, "[#6](=[#8])(-[*])-[#8]-[*]"),
     ("PFOS", 3.08, 640, 810, 610, "[#6](-[#6](-[#6](-[#6](-[#6](-[#6](-[#6](-[F])-[F])(-[F])-[F])(-[F])-[F])(-[F])-[F])(-[F])-[F])(-[F])-[F])(-[F])(-[F])-[#6](-[F])(-[F])-[F]"),
     ("PFBS", 3.04, 640, 810, 560, "[#6](-[#6](-[#6](-[#6](-[F])-[F])(-[F])-[F])(-[F])-[F])(-[F])(-[F])-[F]"),
@@ -54,7 +52,8 @@ rows = [
     ("2:2 FTOH", None, 1040, 770, 900, "[#6](-[#6](-[#6](=[#6](-[#1])-[#1])-[F])(-[F])-[F])(-[F])(-[F])-[F])"),
 ]
 
-# Parametrized queries prevent SQL injection 
+# Parametrized queries (?, ... ?) prevent SQL injection; <?> placeholders are used to bind data to the query.  
+# INSERT opens a transaction which needs to be commited before changes are saved in the databsae. 
 cursor.executemany("""
 INSERT OR REPLACE INTO test_1
 (subst_iupac, 
@@ -65,16 +64,19 @@ temp_alpha_clvg,
 init_prod_smarts) 
 VALUES (?, ?, ?, ?, ?, ?) 
 """, rows)
-conn.commit() 
+
+#|%%--%%| <eik9wM6aJk|NGyGXLqhrL>
+conn.commit() # commits the previous transaction
+for row in cursor.fetchall():
+    print(row) 
+
+#|%%--%%| <NGyGXLqhrL|YsYm80WTrg>
 cursor.execute("SELECT * FROM test_1 ORDER BY id") 
-rows_1 = cursor.fetchall() 
-with open("test_1.csv", "w", newline="") as f: 
+rows = cursor.fetchall() 
+with open("PFAS_thermal_data.csv", "w", newline="") as f: 
     write = csv.writer(f) 
     write.writerow([d[0] for d in cursor.description])
-    write.writerows(rows_1)
+    write.writerows(rows)
 
-# for row in cursor.fetchall():
-#     print(row) 
-# conn.close() 
-
-
+#|%%--%%| <YsYm80WTrg|sLBpadKoVI>
+conn.close() 
