@@ -1,1 +1,1 @@
-{"cmd":"","cmd_opts":"","import_complete":1,"terminal":"tmux"}
+{"cmd":"zed = BytesPDB(data_path) \nzed.bookeeper()\nzed.mol_pdb() \nxyz = zed.smi_pdb_dict\nxyz.keys()\nxyz[\"PDB MOLS\"]\n","cmd_opts":" --cell_id=Ct5CBZ9ecE -s","import_complete":1,"terminal":"tmux"}
