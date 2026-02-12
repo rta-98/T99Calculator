@@ -4,6 +4,7 @@ from utility.smiles import *
 from rdkit import Chem
 from pathlib import Path 
 from itertools import zip_longest 
+from collections import Counter 
 #|%%--%%| <sbUXtDskGX|02x1QgN63r>
 # Only works in script file 
 # root_dir = Path(__file__).resolve().parent 
@@ -44,6 +45,7 @@ class BytesPDB:
         self.smi_pdb_dict = {
                 "SMILES": [],
                 "SMARTS": [], 
+                "MOLS": [],
                 "PDB Bytes": [],
                 "PDB Files": [],
                 "PDB Posix": [],
@@ -52,7 +54,8 @@ class BytesPDB:
                 "IDX": []
         }
 
-    def bookeeper(self):
+
+    def bookeeper(self) -> dict:
         self.fparse = SmileFileParser(str(data_path)) 
         self.fparse.smi_populate()
         for idx, (smiles, pdbs) in enumerate(zip_longest(self.fparse.smiles_list, self.fparse.pdb_files)):
@@ -61,7 +64,11 @@ class BytesPDB:
             self.smi_pdb_dict["PDB Files"].append(str(pdbs)) 
             self.smi_pdb_dict["PDB Posix"].append(pdbs) 
             self.smi_pdb_dict["IUPAC"].append(pdbs.stem) 
-            
+            self.smi_pdb_dict["MOLS"].append(Chem.MolFromSmiles(smiles)) 
+      
+        return self.smi_pdb_dict 
+
+
 #             self.smi_pdb_dict["PDB Bytes"].append(pdbs.read_bytes()) 
 #             self.smi_pdb_dict[i] = {
 #                 "SMILES": smiles,
@@ -71,7 +78,8 @@ class BytesPDB:
 #                     i for i, (smiles, pdbs) in enumerate(zip_longest(self.fparse.smiles_list, self.fparse.pdb_files)) if smiles is None or pdbs is None
 #                 ]
 #             }
-#            self.pdb_posix.append(pdbs) 
+#           self.pdb_posix.append(pdbs) 
+
 
     def correlator(self): 
         pass 
@@ -79,12 +87,84 @@ class BytesPDB:
     
   
 #|%%--%%| <02x1QgN63r|xeQWkYYp1c>
+class MoleculeSorter: 
+    def __init__(self, molecule_sorter: BytesPDB): 
+        self.molecule_sorter: BytesPDB = molecule_sorter 
+        self.imported_mol_data: dict = molecule_sorter.bookeeper() 
+        self.iupacs = self.imported_mol_data["IUPAC"]
+        self.mols = self.imported_mol_data["MOLS"]
+        self.mol_sorted_dict: dict = {}
 
+    def analyze_all(self): 
+        for iupac, mol in zip(self.iupacs, self.mols):
+            self.mol_sorted_dict[iupac] = self.analyzer(mol) 
+        return self.mol_sorted_dict 
 
-#|%%--%%| <xeQWkYYp1c|9OGAofAeBD>
+    def analyzer(self, mol):
+        return {
+            "Num. Atoms": self.count_atoms(mol),
+            "Connectivity": self.count_motif(mol),
+        }
 
-#|%%--%%| <9OGAofAeBD|7wgqOXTKKq>
+    def count_atoms(self, mol): 
+        cnt = Counter() 
+        for atom in mol.GetAtoms():
+            Z = atom.GetAtomicNum()
+            if Z > 0: 
+                E = Chem.GetPeriodicTable().GetElementSymbol(Z)
+            else: 
+                E = f"query({atom.GetSmarts()})" 
+            cnt[E] += 1
+        return dict(cnt) 
+
+    def count_motif(self, mol): 
+        # creates a map
+        bond_map = {
+            Chem.BondType.SINGLE: "sp3", 
+            Chem.BondType.DOUBLE: "sp2", 
+            Chem.BondType.TRIPLE: "sp",
+            Chem.BondType.AROMATIC: "aromatic",
+        }
+        bonds_in_mol = {
+            "sp3": [],
+            "sp2": [],
+            "sp" : [],
+            "Aromatic": [],
+            "Unk": []
+        } 
+        for bond_obj in mol.GetBonds():
+            # -- Two Steps: --
+            # 1. bond.GetBondType() returns RDKit enum
+            # 2. .get(...) searchs that enum in the map -- if the bond type isnt in the map then return "other" 
+            bond_obj_type = bond_map.get(bond_obj.GetBondType(), "Unk") 
+            # defining two points
+            atom1 = bond_obj.GetBeginAtom()
+            atom2 = bond_obj.GetEndAtom() 
+            # convert two points to atomic numbers (Z)
+            z1 = atom1.GetAtomicNum() 
+            z2 = atom2.GetAtomicNum() 
+            # convert atomic numbers (Z) to atomic symbols (E) 
+            e1 = Chem.GetPeriodicTable().GetElementSymbol(z1) if z1 > 0 else atom1.GetSmarts() 
+            e2 = Chem.GetPeriodicTable().GetElementSymbol(z2) if z2 > 0 else atom2.GetSmarts() 
+            # append atomic symbols (E) to the bonds_in_mol dict.
+            bonds_in_mol[bond_obj_type].append({
+                "Pair": "{e1}-{e2}",
+                "Mol. Obj Idxs": (bond_obj.GetBeginAtomIdx(), bond_obj.GetEndAtomIdx())
+            }) 
+            
+        result = {} 
+
+        for hybridization, bond_idx in bonds_in_mol.items():
+            if bond_idx: 
+                result[hybridization] = {
+                    "Total Count": len(bond_idx),
+                    "Pair Count": dict(Counter(bond["Pair"] for bond in bond_idx)), 
+                    "More Details": bond_idx,
+                }
+
+        return result 
+
+#|%%--%%| <xeQWkYYp1c|Ct5CBZ9ecE>
 zed = BytesPDB(data_path) 
-zed.bookeeper()
-d = zed.smi_pdb_dict
-print(d["IDX"], d["SMILES"])
+inst = MoleculeSorter(zed)
+
