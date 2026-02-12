@@ -5,6 +5,7 @@ from rdkit import Chem
 from pathlib import Path 
 from itertools import zip_longest 
 from collections import Counter 
+
 base = Path.cwd() 
 data_path = base / "./smi_pdb_data"
 
@@ -102,7 +103,7 @@ class MoleculeSorter:
             e2 = Chem.GetPeriodicTable().GetElementSymbol(z2) if z2 > 0 else atom2.GetSmarts() 
             # append atomic symbols (E) to the bonds_in_mol dict.
             bonds_in_mol[bond_obj_type].append({
-                "Pair": "{e1}-{e2}",
+                "Pair": f"{e1}-{e2}",
                 "Mol. Obj Idxs": (bond_obj.GetBeginAtomIdx(), bond_obj.GetEndAtomIdx())
             }) 
 
@@ -119,4 +120,4 @@ class MoleculeSorter:
 #|%%--%%| <xeQWkYYp1c|Ct5CBZ9ecE>
 zed = BytesPDB(data_path) 
 inst = MoleculeSorter(zed)
-
+inst.analyze_all() 
