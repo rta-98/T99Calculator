@@ -1,1 +1,1 @@
-{"cmd":"zed = BytesPDB(data_path) \nzed.bookeeper()\nd = zed.smi_pdb_dict\nprint(d[\"IDX\"], d[\"SMILES\"])","cmd_opts":" --cell_id=7wgqOXTKKq -s","import_complete":1,"terminal":"tmux"}
+{"cmd":"# mol = Chem.MolFromSmarts(\"[#8]=[#16](-[#8]-[#1])(=[#8])-[#6]\") \n# inst.count_motif(mol) \ninst.analyze_all() ","cmd_opts":" --cell_id=9OGAofAeBD -s","import_complete":1,"terminal":"tmux"}
