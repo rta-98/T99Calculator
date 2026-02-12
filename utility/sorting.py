@@ -157,6 +157,7 @@ class MoleculeSorter:
                 traversed.add(bond)
                 unique_matches.append(bond) 
         torsions = []
+        bonds = []
         for j, k in unique_matches:
             atom_j = imp_mol.GetAtomWithIdx(j)
             atom_k = imp_mol.GetAtomWithIdx(k)
@@ -176,9 +177,15 @@ class MoleculeSorter:
                     "Atoms": tuple(a.GetSymbol() for a in atoms),
                     "Phi": round(phi, 4),
                     "Torsion Indices": (m, j, k, n),
-                    "Torsions Per Bond": num_tbond
                 }) 
-        return {"Number of Rot. Bonds": len(unique_matches), "Torsions Info": torsions}
+            bonds.append({
+                "Central Bond": f"{imp_mol.GetAtomWithIdx(j).GetSymbol()}-{imp_mol.GetAtomWithIdx(k).GetSymbol()}",
+                "Central Bond Idx": (j, k),
+                "Torsions Per Bond": num_tbond, 
+                "Torsions": torsions
+            }) 
+
+        return {"Number of Rot. Bonds": len(unique_matches), "Torsions Info": bonds}
 
 #|%%--%%| <G7fwsrep6J|tMQLbCQO6K>
 zed = BytesPDB(data_path) 
