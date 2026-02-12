@@ -4,7 +4,7 @@ from utility.smiles import *
 from rdkit import Chem
 from rdkit.Chem import rdMolTransforms, rdMolDescriptors
 from pathlib import Path 
-from itertools import zip_longest 
+from itertools import zip_longest, product 
 from collections import Counter 
 #|%%--%%| <xeQWkYYp1c|zBTodN4fRQ>
 base = Path.cwd() 
@@ -139,7 +139,7 @@ class MoleculeSorter:
 
     def count_dihedral(self, pdb_mol=None):
         ROT_BONDS = str('[!$(*#*)&!D1]-&!@[!$(*#*)&!D1]')
-        DUMMY_MOL = self.pdb_mols[2]
+        DUMMY_MOL = self.pdb_mols[0]
         rot_bonds_smarts = Chem.MolFromSmarts(ROT_BONDS)
         try: 
             confs = pdb_mol.GetConformer() 
@@ -149,19 +149,36 @@ class MoleculeSorter:
             confs = DUMMY_MOL.GetConformer() 
             matches = DUMMY_MOL.GetSubstructMatches(rot_bonds_smarts) 
             imp_mol = DUMMY_MOL
+        traversed = set() 
+        unique_matches = []
+        for j, k in matches: 
+            bond = (min(j, k), max(j, k))
+            if bond not in traversed:
+                traversed.add(bond)
+                unique_matches.append(bond) 
         torsions = []
-        for j, k in matches:
+        for j, k in unique_matches:
             atom_j = imp_mol.GetAtomWithIdx(j)
             atom_k = imp_mol.GetAtomWithIdx(k)
-            i = [n.GetIdx() for n in atom_j.GetNeighbors() if n.GetIdx() != k][0]
-            l = [n.GetIdx() for n in atom_k.GetNeighbors() if n.GetIdx() != j][0]
-            phi = rdMolTransforms.GetDihedralDeg(confs, i, j, k, l)
-            atoms = [imp_mol.GetAtomWithIdx(idx) for idx in (i, j, k, l)]
-            torsions.append({
-                "Atoms": tuple(a.GetSymbol() for a in atoms),
-                "Phi": round(phi, 2),
-            }) 
-        return {"Number of Rot. Bonds": len(matches), "Torsions Info": torsions}
+            i = [n.GetIdx() for n in atom_j.GetNeighbors() if n.GetIdx() != k]
+            l = [n.GetIdx() for n in atom_k.GetNeighbors() if n.GetIdx() != j]
+            num_tbond = 0 
+            for m, n in product(i, l):
+                if m != n:
+                    num_tbond += 1 
+            # All possible combinations via cartesian product 
+            for m, n in product(i, l):
+                if m == n: 
+                    continue
+                phi = rdMolTransforms.GetDihedralDeg(confs, m, j, k, n)
+                atoms = [imp_mol.GetAtomWithIdx(idx) for idx in (m, j, k, n)]
+                torsions.append({
+                    "Atoms": tuple(a.GetSymbol() for a in atoms),
+                    "Phi": round(phi, 4),
+                    "Torsion Indices": (m, j, k, n),
+                    "Torsions Per Bond": num_tbond
+                }) 
+        return {"Number of Rot. Bonds": len(unique_matches), "Torsions Info": torsions}
 
 #|%%--%%| <G7fwsrep6J|tMQLbCQO6K>
 zed = BytesPDB(data_path) 
