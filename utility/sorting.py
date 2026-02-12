@@ -5,35 +5,10 @@ from rdkit import Chem
 from pathlib import Path 
 from itertools import zip_longest 
 from collections import Counter 
-#|%%--%%| <sbUXtDskGX|02x1QgN63r>
-# Only works in script file 
-# root_dir = Path(__file__).resolve().parent 
-
-# txt_path = root_dir / "../smi_pdb_data
-
-# --- Imported CLass Ref. ---
-#         self.dir = dir_path
-#         self.smiles_list = []
-#         self.mols_list = []
-#         self.smi_fname = []
-#         self.smiles_dud_list = []
-#         self.pdb_files = []
-
-base = Path.cwd() 
-data_path = base / "./smi_pdb_data"
-
-
-print(data_path)
-
-# for i in data_path.rglob('*.smi'):
-#     print(i)
-
-
 base = Path.cwd() 
 data_path = base / "./smi_pdb_data"
 
 class BytesPDB:
-
     def __init__(self, data_path, fparse: SmileFileParser | None = None): 
         self.data_path = data_path 
         self.fparse = fparse or SmileFileParser(data_path) 
@@ -54,7 +29,6 @@ class BytesPDB:
                 "IDX": []
         }
 
-
     def bookeeper(self) -> dict:
         self.fparse = SmileFileParser(str(data_path)) 
         self.fparse.smi_populate()
@@ -65,28 +39,8 @@ class BytesPDB:
             self.smi_pdb_dict["PDB Posix"].append(pdbs) 
             self.smi_pdb_dict["IUPAC"].append(pdbs.stem) 
             self.smi_pdb_dict["MOLS"].append(Chem.MolFromSmiles(smiles)) 
-      
         return self.smi_pdb_dict 
 
-
-#             self.smi_pdb_dict["PDB Bytes"].append(pdbs.read_bytes()) 
-#             self.smi_pdb_dict[i] = {
-#                 "SMILES": smiles,
-#                 "PDB Files": str(pdbs),
-#                 "PDB Posix": [pdbs],
-#                 "None Idxs": [
-#                     i for i, (smiles, pdbs) in enumerate(zip_longest(self.fparse.smiles_list, self.fparse.pdb_files)) if smiles is None or pdbs is None
-#                 ]
-#             }
-#           self.pdb_posix.append(pdbs) 
-
-
-    def correlator(self): 
-        pass 
-        
-    
-  
-#|%%--%%| <02x1QgN63r|xeQWkYYp1c>
 class MoleculeSorter: 
     def __init__(self, molecule_sorter: BytesPDB): 
         self.molecule_sorter: BytesPDB = molecule_sorter 
@@ -151,7 +105,7 @@ class MoleculeSorter:
                 "Pair": "{e1}-{e2}",
                 "Mol. Obj Idxs": (bond_obj.GetBeginAtomIdx(), bond_obj.GetEndAtomIdx())
             }) 
-            
+
         result = {} 
 
         for hybridization, bond_idx in bonds_in_mol.items():
@@ -161,9 +115,7 @@ class MoleculeSorter:
                     "Pair Count": dict(Counter(bond["Pair"] for bond in bond_idx)), 
                     "More Details": bond_idx,
                 }
-
         return result 
-
 #|%%--%%| <xeQWkYYp1c|Ct5CBZ9ecE>
 zed = BytesPDB(data_path) 
 inst = MoleculeSorter(zed)
