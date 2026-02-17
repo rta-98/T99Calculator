@@ -1,1 +1,1 @@
-{"cmd":"function = FileParser()\nprint(function.pdb_to_smi(str('/data') ) ","cmd_opts":"","import_complete":1,"terminal":"tmux"}
+{"cmd":"zed = BytesPDB(data_path) \ninst = MoleculeSorter(zed)\ninst.analyze_all() \ninst.mol_sorted_dict","cmd_opts":" --cell_id=Tk4Rq9bmeg -s","import_complete":1,"terminal":"tmux"}
