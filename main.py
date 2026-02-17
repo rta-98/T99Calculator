@@ -135,7 +135,7 @@ async def grid_page(request: Request):
 
 @app.get("/filter-grid", response_class=HTMLResponse) 
 async def filter_grid_page(request: Request): 
-    data_dir = Path('/home/tau/projects/sandbox/tutorials/git_dir/Jinja2/data') # name the path 
+    data_dir = Path('./data_tmp') # name the path 
     parser_1 = SmileFileParser(str(data_dir)) # assign   
     parser_1.smi_populate() # instance of FileParser created  
     matcher = SubstMatch() 
