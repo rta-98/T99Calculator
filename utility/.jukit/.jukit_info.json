@@ -1,1 +1,1 @@
-{"cmd":"zed = BytesPDB(data_path) \ninst = MoleculeSorter(zed)\ninst.analyze_all() \ninst.mol_sorted_dict","cmd_opts":" --cell_id=Tk4Rq9bmeg -s","import_complete":1,"terminal":"tmux"}
+{"cmd":"data_path \ninst = BytesPDB(abbrv=abbrv_col, smiles=smiles_col)\ntmp = MoleculeSorter(inst)\ntmp.analyze_all() ","cmd_opts":" --cell_id=EmirmaL8Et -s","import_complete":1,"terminal":"tmux"}
