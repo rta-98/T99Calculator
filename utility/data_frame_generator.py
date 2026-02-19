@@ -1,4 +1,5 @@
 from utility.sorting import * 
+from utility.smiles import * 
 from openbabel import openbabel as ob
 from pathlib import Path
 import pandas as pd
@@ -108,10 +109,15 @@ for idx, i in enumerate(files):
         results["unk"].append(tuple([idx,i])) 
 print(len(results["g16"]))
 print(len(files))
-#|%%--%%| <QVKUWv3fEd|ZhIBoaDdkH>
-class LogConverter:
-    def __init__(self, logs_dir: Optional[list] = None):
-        self.logs_dir = logs_dir
-        self.pdbs
-
-
+#|%%--%%| <QVKUWv3fEd|1GSm9aLx4H>
+inst1 = SmileFileParser(logs_dir)
+inst1.log_parse() 
+#|%%--%%| <1GSm9aLx4H|ZhIBoaDdkH>
+#class LogConverter:
+#    def __init__(self, logs_dir: Optional[list] = None):
+#        self.logs_dir = logs_dir
+#        self.log_files  = log_dir.stem() 
+#        self.log_sdfs = []
+#        self.sdf_mols = [] 
+#        self.
+#

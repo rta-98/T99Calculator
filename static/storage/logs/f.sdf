@@ -1,0 +1,13 @@
+/home/tau/projects/t99_calc/v1/static/storage/logs/f.log
+ OpenBabel02182619163D
+Gaussian applications/g16/g16/g16 # freq wb97xd/6-311+g(2d) geom=connectivity in
+  1  0  0  0  0  0  0  0  0  0999 V2000
+    0.0000    0.0000    0.0000 F   0  0  0  0  0 15  0  0  0  0  0  0
+M  END
+>  <program>
+Gaussian 16, Revision A.03
+
+>  <basis>
+6-311+G(2d) (5D, 7F)
+
+$$$$
