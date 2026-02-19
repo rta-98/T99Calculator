@@ -1,0 +1,17 @@
+/home/tau/projects/t99_calc/v1/static/storage/logs/cf2.log
+ OpenBabel02182619163D
+Gaussian applications/g16/g16/g16 # opt freq wb97xd/6-311+g(2d,2p) geom=connecti
+  3  2  0  0  0  0  0  0  0  0999 V2000
+   -0.0000   -0.0000    0.5946 C   0  0  0  0  0  2  0  0  0  0  0  0
+    0.0000   -1.0273   -0.1982 F   0  0  0  0  0  0  0  0  0  0  0  0
+    0.0000    1.0273   -0.1982 F   0  0  0  0  0  0  0  0  0  0  0  0
+  2  1  1  0  0  0  0
+  3  1  1  0  0  0  0
+M  END
+>  <program>
+Gaussian 16, Revision A.03
+
+>  <basis>
+6-311+G(2d,2p) (5D, 7F)
+
+$$$$

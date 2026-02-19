@@ -1,0 +1,17 @@
+/home/tau/projects/t99_calc/v1/static/storage/logs/cfo.log
+ OpenBabel02182619163D
+Gaussian applications/g16/g16/g16 # opt=tight uwb97xd/6-311+g(2d,2p) geom=connec
+  3  2  0  0  0  0  0  0  0  0999 V2000
+   -1.0105   -0.4369    0.0000 F   0  0  0  0  0  0  0  0  0  0  0  0
+    0.0000    0.4204    0.0000 C   0  0  0  0  0  3  0  0  0  0  0  0
+    1.1369    0.1762    0.0000 O   0  0  0  0  0  0  0  0  0  0  0  0
+  1  2  1  0  0  0  0
+  2  3  2  0  0  0  0
+M  END
+>  <program>
+Gaussian 16, Revision A.03
+
+>  <basis>
+6-311+G(2d,2p) (5D, 7F)
+
+$$$$
