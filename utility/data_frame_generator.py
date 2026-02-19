@@ -24,7 +24,6 @@ import csv
 #df.to_sql("pfas", conn, if_exists="replace", index=False) 
 #conn.close()
 #|%%--%%| <FHoHj5Arg7|TOY63qQAWN>
-data = get_pfas_data() 
 def flatten(obj, parent_key="", sep="__"):
     items = {} 
     if isinstance(obj, dict):
@@ -38,9 +37,10 @@ def flatten(obj, parent_key="", sep="__"):
     else: 
         items[parent_key] = obj
     return items
+
 #|%%--%%| <TOY63qQAWN|8tJXQAAfnQ>
 rows = [] 
-for mol_id, payload in data.items():
+for mol_id, payload in dict_inst.items():
     row = {"Molecule": mol_id, **flatten(payload, sep=" ")}
     rows.append(row) 
 
@@ -69,7 +69,7 @@ df = df.rename(columns=canon_col)
 df = df.rename(columns=rename_torsion_cols)
 df = df.rename(columns=rename_motif_cols) 
 df = df.groupby(df.columns, axis=1, sort=False).sum() 
-df.to_csv("PFAS_data.csv", index=False) 
+df.to_csv("PFAS_data_233.csv", index=False) 
 #|%%--%%| <5sgAiiqsae|mD754zr3PI>
 # Reading in new csv file from Tony
 
@@ -94,10 +94,6 @@ def log_to_pdb(path: Optional[Path] = None, fmt: Optional[str] = None) -> Path:
 
 # log_to_pdb
 #|%%--%%| <5ncx47evrh|QVKUWv3fEd>
-logs_dir = Path("/home/tau/projects/t99_calc/v1/static/storage/logs") 
-files = list(logs_dir.glob("*.log")) 
-# files
-
 results = {"orca": [], "g16": [], "unk": []} 
 for idx, i in enumerate(files): 
     head = i.read_text(errors="ignore", encoding="utf-8")[:20000]
@@ -109,7 +105,11 @@ for idx, i in enumerate(files):
         results["unk"].append(tuple([idx,i])) 
 print(len(results["g16"]))
 print(len(files))
-#|%%--%%| <QVKUWv3fEd|1GSm9aLx4H>
+#|%%--%%| <QVKUWv3fEd|KR0AMgJf4y>
+logs_dir = Path("/home/tau/projects/t99_calc/v1/static/storage/logs") 
+files = list(logs_dir.glob("*.log")) 
+files 
+#|%%--%%| <KR0AMgJf4y|1GSm9aLx4H>
 inst1 = SmileFileParser(logs_dir)
 inst1.log_parse() 
 #|%%--%%| <1GSm9aLx4H|ZhIBoaDdkH>
@@ -121,3 +121,31 @@ inst1.log_parse()
 #        self.sdf_mols = [] 
 #        self.
 #
+#|%%--%%| <ZhIBoaDdkH|agsbb5VZiu>
+logs_dir = Path("./static/storage/logs") 
+files = list(logs_dir.glob("*.log")) 
+log_parser = SmileFileParser(logs_dir)
+temp = log_parser.log_parse()
+#|%%--%%| <agsbb5VZiu|3059aPYzyj>
+temp
+#|%%--%%| <3059aPYzyj|rmLbzznwNZ>
+mol_col = temp["mol"]
+log_col = temp[".log path"] 
+log_col
+#|%%--%%| <rmLbzznwNZ|tMQLbCQO6K>
+zed = BytesPDB() 
+inst = MoleculeSorter(zed)
+inst.pdb_mols
+#|%%--%%| <tMQLbCQO6K|Tk4Rq9bmeg>
+base = Path.cwd() 
+data_path = base / "./smi_pdb_data"
+data_path
+#|%%--%%| <Tk4Rq9bmeg|LhPKZvIDLK>
+zed = BytesPDB(data_path=data_path, log_abbrvs=log_col, log_mols=mol_col) 
+inst = MoleculeSorter(zed)
+inst.analyze_all() 
+dict_inst = inst.mol_sorted_dict
+dict_inst
+
+
+#|%%--%%| <LhPKZvIDLK|3zYSIqsYe5>
