@@ -1,6 +1,8 @@
 from utility.services import * 
 from utility.display import *
 from utility.smiles import * 
+from typing import Optional, List 
+from dataclasses import dataclass 
 from rdkit import Chem
 from rdkit.Chem import rdMolTransforms, rdMolDescriptors
 from pathlib import Path 
@@ -11,9 +13,15 @@ base = Path.cwd()
 data_path = base / "./smi_pdb_data"
 
 class BytesPDB:
-    def __init__(self, data_path, fparse: SmileFileParser | None = None): 
-        self.data_path = data_path 
+    def __init__(self, 
+                 data_path: Optional[str] = None, 
+                 abbrv: Optional[list[str]] = None,
+                 smiles: Optional[list[str]] = None, 
+                 fparse: SmileFileParser | None = None): 
+        self.data_path = data_path
         self.fparse = fparse or SmileFileParser(data_path) 
+        self.abbrv = [] if abbrv is None else list(abbrv) 
+        self.smiles = [] if abbrv is None else list(smiles) 
         self.pdb_posix = []
         self.pdb_bytes = []
         self.pdb_IUPAC = []
@@ -27,7 +35,7 @@ class BytesPDB:
                 "PDB Files": [],
                 "PDB MOLS": [],
                 "PDB Posix": [],
-                "IUPAC": [],
+                "Abbrv. | IUPAC": [],
                 "PDB Bytes": [],
                 "IDX": []
         }
@@ -41,21 +49,30 @@ class BytesPDB:
 
     
     def bookeeper(self) -> dict:
-        self.fparse = SmileFileParser(str(data_path)) 
+        self.fparse = SmileFileParser(str(self.data_path)) 
         self.fparse.smi_populate()
+        print(type(self.abbrv), len(self.abbrv), type(self.smiles),len(self.smiles)) 
         for idx, (smiles, pdbs) in enumerate(zip_longest(self.fparse.smiles_list, self.fparse.pdb_files)):
             try: 
                 mol_pdb = Chem.MolFromPDBFile(str(pdbs))
             except OSError: 
                 mol_pdb = None 
+                mol_pdb = Chem.MolFromSmiles(smiles)
             self.smi_pdb_dict["PDB MOLS"].append(mol_pdb)  
             self.smi_pdb_dict["IDX"].append(idx) 
             self.smi_pdb_dict["SMILES"].append(smiles) 
             self.smi_pdb_dict["PDB Files"].append(str(pdbs)) 
             self.smi_pdb_dict["PDB Posix"].append(pdbs) 
-            self.smi_pdb_dict["IUPAC"].append(pdbs.stem) 
-            self.smi_pdb_dict["MOLS"].append(Chem.MolFromSmiles(smiles)) 
-
+            self.smi_pdb_dict["Abbrv. | IUPAC"].append(pdbs.stem) 
+            self.smi_pdb_dict["MOLS"].append(Chem.MolFromSmiles(InternalValid.validator(smiles))) 
+        for idx, (abbrv, smiles) in enumerate(zip_longest(self.abbrv, self.smiles)): 
+            try: 
+                mol_nasa7 = Chem.MolFromSmiles(smiles) 
+            except Exception: 
+                mol_nasa7 = None 
+            self.smi_pdb_dict["Abbrv. | IUPAC"].append(abbrv) 
+            self.smi_pdb_dict["SMILES"].append(smiles)
+            self.smi_pdb_dict["MOLS"].append(mol_nasa7) 
         return self.smi_pdb_dict 
 
 #|%%--%%| <zBTodN4fRQ|G7fwsrep6J>
@@ -63,21 +80,22 @@ class MoleculeSorter:
     def __init__(self, molecule_sorter: BytesPDB): 
         self.molecule_sorter: BytesPDB = molecule_sorter 
         self.imported_mol_data: dict = molecule_sorter.bookeeper() 
-        self.iupacs = self.imported_mol_data["IUPAC"]
+        self.iupacs = self.imported_mol_data["Abbrv. | IUPAC"]
         self.mols = self.imported_mol_data["MOLS"]
         self.pdb_mols = self.imported_mol_data["PDB MOLS"]
         self.mol_sorted_dict: dict = {}
 #
     def analyze_all(self): 
-       for iupac, mol, pdb_mol in zip(self.iupacs, self.mols, self.pdb_mols):
+       for i, (iupac, mol) in enumerate(zip_longest(self.iupacs, self.mols)):
+           pdb_mol = self.pdb_mols[i] if i < len(self.pdb_mols) else None 
            self.mol_sorted_dict[iupac] = self.analyzer(mol, pdb_mol) 
        return self.mol_sorted_dict 
 
     def analyzer(self, mol, pdb_mol):
         return {
             "Num. Atoms": self.count_atoms(mol),
-            "Connectivity": self.count_motif(mol),
-            "Torsions": self.count_dihedral(pdb_mol),
+            "Motif": self.count_motif(mol),
+            "Torsions": None if pdb_mol is None else self.count_dihedral(pdb_mol),
         }
 
     def count_atoms(self, mol): 
@@ -133,7 +151,7 @@ class MoleculeSorter:
                 result[hybridization] = {
                     "Total Count": len(bond_idx),
                     "Pair Count": dict(Counter(bond["Pair"] for bond in bond_idx)), 
-                    "More Details": bond_idx,
+#                    "More Details": bond_idx,
                 }
         return result 
 
@@ -158,34 +176,42 @@ class MoleculeSorter:
                 unique_matches.append(bond) 
         torsions = []
         bonds = []
+        torsion_counts = {} 
         for j, k in unique_matches:
             atom_j = imp_mol.GetAtomWithIdx(j)
             atom_k = imp_mol.GetAtomWithIdx(k)
-            i = [n.GetIdx() for n in atom_j.GetNeighbors() if n.GetIdx() != k]
-            l = [n.GetIdx() for n in atom_k.GetNeighbors() if n.GetIdx() != j]
-            num_tbond = 0 
-            for m, n in product(i, l):
-                if m != n:
+            i = [n.GetIdx() for n in atom_j.GetNeighbors() if n.GetIdx() != k] # Neighbor atom that is not k = left side
+            l = [n.GetIdx() for n in atom_k.GetNeighbors() if n.GetIdx() != j] # Neighbor atom that is not j = right side 
+            num_tbond = 0 # counter for num torsions around central bond
+            for m, n in product(i, l): # iterates all neighbor pairs across the bond.
+                if m != n: # skips identical indices 
                     num_tbond += 1 
             # All possible combinations via cartesian product 
             for m, n in product(i, l):
-                if m == n: 
+                if m == n: # skips degenerate pairs
                     continue
-                phi = rdMolTransforms.GetDihedralDeg(confs, m, j, k, n)
+                phi = rdMolTransforms.GetDihedralDeg(confs, m, j, k, n) 
                 atoms = [imp_mol.GetAtomWithIdx(idx) for idx in (m, j, k, n)]
+                atom_symbols = tuple(a.GetSymbol() for a in atoms) 
                 torsions.append({
                     "Atoms": tuple(a.GetSymbol() for a in atoms),
-                    "Phi": round(phi, 4),
+#                    "Phi": round(phi, 4),
                     "Torsion Indices": (m, j, k, n),
                 }) 
+                label = "-".join(atom_symbols) 
+                torsion_counts[label] = torsion_counts.get(label, 0) + 1 
             bonds.append({
                 "Central Bond": f"{imp_mol.GetAtomWithIdx(j).GetSymbol()}-{imp_mol.GetAtomWithIdx(k).GetSymbol()}",
-                "Central Bond Idx": (j, k),
+#                "Central Bond Idx": (j, k),
                 "Torsions Per Bond": num_tbond, 
-                "Torsions": torsions
+#                "Torsions": torsions
             }) 
 
-        return {"Number of Rot. Bonds": len(unique_matches), "Torsions Info": bonds}
+        return {
+                "Number of Rot. Bonds": len(unique_matches), 
+                "Torsion Counts": torsion_counts, 
+#                "Torsions Info": bonds,
+        }
 
 #|%%--%%| <G7fwsrep6J|tMQLbCQO6K>
 zed = BytesPDB(data_path) 
@@ -195,16 +221,9 @@ inst.pdb_mols
 zed = BytesPDB(data_path) 
 inst = MoleculeSorter(zed)
 inst.analyze_all() 
-inst.mol_sorted_dict
-#|%%--%%| <Tk4Rq9bmeg|Ct5CBZ9ecE>
-zed = BytesPDB(data_path) 
-zed.bookeeper()
-zed.mol_pdb()
-inst.analyze_all()
-#xyz = zed.smi_pdb_dict
-#xyz.keys()
-#xyz["PDB MOLS"]
-
-
-#                "Torsion Idxs": (i,
-#            print(f"Rot. Bond: ({j}-{k}), Torsion: ({i},{j},{k},{l}): {angle:.2f}°") 
+dict_inst = inst.mol_sorted_dict
+dict_inst
+#|%%--%%| <Tk4Rq9bmeg|3zYSIqsYe5>
+def get_pfas_data() -> dict:
+    pfas_data_dict = dict_inst 
+    return pfas_data_dict 
