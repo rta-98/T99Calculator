@@ -1,5 +1,5 @@
-/home/tau/projects/t99_calc/v1/static/storage/logs/ethane_2000.log
- OpenBabel02182619163D
+static/storage/logs/ethane_2000.log
+ OpenBabel02182622403D
 Gaussian Volumes/gcode/g16/g16/g16 # freq=(readfc) temperature=1 geom=allcheck
   8  7  0  0  0  0  0  0  0  0999 V2000
    -0.5999   -0.0011    0.0001 C   0  0  0  0  0  0  0  0  0  0  0  0

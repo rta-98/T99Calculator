@@ -1,5 +1,5 @@
-/home/tau/projects/t99_calc/v1/static/storage/logs/n_octane_twisted.log
- OpenBabel02182619163D
+static/storage/logs/n_octane_twisted.log
+ OpenBabel02182622403D
 Gaussian 16 # opt wb97xd/6-311+g(2d) geom=connectivity freq
  26 25  0  0  0  0  0  0  0  0999 V2000
    -4.5589   -0.1600    0.2500 C   0  0  0  0  0  0  0  0  0  0  0  0

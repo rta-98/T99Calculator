@@ -5,23 +5,28 @@ from typing import Optional, List
 from dataclasses import dataclass 
 from rdkit import Chem
 from rdkit.Chem import rdMolTransforms, rdMolDescriptors
+from rdkit.Chem.rdchem import Mol
 from pathlib import Path 
 from itertools import zip_longest, product 
 from collections import Counter 
-#|%%--%%| <xeQWkYYp1c|zBTodN4fRQ>
+
 base = Path.cwd() 
 data_path = base / "./smi_pdb_data"
 
 class BytesPDB:
     def __init__(self, 
                  data_path: Optional[str] = None, 
-                 abbrv: Optional[list[str]] = None,
+                 abbrv: Optional[list[str]] = None, # .csv mol abbreviations 
+                 log_abbrvs: Optional[list[str]] = None, 
                  smiles: Optional[list[str]] = None, 
+                 log_mols: Optional[list[Mol]] = None,
                  fparse: SmileFileParser | None = None): 
         self.data_path = data_path
         self.fparse = fparse or SmileFileParser(data_path) 
         self.abbrv = [] if abbrv is None else list(abbrv) 
-        self.smiles = [] if abbrv is None else list(smiles) 
+        self.log_abbrvs = [] if log_abbrvs is None else list(log_abbrvs) 
+        self.smiles = [] if smiles is None else list(smiles) 
+        self.log_mols = [] if log_mols is None else list(log_mols) 
         self.pdb_posix = []
         self.pdb_bytes = []
         self.pdb_IUPAC = []
@@ -51,7 +56,7 @@ class BytesPDB:
     def bookeeper(self) -> dict:
         self.fparse = SmileFileParser(str(self.data_path)) 
         self.fparse.smi_populate()
-        print(type(self.abbrv), len(self.abbrv), type(self.smiles),len(self.smiles)) 
+#        print(type(self.abbrv), len(self.abbrv), type(self.smiles),len(self.smiles)) 
         for idx, (smiles, pdbs) in enumerate(zip_longest(self.fparse.smiles_list, self.fparse.pdb_files)):
             try: 
                 mol_pdb = Chem.MolFromPDBFile(str(pdbs))
@@ -65,14 +70,16 @@ class BytesPDB:
             self.smi_pdb_dict["PDB Posix"].append(pdbs) 
             self.smi_pdb_dict["Abbrv. | IUPAC"].append(pdbs.stem) 
             self.smi_pdb_dict["MOLS"].append(Chem.MolFromSmiles(InternalValid.validator(smiles))) 
-        for idx, (abbrv, smiles) in enumerate(zip_longest(self.abbrv, self.smiles)): 
-            try: 
-                mol_nasa7 = Chem.MolFromSmiles(smiles) 
-            except Exception: 
-                mol_nasa7 = None 
-            self.smi_pdb_dict["Abbrv. | IUPAC"].append(abbrv) 
-            self.smi_pdb_dict["SMILES"].append(smiles)
-            self.smi_pdb_dict["MOLS"].append(mol_nasa7) 
+        for idx, (log_abbrv, log_mol) in enumerate(zip_longest(self.log_abbrvs, self.log_mols)): 
+#            try: 
+#                mol_nasa7 = Chem.MolFromSmiles(smiles) 
+#            except Exception: 
+#                mol_nasa7 = None 
+            self.smi_pdb_dict["Abbrv. | IUPAC"].append(log_abbrv) 
+            self.smi_pdb_dict["SMILES"].append(Chem.MolToSmiles(log_mol))
+            self.smi_pdb_dict["MOLS"].append(log_mol) 
+#        for idx, (log_abbrv, log_mols) in enumerate(zip_longest(self.log_mols, self.log_abbrvs)):
+#            self.smi_pdb_dict["Abbrv. 
         return self.smi_pdb_dict 
 
 #|%%--%%| <zBTodN4fRQ|G7fwsrep6J>
@@ -95,7 +102,8 @@ class MoleculeSorter:
         return {
             "Num. Atoms": self.count_atoms(mol),
             "Motif": self.count_motif(mol),
-            "Torsions": None if pdb_mol is None else self.count_dihedral(pdb_mol),
+            "Torsions": self.count_dihedral(mol) if pdb_mol is None else self.count_dihedral(pdb_mol),
+#            "Torsions": self.count_dihedral(mol)
         }
 
     def count_atoms(self, mol): 
@@ -157,16 +165,18 @@ class MoleculeSorter:
 
     def count_dihedral(self, pdb_mol=None):
         ROT_BONDS = str('[!$(*#*)&!D1]-&!@[!$(*#*)&!D1]')
-        DUMMY_MOL = self.pdb_mols[0]
         rot_bonds_smarts = Chem.MolFromSmarts(ROT_BONDS)
+        dud_list = []
         try: 
             confs = pdb_mol.GetConformer() 
             matches = pdb_mol.GetSubstructMatches(rot_bonds_smarts)
             imp_mol = pdb_mol
-        except Exception: 
-            confs = DUMMY_MOL.GetConformer() 
-            matches = DUMMY_MOL.GetSubstructMatches(rot_bonds_smarts) 
-            imp_mol = DUMMY_MOL
+        except ValueError: 
+            dud_list.append(pdb_mol)
+            return 
+#            confs = DUMMY_MOL.GetConformer() 
+#            matches = DUMMY_MOL.GetSubstructMatches(rot_bonds_smarts) 
+#            imp_mol = DUMMY_MOL
         traversed = set() 
         unique_matches = []
         for j, k in matches: 
@@ -213,17 +223,7 @@ class MoleculeSorter:
 #                "Torsions Info": bonds,
         }
 
-#|%%--%%| <G7fwsrep6J|tMQLbCQO6K>
-zed = BytesPDB(data_path) 
-inst = MoleculeSorter(zed)
-inst.pdb_mols
-#|%%--%%| <tMQLbCQO6K|Tk4Rq9bmeg>
-zed = BytesPDB(data_path) 
-inst = MoleculeSorter(zed)
-inst.analyze_all() 
-dict_inst = inst.mol_sorted_dict
-dict_inst
-#|%%--%%| <Tk4Rq9bmeg|3zYSIqsYe5>
-def get_pfas_data() -> dict:
-    pfas_data_dict = dict_inst 
-    return pfas_data_dict 
+
+
+
+

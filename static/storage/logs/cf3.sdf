@@ -1,5 +1,5 @@
-/home/tau/projects/t99_calc/v1/static/storage/logs/cf3.log
- OpenBabel02182619173D
+static/storage/logs/cf3.log
+ OpenBabel02182622403D
 Gaussian applications/g16/g16/g16 # opt freq uwb97xd/6-311+g(2d,2p) geom=connect
   4  3  0  0  0  0  0  0  0  0999 V2000
    -0.5958   -1.1031   -0.0719 F   0  0  0  0  0  0  0  0  0  0  0  0

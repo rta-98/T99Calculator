@@ -1,5 +1,5 @@
-/home/tau/projects/t99_calc/v1/static/storage/logs/frd_903_carbF.log
- OpenBabel02182619163D
+static/storage/logs/frd_903_carbF.log
+ OpenBabel02182622403D
 Gaussian 16 # opt wb97xd/6-311+g(2d) geom=connectivity freq
  20 19  0  0  1  0  0  0  0  0999 V2000
    -3.2387    0.0486   -0.0828 C   0  0  0  0  0  0  0  0  0  0  0  0

@@ -1,1 +1,1 @@
-{"cmd":"inst1 = SmileFileParser(logs_dir)\ninst1.log_parse() ","cmd_opts":" --cell_id=1GSm9aLx4H -s","import_complete":1,"terminal":"tmux"}
+{"cmd":"df = pd.DataFrame(rows).fillna(0)\ncols = [\"Molecule\"] + sorted(c for c in df.columns if c != \"Molecule\")\ndf = df[cols]\ndf = df.rename(columns=canon_col) \ndf = df.rename(columns=rename_torsion_cols)\ndf = df.rename(columns=rename_motif_cols) \ndf = df.groupby(df.columns, axis=1, sort=False).sum() \ndf.to_csv(\"PFAS_data_233.csv\", index=False) ","cmd_opts":" --cell_id=5sgAiiqsae -s","import_complete":1,"terminal":"tmux"}

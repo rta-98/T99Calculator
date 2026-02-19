@@ -1,5 +1,5 @@
-/home/tau/projects/t99_calc/v1/static/storage/logs/allyl.log
- OpenBabel02182619163D
+static/storage/logs/allyl.log
+ OpenBabel02182622403D
 Gaussian applications/g16/g16/g16 # opt freq uwb97xd/6-311+g(2d,2p) geom=connect
   8  7  0  0  0  0  0  0  0  0999 V2000
    -1.2299   -0.1553    0.0479 C   0  0  0  0  0  0  0  0  0  0  0  0

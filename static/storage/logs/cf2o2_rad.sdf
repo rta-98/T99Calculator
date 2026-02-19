@@ -1,5 +1,5 @@
-/home/tau/projects/t99_calc/v1/static/storage/logs/cf2o2_rad.log
- OpenBabel02182619163D
+static/storage/logs/cf2o2_rad.log
+ OpenBabel02182622403D
 Gaussian applications/g16/g16/g16 #p scf=xqc uwb97xd/6-311+g(2d) freq=anharm
   5  4  0  0  0  0  0  0  0  0999 V2000
     0.0000    0.3830    0.0000 C   0  0  0  0  0  3  0  0  0  0  0  0

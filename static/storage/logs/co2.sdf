@@ -1,5 +1,5 @@
-/home/tau/projects/t99_calc/v1/static/storage/logs/co2.log
- OpenBabel02182619163D
+static/storage/logs/co2.log
+ OpenBabel02182622403D
 Gaussian applications/g16/g16/g16 # freq wb97xd/6-311+g(2d,2p) geom=connectivity
   3  2  0  0  0  0  0  0  0  0999 V2000
     0.0000    0.0020   -0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
