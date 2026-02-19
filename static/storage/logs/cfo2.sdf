@@ -1,5 +1,5 @@
-/home/tau/projects/t99_calc/v1/static/storage/logs/cfo2.log
- OpenBabel02182619163D
+static/storage/logs/cfo2.log
+ OpenBabel02182622403D
 Gaussian 16 # opt freq wb97xd/6-311+g(2d,2p) geom=connectivity scf=xqc
   4  3  0  0  0  0  0  0  0  0999 V2000
    -0.6820    1.0591    0.0000 O   0  0  0  0  0  0  0  0  0  0  0  0

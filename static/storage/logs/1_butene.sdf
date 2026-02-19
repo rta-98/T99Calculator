@@ -1,5 +1,5 @@
-/home/tau/projects/t99_calc/v1/static/storage/logs/1_butene.log
- OpenBabel02182619163D
+static/storage/logs/1_butene.log
+ OpenBabel02182622403D
 Gaussian applications/g16/g16/g16 # opt freq uwb97xd/6-311+g(2d,2p) geom=connect
  12 11  0  0  0  0  0  0  0  0999 V2000
    -1.2217   -0.4472   -0.0283 C   0  0  0  0  0  0  0  0  0  0  0  0

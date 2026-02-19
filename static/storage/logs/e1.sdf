@@ -1,5 +1,5 @@
-/home/tau/projects/t99_calc/v1/static/storage/logs/e1.log
- OpenBabel02182619163D
+static/storage/logs/e1.log
+ OpenBabel02182622403D
 Gaussian 16 # opt freq wb97xd/6-311+g(2d) geom=connectivity
  18 17  0  0  1  0  0  0  0  0999 V2000
     2.7757   -0.1136    0.3053 C   0  0  0  0  0  0  0  0  0  0  0  0

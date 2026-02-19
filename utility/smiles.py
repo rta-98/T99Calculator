@@ -37,7 +37,6 @@ class SmileFileParser(InternalValid):
 
         return self.log_files_mols_dict 
 
-#|%%--%%| <tvdFZzanew|fQAtR2jmMw>
     def smi_populate(self):
         for smi_file in Path(self.dir).rglob('*.smi'): 
             pdb_file = smi_file.with_suffix('.pdb') 

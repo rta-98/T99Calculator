@@ -1,5 +1,5 @@
-/home/tau/projects/t99_calc/v1/static/storage/logs/cpropane_intts_prod.log
- OpenBabel02182619163D
+static/storage/logs/cpropane_intts_prod.log
+ OpenBabel02182622403D
 Gaussian 16 # opt uwb97xd/6-311+g(2d) guess=read geom=connectivity scf=xqc freq
   9  8  0  0  0  0  0  0  0  0999 V2000
    -1.2610   -0.1132    0.0000 C   0  0  0  0  0  3  0  0  0  0  0  0
