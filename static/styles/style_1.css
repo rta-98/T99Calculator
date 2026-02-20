@@ -301,6 +301,7 @@ button {
 
 .all-pngs .filterBtn.show {
   display: inline-block;
+  margin: auto;
   width: 90%;
   display: block;
   object-fit: contain;
