@@ -1,1 +1,1 @@
-{"cmd":"cols = []\nwith open(f\"{smi_data_file.parent / smi_data_file.stem}.txt\") as f:\n    for line in f: \n        parts = line.split() \n        cols.append((parts[0], parts[1], parts[2])) \n\ncols ","cmd_opts":" --cell_id=BOvmqhbdzQ -s","import_complete":1,"terminal":"tmux"}
+{"cmd":"# Parsing nasa7 parameter csv file for smiles\ncsvdf = pd.read_csv(csv_data_file) ","cmd_opts":" --cell_id=HDUs1aDqWw -s","import_complete":1,"terminal":"tmux"}
