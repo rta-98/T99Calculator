@@ -1,1 +1,1 @@
-{"cmd":"# Parsing nasa7 parameter csv file for smiles\ncsvdf = pd.read_csv(csv_data_file) ","cmd_opts":" --cell_id=HDUs1aDqWw -s","import_complete":1,"terminal":"tmux"}
+{"cmd":"pfas_df = df_generator(sort=False)\ncsv_generator(pfas_df, fname='nasa7_total') \ncsv_generator(logfdf, fname='imported_logs')\ncsv_generator(smidf, fname='imported_smi_nlog_flog')\nlen(pfas_df)","cmd_opts":" --cell_id=yzWnLVRcEJ -s","import_complete":1,"terminal":"tmux"}
