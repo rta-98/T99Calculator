@@ -129,6 +129,10 @@ def csv_generator(df, fname: str, index: Optional[bool]=False):
     csvdf = df.to_csv(filename, index=index) # include index positional argument for to_csv() 
     return csvdf
 
+def txt_generator(arr: list, fname: Optional[str]=None):
+    with open("missing_log.txt", "w") as txtf: 
+        for elm in arr: 
+            txtf.write(f"{elm}\n") 
 
 #|%%--%%| <DjojCOhCLc|yzWnLVRcEJ>
 pfas_df = df_generator(sort=False)
@@ -138,19 +142,80 @@ csv_generator(smidf, fname='imported_smi_nlog_flog')
 len(pfas_df)
 
 #|%%--%%| <yzWnLVRcEJ|9ahirKdJXe>
+import csv as csv_mod
 def path_matcher(
         csv_path: Optional[str]='./qchem_data/csv/nasa7_parms_final.csv', 
         dir1: Optional[str]='/mnt/d/J', 
         dir2: Optional[str]='/mnt/d/K', 
-        col_idx: int
+        col_idx: Optional[int]=0
 ):
-    dirs = [dir1, dir2]
-#    all_files = { 
-#                 p.name
-#                 for d in dirs 
-#                 for p in d.glob("*") 
-#                 if p.is_file()
-#    } 
-    all_files = set() 
+    dirs = [Path(dir1),Path(dir2)]
+    csv_path = Path(csv_path)
+#    all_files = set() 
+#    for d in dirs: 
+#        for p in d.rglob("*.log"):
+#            if p.is_file():
+#                all_files.add(p.name)
+    all_files = { 
+                p.name
+                for d in dirs 
+                for p in d.rglob("*.log") 
+                if p.is_file() and p.name != ".DS_Store" and not p.name.startswith("._") 
+    } 
+    with csv_path.open(newline="", encoding="utf-8-sig") as f:
+        reader = csv_mod.reader(f) 
+        next(reader, None)
+        results = {} 
+        missing_results = [] 
+        found_results = [] 
+        for row in reader: 
+#            print(row)
+            if len(row) <= col_idx:
+                continue
+            name = row[col_idx].strip()
+            if not name:
+                continue
+            status = "FOUND" if name in all_files else "MISSING" 
+            if name in all_files: 
+                found_results.append(name) 
+            else: 
+                missing_results.append(name) 
+            results = {"Found": found_results,
+                       "Missing": missing_results
+            } 
+    return (results, all_files)
 
     
+#|%%--%%| <9ahirKdJXe|JeDJzfEcwi>
+#csv_data_file = str(csv_data_file)
+csv_data_file
+result, files = path_matcher(col_idx=1) 
+#|%%--%%| <JeDJzfEcwi|l0JiY4r8BC>
+print(len(result["Missing"]))
+print(len(result["Found"]))
+print(len(set(all_files)))
+
+miss_arr = result["Missing"]
+
+txt_generator(miss_arr)
+#|%%--%%| <l0JiY4r8BC|p32xSXam5j>
+dir1= '/mnt/d/J' 
+dir2= '/mnt/d/K'
+dirs = [Path(dir1), Path(dir2)]
+all_files = set() 
+all_files = { 
+            p.name
+            for d in dirs 
+            for p in d.rglob("*.log") 
+            if p.is_file() and p.name != ".DS_Store" and not p.name.startswith("._") 
+} 
+all_files
+
+with csv_path.open(newline="") as f:
+    reader = csv_mod.reader(f) 
+    for row in reader: 
+        if len(row) > 1:
+            print(row[1].strip()) 
+
+
+
