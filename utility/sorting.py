@@ -11,7 +11,7 @@ from itertools import zip_longest, product
 from collections import Counter 
 
 base = Path.cwd() 
-data_path = base / "./smi_pdb_data"
+data_path = base / "./qchem_data/csv"
 
 class BytesPDB:
     def __init__(self, 
@@ -19,14 +19,12 @@ class BytesPDB:
                  abbrv: Optional[list[str]] = None, # .csv mol abbreviations 
                  log_abbrvs: Optional[list[str]] = None, 
                  smiles: Optional[list[str]] = None, 
-                 log_mols: Optional[list[Mol]] = None,
                  fparse: SmileFileParser | None = None): 
         self.data_path = data_path
         self.fparse = fparse or SmileFileParser(data_path) 
         self.abbrv = [] if abbrv is None else list(abbrv) 
         self.log_abbrvs = [] if log_abbrvs is None else list(log_abbrvs) 
         self.smiles = [] if smiles is None else list(smiles) 
-        self.log_mols = [] if log_mols is None else list(log_mols) 
         self.pdb_posix = []
         self.pdb_bytes = []
         self.pdb_IUPAC = []
@@ -34,75 +32,39 @@ class BytesPDB:
         self.pdb_smiles = [] 
         self.smi_pdb_dict = {
                 "SMILES": [],
-                "SMARTS": [], 
                 "MOLS": [],
-                "PDB Bytes": [],
-                "PDB Files": [],
-                "PDB MOLS": [],
-                "PDB Posix": [],
+                "Log Files": [],
                 "Abbrv. | IUPAC": [],
-                "PDB Bytes": [],
-                "IDX": []
         }
-##
-#    def mol_pdb(self):
-#        for pdb in self.fparse.pdb_files:
-#            try: 
-#                mol_pdb = Chem.MolFromPDBFile(pdb, sanitize=False, removeHs=False)
-#            except OSError: 
-#                mol_pdb = None 
 
-    
     def bookeeper(self) -> dict:
         self.fparse = SmileFileParser(str(self.data_path)) 
         self.fparse.smi_populate()
-#        print(type(self.abbrv), len(self.abbrv), type(self.smiles),len(self.smiles)) 
-        for idx, (smiles, pdbs) in enumerate(zip_longest(self.fparse.smiles_list, self.fparse.pdb_files)):
-            try: 
-                mol_pdb = Chem.MolFromPDBFile(str(pdbs))
-            except OSError: 
-                mol_pdb = None 
-                mol_pdb = Chem.MolFromSmiles(smiles)
-            self.smi_pdb_dict["PDB MOLS"].append(mol_pdb)  
-            self.smi_pdb_dict["IDX"].append(idx) 
+        for idx, (smiles, abbrv, log_abbrvs) in enumerate(zip_longest(self.smiles, self.abbrv, self.log_abbrvs)):
             self.smi_pdb_dict["SMILES"].append(smiles) 
-            self.smi_pdb_dict["PDB Files"].append(str(pdbs)) 
-            self.smi_pdb_dict["PDB Posix"].append(pdbs) 
-            self.smi_pdb_dict["Abbrv. | IUPAC"].append(pdbs.stem) 
+            self.smi_pdb_dict["Abbrv. | IUPAC"].append(abbrv) 
             self.smi_pdb_dict["MOLS"].append(Chem.MolFromSmiles(InternalValid.validator(smiles))) 
-        for idx, (log_abbrv, log_mol) in enumerate(zip_longest(self.log_abbrvs, self.log_mols)): 
-#            try: 
-#                mol_nasa7 = Chem.MolFromSmiles(smiles) 
-#            except Exception: 
-#                mol_nasa7 = None 
-            self.smi_pdb_dict["Abbrv. | IUPAC"].append(log_abbrv) 
-            self.smi_pdb_dict["SMILES"].append(Chem.MolToSmiles(log_mol))
-            self.smi_pdb_dict["MOLS"].append(log_mol) 
-#        for idx, (log_abbrv, log_mols) in enumerate(zip_longest(self.log_mols, self.log_abbrvs)):
-#            self.smi_pdb_dict["Abbrv. 
+            self.smi_pdb_dict["Log Files"].append(log_abbrvs) 
         return self.smi_pdb_dict 
 
-#|%%--%%| <zBTodN4fRQ|G7fwsrep6J>
 class MoleculeSorter: 
     def __init__(self, molecule_sorter: BytesPDB): 
         self.molecule_sorter: BytesPDB = molecule_sorter 
         self.imported_mol_data: dict = molecule_sorter.bookeeper() 
         self.iupacs = self.imported_mol_data["Abbrv. | IUPAC"]
         self.mols = self.imported_mol_data["MOLS"]
-        self.pdb_mols = self.imported_mol_data["PDB MOLS"]
         self.mol_sorted_dict: dict = {}
 #
     def analyze_all(self): 
        for i, (iupac, mol) in enumerate(zip_longest(self.iupacs, self.mols)):
-           pdb_mol = self.pdb_mols[i] if i < len(self.pdb_mols) else None 
-           self.mol_sorted_dict[iupac] = self.analyzer(mol, pdb_mol) 
+           self.mol_sorted_dict[iupac] = self.analyzer(mol) 
        return self.mol_sorted_dict 
 
-    def analyzer(self, mol, pdb_mol):
+    def analyzer(self, mol):
         return {
             "Num. Atoms": self.count_atoms(mol),
             "Motif": self.count_motif(mol),
-            "Torsions": self.count_dihedral(mol) if pdb_mol is None else self.count_dihedral(pdb_mol),
+            "Torsions": self.count_dihedral(mol),
 #            "Torsions": self.count_dihedral(mol)
         }
 
@@ -163,16 +125,16 @@ class MoleculeSorter:
                 }
         return result 
 
-    def count_dihedral(self, pdb_mol=None):
+    def count_dihedral(self, mol=None):
         ROT_BONDS = str('[!$(*#*)&!D1]-&!@[!$(*#*)&!D1]')
         rot_bonds_smarts = Chem.MolFromSmarts(ROT_BONDS)
         dud_list = []
         try: 
-            confs = pdb_mol.GetConformer() 
-            matches = pdb_mol.GetSubstructMatches(rot_bonds_smarts)
-            imp_mol = pdb_mol
+#            confs = mol.GetConformer() 
+            matches = mol.GetSubstructMatches(rot_bonds_smarts)
+            imp_mol = mol
         except ValueError: 
-            dud_list.append(pdb_mol)
+            dud_list.append(mol)
             return 
 #            confs = DUMMY_MOL.GetConformer() 
 #            matches = DUMMY_MOL.GetSubstructMatches(rot_bonds_smarts) 
@@ -200,7 +162,7 @@ class MoleculeSorter:
             for m, n in product(i, l):
                 if m == n: # skips degenerate pairs
                     continue
-                phi = rdMolTransforms.GetDihedralDeg(confs, m, j, k, n) 
+#                phi = rdMolTransforms.GetDihedralDeg(confs, m, j, k, n) 
                 atoms = [imp_mol.GetAtomWithIdx(idx) for idx in (m, j, k, n)]
                 atom_symbols = tuple(a.GetSymbol() for a in atoms) 
                 torsions.append({

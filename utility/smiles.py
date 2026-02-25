@@ -23,30 +23,30 @@ class SmileFileParser(InternalValid):
                 "mol": []
         }
 
-#    def log_parse(self) -> dict: 
-##    results = {"orca": [], "g16": [], "unk": []} 
-#    for idx, i in enumerate(files): 
-#        head = i.read_text(errors="ignore", encoding="utf-8")[:20000]
-#        if "O R C A" in head or "ORCA" in head: 
-##            results["orca"].append(tuple([idx,i])) 
-#            fmt = "orca" 
-#        elif "Entering Gaussian" in head or "G16" in head or "Gaussian Inc." in head:
-##            results["g16"].append(tuple([idx,i])) 
-#        fmt = "g09" 
-#        else: 
-##            results["unk"].append(tuple([idx,i])) 
-#        fmt = "Unk" 
-#        for log_file in Path(self.dir).glob('*.log'): 
-#            sdf = log_file.with_suffix('.sdf')
-#            subprocess.run(
-#                    ["obabel", f"-i{fmt}", str(log_file), "-osdf", "-O", str(sdf)],
-#                    check=True
-#            )
-#            mol = Chem.SDMolSupplier(str(sdf), removeHs=False)[0]
-#            self.log_files_mols_dict[".log path"].append(log_file.stem) 
-#            self.log_files_mols_dict["mol"].append(mol) 
-#
-#        return self.log_files_mols_dict 
+    def log_parse(self) -> dict: 
+    #    results = {"orca": [], "g16": [], "unk": []} 
+        for idx, i in enumerate(files): 
+            head = i.read_text(errors="ignore", encoding="utf-8")[:20000]
+            if "O R C A" in head or "ORCA" in head: 
+        #            results["orca"].append(tuple([idx,i])) 
+                fmt = "orca" 
+            elif "Entering Gaussian" in head or "G16" in head or "Gaussian Inc." in head:
+        #            results["g16"].append(tuple([idx,i])) 
+                fmt = "g09" 
+            else: 
+        #            results["unk"].append(tuple([idx,i])) 
+                fmt = "Unk" 
+            for log_file in Path(self.dir).glob('*.log'): 
+                sdf = log_file.with_suffix('.sdf')
+                subprocess.run(
+                    ["obabel", f"-i{fmt}", str(log_file), "-osdf", "-O", str(sdf)],
+                    check=True
+                )
+                mol = Chem.SDMolSupplier(str(sdf), removeHs=False)[0]
+                self.log_files_mols_dict[".log path"].append(log_file.stem) 
+                self.log_files_mols_dict["mol"].append(mol) 
+
+        return self.log_files_mols_dict 
 
     def smi_populate(self):
         for smi_file in Path(self.dir).rglob('*.smi'): 
