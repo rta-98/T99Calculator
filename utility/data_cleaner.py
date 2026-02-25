@@ -1,3 +1,4 @@
+# -- NUMBER 1 --
 from utility.sorting import * 
 from utility.smiles import * 
 from openbabel import openbabel as ob
@@ -9,8 +10,9 @@ import json
 import sqlite3 
 import re 
 import os
-import csv 
-#|%%--%%| <zNgtESxaFm|QsOzaZYYL6>
+#|%%--%%| <L09tF1eetA|QsOzaZYYL6>
+# -- NUMBER 2 --
+
 base = Path.cwd() 
 print(base)
 rpath = str("relative_to(os.getcwd())") 
@@ -25,68 +27,33 @@ log_files = list(log_data_path.glob("*.log"))
 print(log_data_path)
 
 csv_data_path = base / "./qchem_data/csv"
-csv_data_file = csv_data_path / "nasa7_parms_final.csv"
+csv_data_file = csv_data_path / "nasa7_parms_final.csv" # must be this file path
 with open(csv_data_file, 'r') as f:
     nasa7_csv_arr = f.read() 
 
+def df_generator(sort: Optional[bool]=False):
+    pfas_data_df = pd.merge(csvdf, logcat1, on=['SMILES', 'Log Files'], how='left', sort=sort, suffixes=['_csv', '_txt']) 
+    print(pfas_data_df.head(131).to_string(index=False)) 
+    return pfas_data_df
+
+def csv_generator(df, fname: str, index: Optional[bool]=False):
+    filename = f"{fname}.csv" 
+    csvdf = df.to_csv(filename, index=index) # include index positional argument for to_csv() 
+    return csvdf
+
+def txt_generator(arr: list, fname: Optional[str]=None):
+    with open("missing_log.txt", "w") as txtf: 
+        for elm in arr: 
+            txtf.write(f"{elm}\n") 
 #txt_data_path = base / "./qchem_data/txt"
 #txt_data_file = txt_data_path / "nasa7_parms.txt"
 #with open(txt_data_file, 'r') as f:
 #    content = f.read()
 #    nasa7_txt_arr = content.split('\n')
 #arr = [line.strip() for line in nasa7_txt_arr]
-#|%%--%%| <QsOzaZYYL6|E1I76lVlbT>
-smi_nlog_flog = []
-log_smis = []
-log_names = []
-log_files = []
+#|%%--%%| <QsOzaZYYL6|D8DWRZPK7T>
+# -- NUMBER 3 --
 
-with open(f"{smi_data_file.parent / smi_data_file.stem}.txt") as f:
-    for line in f: 
-        parts = line.split() 
-        log_names.append(parts[0])
-        log_smis.append(parts[1])
-        log_files.append(parts[2]) 
-
-for idx, (smi, name, file) in enumerate(zip(log_smis, log_names, log_files)):
-    smi_nlog_flog.append([smi, name, file])
-
-#|%%--%%| <E1I76lVlbT|fYhdO5RQ1e>
-smidf = pd.DataFrame(smi_nlog_flog, columns=["SMILES", "Log Names", "Log Files"]) 
-smidf = smidf.drop_duplicates(keep=False) 
-smidf = smidf.map(lambda x: x.strip() if isinstance(x, str) else x) 
-#smidf.keys() 
-#pd.set_option("display.max_columns", None) 
-print(smidf.head(20).to_string(index=False))  
-|%%--%%| <fYhdO5RQ1e|5OwoIpBpEc>
-# Logdf and Smidf are the same thing
-logdf = pd.DataFrame({
-    "SMILES": log_smis,
-    "Log Names": log_names,
-    "Log Paths": log_files,
-}) 
-
-logdf = logdf.map(lambda x: x.strip() if isinstance(x, str) else x) 
-print(logdf.head(20).to_string(index=False))
-##|%%--%%| <5OwoIpBpEc|E43WgvZIQC>
-## Parsing nasa7 parameter txt file for abbreviations 
-#txtdf = pd.DataFrame(nasa7_txt_arr) 
-#txtdf
-##txtdf.columns = ['Abbreviation', 'a0', 'a1', 'a2', 'a3', 'a4', 'H_f_0K', 'S(300K)']
-##txtdf = txtdf.map(lambda x: x.strip() if isinstance(x, str) else x) 
-#txtdf
-#print(txtdf.head(20).to_string(index=False))
-j#|%%--%%| <E43WgvZIQC|HDUs1aDqWw>
-# Parsing nasa7 parameter csv file for smiles
-csv = pd.read_csv(csv_data_file) 
-csvdf = csv.rename(columns={"S_300K ": "S(300K)", "Log_file": "Log Files"}) 
-csvdf.keys()
-csvdf["SMILES"] = csvdf["SMILES"].str.strip()
-csvdf = csvdf.map(lambda x: x.strip() if isinstance(x, str) else x) 
-csvdf.keys()
-csvdf[['a0', 'a1', 'a2', 'a3', 'a4', 'H_f_0K', 'S(300K)']] = csvdf[['a0', 'a1', 'a2', 'a3', 'a4', 'H_f_0K', 'S(300K)']].round(6)
-print(csvdf.head(20).to_string(index=False))
-#|%%--%%| <HDUs1aDqWw|D8DWRZPK7T>
 # Parsing .log files form ./qchem_data/log into a single array and df 
 def logf_dict_pop(): 
     logf_dict = {
@@ -104,44 +71,87 @@ logf_dict = logf_dict_pop()
 logf_dict 
 logfdf = pd.DataFrame(logf_dict)
 logfdf = logfdf.rename(columns={"frpath_col": "Log Files (Rel. Path)", "frpath_stem_col": "Log Files"})
-logfdfA
+print(len(logfdf))
 
 #logfdf = logfdf.map(lambda x: x.strip() if isinstance(x, str) else x)
-print(logfdf.head(20).to_string(index=False))
-#|%%--%%| <D8DWRZPK7T|6C4y7p8lWU>
+print(logfdf.head(290).to_string(index=False))
+|%%--%%| <D8DWRZPK7T|E1I76lVlbT>
+# -- NUMBER 4 --
+#
+#smi_nlog_flog = []
+#log_smis = []
+#log_names = []
+#log_files = []
+#
+#with open(f"{smi_data_file.parent / smi_data_file.stem}.txt") as f:
+#    for line in f: 
+#        parts = line.split() 
+#        log_names.append(parts[0])
+#        log_smis.append(parts[1])
+#        log_files.append(parts[2]) 
+#
+#for idx, (smi, name, file) in enumerate(zip(log_smis, log_names, log_files)):
+#    smi_nlog_flog.append([smi, name, file])
+#
+#j#|%%--%%| <E1I76lVlbT|fYhdO5RQ1e>
+## -- NUMBER 5 --
+#
+## Dataframe generated from .log file directory containing SMILES and .log names
+#smidf = pd.DataFrame(smi_nlog_flog, columns=["SMILES", "Log Names", "Log Files"]) 
+#smidf = smidf.drop_duplicates(keep=False) 
+#smidf = smidf.map(lambda x: x.strip() if isinstance(x, str) else x) 
+##smidf.keys() 
+##pd.set_option("display.max_columns", None) 
+#print(smidf.head(100).to_string(index=False))  
+
+# Parsing nasa7 parameter csv file for smiles
+csv = pd.read_csv(csv_data_file, dtype={"big_id": "Int64"}) 
+csvdf = csv.rename(columns={"S_300K ": "S(300K)", "Log_file": "Log Files"}) 
+csvdf.keys()
+csvdf["SMILES"] = csvdf["SMILES"].str.strip()
+csvdf = csvdf.map(lambda x: x.strip() if isinstance(x, str) else x) 
+csvdf.keys()
+#csvdf[['a0', 'a1', 'a2', 'a3', 'a4', 'H_f_0K', 'S(300K)']] = csvdf[['a0', 'a1', 'a2', 'a3', 'a4', 'H_f_0K', 'S(300K)']].round()
+print(csvdf.head(100).to_string(index=False))
+print(csvdf.keys())
+#|%%--%%| <fYhdO5RQ1e|6C4y7p8lWU>
+# -- NUMBER 7 --
 # Concatenating a0, a1 ... S(300K), SMILES, Abbreviations, .log names 
-logcat1 = logfdf.merge(smidf, on="Log Files", how="inner", sort=False) 
-logcat1 = logcat1.map(lambda x: x.strip() if isinstance(x, str) else x) 
-logcat1.keys() 
-print(logcat1.head(20).to_string(index=False))
-#|%%--%%| <6C4y7p8lWU|xIFeuvCqnz>
-#final_merge = logcat1.merge(csvdf[["Abbreviation", "SMILES", "Log Files", "a0", "a1", "a2", "a3", "a4", "H_f_0K", "S(300K)"]], on=["SMILES", "Log Files"], how="outer")
+log_csv_df = pd.merge(csvdf, logfdf, on="Log Files", how="outer", sort=False)
+log_csv_df = logcat1.map(lambda x: x.strip() if isinstance(x, str) else x) 
+log_csv_df.keys() 
+print(log_csv_df.head(100).to_string(index=False))
+len(log_csv_df)
+#|%%--%%| <6C4y7p8lWU|7qvyDuOXKN>
+## -- NUMBER 8 --
+merge_part1 = logfdf.merge(csvdf[["Abbreviation", "SMILES", "Log Files", "a0", "a1", "a2", "a3", "a4", "H_f_0K", "S(300K)"]], on=["Log Files"], how="right")
+merge_part1 = merge_part1.rename(columns={'Abbreviation': 'Molecule'})
+print(merge_part1.head(10).to_string(index=False))
+csv_generator(merge_part1, fname='PFAS_data_130_part1')
+#|%%--%%| <7qvyDuOXKN|5OwoIpBpEc>
+merge_part2 = pd.read_csv("PFAS_data_130_part2.csv") 
+merge_part2 
+## Parsing nasa7 parameter txt file for abbreviations 
+#txtdf = pd.DataFrame(nasa7_txt_arr) 
+#txtdf
+##txtdf.columns = ['Abbreviation', 'a0', 'a1', 'a2', 'a3', 'a4', 'H_f_0K', 'S(300K)']
+##txtdf = txtdf.map(lambda x: x.strip() if isinstance(x, str) else x) 
+#txtdf
+#print(txtdf.head(20).to_string(index=False))
 #logcat3 
 #print(logcat3.head(20).to_string(index=False))
-#|%%--%%| <xIFeuvCqnz|DjojCOhCLc>
-def df_generator(sort: Optional[bool]=False):
-    pfas_data_df = pd.merge(csvdf, logcat1, on='SMILES', how='left', sort=sort, suffixes=['_csv', '_txt']) 
-    print(pfas_data_df.head(20).to_string(index=False)) 
-    return pfas_data_df
+#pfas_130_df = pd.read_csv('PFAS_data_130.csv') 
+#pfas_130_df
+##|%%--%%| <DjojCOhCLc|yzpfas_df = df_generator(sort=False)
+total_pfas_df = pd.merge(merge_part1, merge_part2, on=['Molecule'], how='outer', sort=False)
+total_pfas_df_clean = total_pfas_df.drop(columns=['Log Files (Rel. Path)']) 
+total_pfas_df_clean.keys()
+##|%%--%%| <DjojCOhCLc|yzpfas_df = df_generator(sort=False)
+csv_generator(total_pfas_df_clean, fname='PFAS_data_130')
+csv_generator(total_pfas_df, fname='PFAS_data_130_personal')
+#tot_df = pd.merge(pfas_df, pfas_130_df, on=['Molecule'], how='outer', sort=False)l_pfas_df = pd.merge(pfas_df, pfas_130_df, on=['Molecule'], how='outer', sort=False)
 
-def csv_generator(df, fname: str, index: Optional[bool]=False):
-    filename = f"{fname}.csv" 
-    csvdf = df.to_csv(filename, index=index) # include index positional argument for to_csv() 
-    return csvdf
-
-def txt_generator(arr: list, fname: Optional[str]=None):
-    with open("missing_log.txt", "w") as txtf: 
-        for elm in arr: 
-            txtf.write(f"{elm}\n") 
-
-#|%%--%%| <DjojCOhCLc|yzWnLVRcEJ>
-pfas_df = df_generator(sort=False)
-csv_generator(pfas_df, fname='nasa7_total') 
-csv_generator(logfdf, fname='imported_logs')
-csv_generator(smidf, fname='imported_smi_nlog_flog')
-len(pfas_df)
-
-#|%%--%%| <yzWnLVRcEJ|9ahirKdJXe>
+#|%%--%%| <|9ahirKdJXe>
 import csv as csv_mod
 def path_matcher(
         csv_path: Optional[str]='./qchem_data/csv/nasa7_parms_final.csv', 
