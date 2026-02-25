@@ -16,7 +16,6 @@ class FileParser:
         for fname in os.listdir(self.dir): 
             if fname.endswith('.pdb'):
                 fpath = os.path.join(self.dir, fname) 
-#                 print(fpath) 
                 try: 
                     smi, mol_obj = self.pdb_to_smi(fpath)
                 except Exception as e:
