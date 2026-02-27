@@ -1,4 +1,4 @@
-Abbreviation,Log Files,SMILES,a0,a1,a2,a3,a4,H_f_0K,S(300K),Log Files (Rel. Path),Log Names
+Molecule,Log Files,SMILES,a0,a1,a2,a3,a4,H_f_0K,S(300K),Log Files (Rel. Path),Log Names
 O,o.log,[O],4.9682,0.0,0.0,0.0,0.0,58.997,36.469,,
 F,f.log,[F],4.9682,0.0,0.0,0.0,0.0,18.47,36.176,,
 HF,hf.log,F,7.0265,-0.00037,0.0,0.0,-0.0,-65.18,41.525,,
