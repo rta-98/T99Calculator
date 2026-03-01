@@ -97,47 +97,11 @@ async def grid_page(request: Request):
     except Exception as e: 
         raise RuntimeError(f'Error in grid_page(): {e}') 
 
-
-# Return a grid of mol pngs which have been filtered 
-# @app.get("/filter-grid", response_class=HTMLResponse) 
-# async def filter_grid_page(request: Request): 
-#     data_dir = Path('./data') # name the path 
-#     parser = FileParser(str(data_dir)) # assign   
-#     parser.parse() # instance of FileParser created  
-#     matcher = SubstMatch() 
-#     items = []
-#     categories = set() 
-#     for zed, (mol, smi) in enumerate(zip(parser.mols, parser.smiles)): 
-#         if mol is None: 
-#             continue
-#         cats = matcher.classify(mol) 
-#         if not cats:
-#             cats = ["unclassified"]
-#         categories.update(cats) 
-#         pdb_fnames = parser.pdb_fname[zed] 
-#         mol_fname = f"{Path(pdb_fnames).stem}.png" 
-#         path = OUTPUT_DIR / mol_fname
-#         Draw.MolToImage(mol, size=SIZE, options=drawOptions).save(path) 
-#         items.append({
-#             "filename": f"/static/storage/imgs/{mol_fname}",
-#             "label": smi,
-#             "category": " ".join(cats), 
-#         }) 
-#     return templates.TemplateResponse(
-#         "display.html",
-#         {
-#             "request": request,
-#             "items": items, 
-#             "categories": sorted(categories),
-#             "count": len(items), 
-#         } 
-#     ) 
-
 @app.get("/filter-grid", response_class=HTMLResponse) 
 async def filter_grid_page(request: Request): 
-    data_dir = Path('./data_tmp') # name the path 
-    parser_1 = SmileFileParser(str(data_dir)) # assign   
-    parser_1.smi_populate() # instance of FileParser created  
+    data_dir = Path('./qchem_data/log') # name the path 
+    parser = SmileFileParser(str(data_dir)) # assign   
+    parser.smi_populate() # instance of FileParser created  
     matcher = SubstMatch() 
     items = []
     categories = set() 

@@ -4,9 +4,6 @@ from utility.services import InternalValid
 from rdkit import Chem 
 from rdkit.Chem import rdchem
 from rdkit.Chem.MolStandardize import rdMolStandardize 
-#|%%--%%| <MH2NKWQ4ll|tvdFZzanew>
-
-# valid_smi_inst = InternalValid()
 
 class SmileFileParser(InternalValid): 
     def __init__(self, dir_path):  
