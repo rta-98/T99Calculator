@@ -12,6 +12,7 @@ class FileParser:
         self.smiles = []
         self.mols = [] 
         self.pdb_fname = [] 
+
     def parse(self):
         for fname in os.listdir(self.dir): 
             if fname.endswith('.pdb'):
