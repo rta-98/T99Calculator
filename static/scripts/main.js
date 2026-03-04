@@ -1,4 +1,5 @@
 // modules glossary:
+//
 // utilities.js - shared helper functions
 // smiles-api.js - handles ajax requests, submission, verification
 // mol-display.js - displays single mol image

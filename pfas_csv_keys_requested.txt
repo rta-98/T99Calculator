@@ -1,0 +1,37 @@
+Molecule
+SMILES
+a0
+a1
+a2
+a3
+a4
+H_f_0K
+S(300K)
+sp2 Pair Count C-C
+sp2 Pair Count C-O
+sp2 Pair Count O-O
+sp2 Total Count
+sp3 Pair Count C-C
+sp3 Pair Count C-F
+sp3 Pair Count C-O
+sp3 Pair Count O-O
+sp3 Total Count
+Num. Atoms C
+Num. Atoms F
+Num. Atoms O
+Torsions Number of Rot. Bonds
+C-C-C-C Torsions
+C-C-C-F Torsions
+C-C-O-C Torsions
+C-O-C-C Torsions
+C-O-C-F Torsions
+F-C-C-C Torsions
+F-C-C-F Torsions
+F-C-C-O Torsions
+F-C-O-C Torsions
+O-C-C-C Torsions
+O-C-C-F Torsions
+O-C-C-O Torsions
+O-C-O-C Torsions
+O-O-C-C Torsions
+O-O-C-F Torsions
