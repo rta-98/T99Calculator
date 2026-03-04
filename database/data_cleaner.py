@@ -1,5 +1,5 @@
 # -- NUMBER 1 --
-from utility.sorting import * 
+from database.sorting import * 
 from utility.smiles import * 
 from openbabel import openbabel as ob
 from pathlib import Path
@@ -10,7 +10,7 @@ import json
 import sqlite3 
 import re 
 import os
-#|%%--%%| <L09tF1eetA|QsOzaZYYL6>
+#|%%--%%| <40ObpbSQyO|QsOzaZYYL6>
 # -- NUMBER 2 --
 
 base = Path.cwd() 
@@ -28,6 +28,7 @@ print(log_data_path)
 
 csv_data_path = base / "./qchem_data/csv"
 csv_data_file = csv_data_path / "nasa7_parms_final.csv" # must be this file path
+
 with open(csv_data_file, 'r') as f:
     nasa7_csv_arr = f.read() 
 
@@ -129,6 +130,8 @@ merge_part1 = merge_part1.rename(columns={'Abbreviation': 'Molecule'})
 print(merge_part1.head(10).to_string(index=False))
 csv_generator(merge_part1, fname='PFAS_data_130_part1')
 #|%%--%%| <7qvyDuOXKN|5OwoIpBpEc>
+# -- NUMBER 9 --
+# part2 contains extra info
 merge_part2 = pd.read_csv("PFAS_data_130_part2.csv") 
 merge_part2 
 ## Parsing nasa7 parameter txt file for abbreviations 

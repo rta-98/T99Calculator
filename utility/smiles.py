@@ -6,6 +6,7 @@ from rdkit.Chem import rdchem
 from rdkit.Chem.MolStandardize import rdMolStandardize 
 
 class SmileFileParser(InternalValid): 
+
     def __init__(self, dir_path):  
         self.dir = dir_path
         self.smiles_list = []

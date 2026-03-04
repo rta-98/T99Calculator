@@ -1,0 +1,17 @@
+qchem_data/log/h2o.log
+ OpenBabel03032622033D
+Gaussian applications/g16/g16/g16 # opt freq wb97xd/6-311+g(2d,2p) geom=connecti
+  3  2  0  0  0  0  0  0  0  0999 V2000
+   -0.0000    0.1162   -0.0000 O   0  0  0  0  0  0  0  0  0  0  0  0
+    0.7598   -0.4648    0.0000 H   0  0  0  0  0  0  0  0  0  0  0  0
+   -0.7598   -0.4648    0.0000 H   0  0  0  0  0  0  0  0  0  0  0  0
+  1  2  1  0  0  0  0
+  1  3  1  0  0  0  0
+M  END
+>  <program>
+Gaussian 16, Revision A.03
+
+>  <basis>
+6-311+G(2d,2p) (5D, 7F)
+
+$$$$

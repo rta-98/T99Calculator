@@ -9,10 +9,7 @@ from rdkit.Chem.rdchem import Mol
 from pathlib import Path 
 from itertools import zip_longest, product 
 from collections import Counter 
-
-base = Path.cwd() 
-data_path = base / "./qchem_data/csv"
-
+#|%%--%%| <dVOXJZmJLu|LPbpOa590o>
 class BytesPDB:
     def __init__(self, 
                  data_path: Optional[str] = None, 
@@ -32,9 +29,9 @@ class BytesPDB:
         self.pdb_smiles = [] 
         self.smi_pdb_dict = {
                 "SMILES": [],
-                "MOLS": [],
-                "Log Files": [],
-                "Abbrv. | IUPAC": [],
+                "Mol. Object": [],
+                ".log": [],
+                "Mol. Formula": [],
         }
 
     def bookeeper(self) -> dict:
@@ -42,17 +39,18 @@ class BytesPDB:
         self.fparse.smi_populate()
         for idx, (smiles, abbrv, log_abbrvs) in enumerate(zip_longest(self.smiles, self.abbrv, self.log_abbrvs)):
             self.smi_pdb_dict["SMILES"].append(smiles) 
-            self.smi_pdb_dict["Abbrv. | IUPAC"].append(abbrv) 
-            self.smi_pdb_dict["MOLS"].append(Chem.MolFromSmiles(InternalValid.validator(smiles))) 
-            self.smi_pdb_dict["Log Files"].append(log_abbrvs) 
+            self.smi_pdb_dict["Mol. Formula"].append(abbrv) 
+            self.smi_pdb_dict["Mol. Object"].append(Chem.MolFromSmiles(InternalValid.validator(smiles))) 
+            self.smi_pdb_dict[".log"].append(log_abbrvs) 
         return self.smi_pdb_dict 
 
 class MoleculeSorter: 
     def __init__(self, molecule_sorter: BytesPDB): 
         self.molecule_sorter: BytesPDB = molecule_sorter 
         self.imported_mol_data: dict = molecule_sorter.bookeeper() 
-        self.iupacs = self.imported_mol_data["Abbrv. | IUPAC"]
-        self.mols = self.imported_mol_data["MOLS"]
+        self.iupacs = self.imported_mol_data["Mol. Formula"]
+        self.mols = self.imported_mol_data["Mol. Object"]
+        self.logs = self.imported_mol_data[".log"] 
         self.mol_sorted_dict: dict = {}
 #
     def analyze_all(self): 
@@ -130,11 +128,12 @@ class MoleculeSorter:
         rot_bonds_smarts = Chem.MolFromSmarts(ROT_BONDS)
         dud_list = []
         try: 
-#            confs = mol.GetConformer() 
+            confs = mol.GetConformer() 
             matches = mol.GetSubstructMatches(rot_bonds_smarts)
             imp_mol = mol
         except ValueError: 
             dud_list.append(mol)
+            print(dud_list)
             return 
 #            confs = DUMMY_MOL.GetConformer() 
 #            matches = DUMMY_MOL.GetSubstructMatches(rot_bonds_smarts) 
@@ -162,28 +161,31 @@ class MoleculeSorter:
             for m, n in product(i, l):
                 if m == n: # skips degenerate pairs
                     continue
-#                phi = rdMolTransforms.GetDihedralDeg(confs, m, j, k, n) 
+                phi = rdMolTransforms.GetDihedralDeg(confs, m, j, k, n) 
                 atoms = [imp_mol.GetAtomWithIdx(idx) for idx in (m, j, k, n)]
                 atom_symbols = tuple(a.GetSymbol() for a in atoms) 
                 torsions.append({
                     "Atoms": tuple(a.GetSymbol() for a in atoms),
-#                    "Phi": round(phi, 4),
+                    "Phi": round(phi, 4),
                     "Torsion Indices": (m, j, k, n),
                 }) 
                 label = "-".join(atom_symbols) 
                 torsion_counts[label] = torsion_counts.get(label, 0) + 1 
             bonds.append({
                 "Central Bond": f"{imp_mol.GetAtomWithIdx(j).GetSymbol()}-{imp_mol.GetAtomWithIdx(k).GetSymbol()}",
-#                "Central Bond Idx": (j, k),
+                "Central Bond Idx": (j, k),
                 "Torsions Per Bond": num_tbond, 
-#                "Torsions": torsions
+                "Torsions": torsions
             }) 
 
         return {
                 "Number of Rot. Bonds": len(unique_matches), 
                 "Torsion Counts": torsion_counts, 
-#                "Torsions Info": bonds,
+                "Torsions Info": bonds,
         }
+
+
+
 
 
 
