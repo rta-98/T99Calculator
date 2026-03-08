@@ -1,5 +1,5 @@
 qchem_data/log/butane.log
- OpenBabel03032622033D
+ OpenBabel03072616073D
 Gaussian 16 # opt wb97xd/6-311+g(2d) geom=connectivity freq integral=grid=superf
  14 13  0  0  0  0  0  0  0  0999 V2000
     1.9960   -0.1178    0.0745 C   0  0  0  0  0  0  0  0  0  0  0  0

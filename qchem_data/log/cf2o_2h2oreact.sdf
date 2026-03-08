@@ -1,5 +1,5 @@
 qchem_data/log/cf2o_2h2oreact.log
- OpenBabel03032622033D
+ OpenBabel03072616073D
 Gaussian applications/g16/g16/g16 # opt freq wb97xd/6-311+g(2d,2p) geom=connecti
  10  7  0  0  0  0  0  0  0  0999 V2000
    -0.9640   -0.4078   -0.0109 C   0  0  0  0  0  0  0  0  0  0  0  0

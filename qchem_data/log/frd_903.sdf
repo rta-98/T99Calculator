@@ -1,5 +1,5 @@
 qchem_data/log/frd_903.log
- OpenBabel03032622033D
+ OpenBabel03072616073D
 Gaussian applications/g16/g16/g16 # opt wb97xd/6-311+g(2d,2p) geom=connectivity 
  21 20  0  0  1  0  0  0  0  0999 V2000
    -3.2459    0.0522   -0.0466 C   0  0  0  0  0  0  0  0  0  0  0  0

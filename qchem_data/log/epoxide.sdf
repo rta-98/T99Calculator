@@ -1,5 +1,5 @@
 qchem_data/log/epoxide.log
- OpenBabel03032622033D
+ OpenBabel03072616063D
 Gaussian applications/g16/g16/g16 # opt freq wb97xd/6-311+g(2d) geom=connectivit
   7  7  0  0  0  0  0  0  0  0999 V2000
     0.0098    0.7248    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0

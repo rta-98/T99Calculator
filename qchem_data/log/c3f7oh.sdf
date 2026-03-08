@@ -1,5 +1,5 @@
 qchem_data/log/c3f7oh.log
- OpenBabel03032622033D
+ OpenBabel03072616073D
 Gaussian 16 # opt freq wb97xd/6-311+g(2d,2p) geom=connectivity
  12 11  0  0  0  0  0  0  0  0999 V2000
     1.3086   -0.2370    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
