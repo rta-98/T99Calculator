@@ -1,5 +1,5 @@
 qchem_data/log/pentane.log
- OpenBabel03032622033D
+ OpenBabel03072616073D
 Gaussian applications/g16/g16/g16 # freq wb97xd/6-311+g(2d) geom=connectivity
  17 16  0  0  0  0  0  0  0  0999 V2000
    -2.6131   -0.2715   -0.0650 C   0  0  0  0  0  0  0  0  0  0  0  0

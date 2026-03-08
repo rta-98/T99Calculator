@@ -1,5 +1,5 @@
 qchem_data/log/n_octane_twisted.log
- OpenBabel03032622033D
+ OpenBabel03072616073D
 Gaussian 16 # opt wb97xd/6-311+g(2d) geom=connectivity freq
  26 25  0  0  0  0  0  0  0  0999 V2000
    -4.5589   -0.1600    0.2500 C   0  0  0  0  0  0  0  0  0  0  0  0

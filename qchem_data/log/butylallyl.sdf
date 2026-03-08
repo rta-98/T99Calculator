@@ -1,5 +1,5 @@
 qchem_data/log/butylallyl.log
- OpenBabel03032622033D
+ OpenBabel03072616073D
 Gaussian applications/g16/g16/g16 #p opt freq wb97xd/6-311+g(2d) scf=xqc
  11 10  0  0  1  0  0  0  0  0999 V2000
    -2.1087    0.0463    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0

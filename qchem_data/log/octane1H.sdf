@@ -1,5 +1,5 @@
 qchem_data/log/octane1H.log
- OpenBabel03032622033D
+ OpenBabel03072616073D
 Gaussian applications/g16/g16/g16 # opt freq rwb97xd/6-311+g(2d,2p) geom=connect
  26 25  0  0  0  0  0  0  0  0999 V2000
    -0.8539   -0.4602    0.1774 C   0  0  0  0  0  0  0  0  0  0  0  0

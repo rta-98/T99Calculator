@@ -1,5 +1,5 @@
 qchem_data/log/2_propyl.log
- OpenBabel03032622033D
+ OpenBabel03072616073D
 Gaussian applications/g16/g16/g16 # opt wb97xd/6-311+g(2d) geom=connectivity fre
  10  9  0  0  0  0  0  0  0  0999 V2000
    -1.3233   -0.1398   -0.0255 C   0  0  0  0  0  0  0  0  0  0  0  0
