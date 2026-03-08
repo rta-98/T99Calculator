@@ -1,5 +1,5 @@
 qchem_data/log/heptane1H.log
- OpenBabel03032622033D
+ OpenBabel03072616073D
 Gaussian 16 # opt freq rwb97xd/6-311+g(2d,2p) geom=connectivity
  23 22  0  0  0  0  0  0  0  0999 V2000
     0.2157    0.5128    0.0655 C   0  0  0  0  0  0  0  0  0  0  0  0

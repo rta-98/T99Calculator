@@ -67,9 +67,9 @@ class AppendToCSV:
     def converter(self):
         self.csv_df = pd.read_csv(self.csv_path) 
         df_left = df1.set_index('Log Files (Rel. Path)')
-        df_right = self.csv_df.set_index('Log Files (Rel. Path)') 
-#        self.merged_df = pd.merge(self.csv_df, self.imp_df, on=[f"{self.merge_key}"], how="left") 
-        self.merged_df = self.csv_df.join(df_right, how="outer", sort=False).reset_index() 
+#        df_right = self.csv_df.set_index('Log Files (Rel. Path)') 
+        self.merged_df = pd.merge(self.csv_df, self.imp_df, on=[f"{self.merge_key}"], how="left") 
+        self.merged_df = self.csv_df.join(df_right, how="left", sort=False).reset_index() 
         return self.merged_df
 
 def csv_generator(df, fname: str, index: Optional[bool]=False):
@@ -87,15 +87,22 @@ log_mol_inst = LogToMol(rfpath_list)
 list1 = log_mol_inst.log_mol_list_gen()
 list1
 #|%%--%%| <orETn1G454|MJaYpbuhf9>
-df1 = log_mol_inst.log_mol_df_gen()
-df1 # this is working
+df1_mol = log_mol_inst.log_mol_df_gen()
+df1_mol # this is working
+df1_mol_csv = df1_mol.to_csv('df1_mol_csv.csv') 
 #csv_generator(mol_merge_df, fname='PFAS_data_130_plus_mol') 
-#|%%--%%| <MJaYpbuhf9|ecrzYxG8p2>
-df_left = df1.set_index('Log Files (Rel. Path)')
-df_right = csv
+#|%%--%%| <MJaYpbuhf9|Qdt8pYRChn>
+#df_left = df1.set_index('Log Files (Rel. Path)')
+#df_right = csv
 csv_path = Path('/mnt/d/academic/tmp/PFAS_data_130_personal.csv') 
-csv = pd.read_csv(csv_path)
-#self.merged_df = pd.merge(self.csv_df, self.imp_df, on="Log Files (Rel. Path), how="inner") 
+df2_mol = pd.read_csv(csv_path)
+df2_mol
+
+print(df2_mol.head(100).to_string(index=False))
+#|%%--%%| <Qdt8pYRChn|NJZceCMubo>
+merged_df = pd.merge(df1_mol_csv, df2_mol, on="Log Files (Rel. Path)", how="right") 
+print(merged_df.head(20).to_string(index=False)) 
+#|%%--%%| <NJZceCMubo|ecrzYxG8p2>
 append_inst = AppendToCSV(csv_path=csv_path, imp_df=df1, merge_key='Log Files (Rel. Path)')
 mol_merge_df = append_inst.converter()
 mol_merge_df['Log Mol. Objects']
@@ -108,3 +115,8 @@ with open("pfas_csv_keys_requested.txt", "w", encoding="utf-8") as f:
 with open("pfas_SMILES_for InChIKey.txt", "w", encoding="utf-8") as f: 
     f.writelines(f"{item}\n" for item in keys) 
 keys
+
+#|%%--%%| <etdZtaVQG3|5uqXfId71G>
+# Concatenating Shomate polynomial coefs.  ---------------------------------
+
+

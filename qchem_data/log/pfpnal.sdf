@@ -1,5 +1,5 @@
 qchem_data/log/pfpnal.log
- OpenBabel03032622033D
+ OpenBabel03072616073D
 Gaussian 16 #p opt freq rwb97xd/6-311+g(2d,2p) integral=grid=superfinegrid scf=(
  16 15  0  0  0  0  0  0  0  0999 V2000
    -1.0659    0.5391   -0.0250 C   0  0  0  0  0  0  0  0  0  0  0  0

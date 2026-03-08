@@ -1,3 +1,5 @@
+Log Files (Rel. Path)
+Log Files
 Molecule
 SMILES
 a0

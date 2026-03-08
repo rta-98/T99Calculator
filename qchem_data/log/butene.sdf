@@ -1,5 +1,5 @@
 qchem_data/log/butene.log
- OpenBabel03032622033D
+ OpenBabel03072616063D
 Gaussian applications/g16/g16/g16 #p opt freq wb97xd/6-311+g(2d) scf=xqc
  12 11  0  0  0  0  0  0  0  0999 V2000
     1.9481   -0.2308   -0.0878 C   0  0  0  0  0  0  0  0  0  0  0  0

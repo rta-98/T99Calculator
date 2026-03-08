@@ -10,7 +10,7 @@ import json
 import sqlite3 
 import re 
 import os
-#|%%--%%| <40ObpbSQyO|QsOzaZYYL6>
+#|%%--%%| <3Od0QjNGbL|QsOzaZYYL6>
 # -- NUMBER 2 --
 
 base = Path.cwd() 
@@ -28,6 +28,10 @@ print(log_data_path)
 
 csv_data_path = base / "./qchem_data/csv"
 csv_data_file = csv_data_path / "nasa7_parms_final.csv" # must be this file path
+PFAS_290_csv  = csv_data_path / "nasa7_290.csv"
+
+txt_data_path = base / "./qchem_data/txt" 
+nasa7_290 = txt_data_path / "nasa7_290.txt" 
 
 with open(csv_data_file, 'r') as f:
     nasa7_csv_arr = f.read() 
@@ -46,6 +50,7 @@ def txt_generator(arr: list, fname: Optional[str]=None):
     with open("missing_log.txt", "w") as txtf: 
         for elm in arr: 
             txtf.write(f"{elm}\n") 
+
 #txt_data_path = base / "./qchem_data/txt"
 #txt_data_file = txt_data_path / "nasa7_parms.txt"
 #with open(txt_data_file, 'r') as f:
@@ -72,50 +77,23 @@ logf_dict = logf_dict_pop()
 logf_dict 
 logfdf = pd.DataFrame(logf_dict)
 logfdf = logfdf.rename(columns={"frpath_col": "Log Files (Rel. Path)", "frpath_stem_col": "Log Files"})
-print(len(logfdf))
+
 
 #logfdf = logfdf.map(lambda x: x.strip() if isinstance(x, str) else x)
 print(logfdf.head(290).to_string(index=False))
+print(len(logfdf))
 |%%--%%| <D8DWRZPK7T|E1I76lVlbT>
-# -- NUMBER 4 --
-#
-#smi_nlog_flog = []
-#log_smis = []
-#log_names = []
-#log_files = []
-#
-#with open(f"{smi_data_file.parent / smi_data_file.stem}.txt") as f:
-#    for line in f: 
-#        parts = line.split() 
-#        log_names.append(parts[0])
-#        log_smis.append(parts[1])
-#        log_files.append(parts[2]) 
-#
-#for idx, (smi, name, file) in enumerate(zip(log_smis, log_names, log_files)):
-#    smi_nlog_flog.append([smi, name, file])
-#
-#j#|%%--%%| <E1I76lVlbT|fYhdO5RQ1e>
-## -- NUMBER 5 --
-#
-## Dataframe generated from .log file directory containing SMILES and .log names
-#smidf = pd.DataFrame(smi_nlog_flog, columns=["SMILES", "Log Names", "Log Files"]) 
-#smidf = smidf.drop_duplicates(keep=False) 
-#smidf = smidf.map(lambda x: x.strip() if isinstance(x, str) else x) 
-##smidf.keys() 
-##pd.set_option("display.max_columns", None) 
-#print(smidf.head(100).to_string(index=False))  
-
 # Parsing nasa7 parameter csv file for smiles
-csv = pd.read_csv(csv_data_file, dtype={"big_id": "Int64"}) 
+csv = pd.read_csv(PFAS_290_csv, dtype={"big_id": "Int64"}) 
 csvdf = csv.rename(columns={"S_300K ": "S(300K)", "Log_file": "Log Files"}) 
-csvdf.keys()
-csvdf["SMILES"] = csvdf["SMILES"].str.strip()
+#csvdf.keys()
+#csvdf["SMILES"] = csvdf["SMILES"].str.strip()
 csvdf = csvdf.map(lambda x: x.strip() if isinstance(x, str) else x) 
 csvdf.keys()
 #csvdf[['a0', 'a1', 'a2', 'a3', 'a4', 'H_f_0K', 'S(300K)']] = csvdf[['a0', 'a1', 'a2', 'a3', 'a4', 'H_f_0K', 'S(300K)']].round()
-print(csvdf.head(100).to_string(index=False))
+print(csvdf.head(290).to_string(index=False))
 print(csvdf.keys())
-#|%%--%%| <fYhdO5RQ1e|6C4y7p8lWU>
+#|%%--%%| <E1I76lVlbT|6C4y7p8lWU>
 # -- NUMBER 7 --
 # Concatenating a0, a1 ... S(300K), SMILES, Abbreviations, .log names 
 log_csv_df = pd.merge(csvdf, logfdf, on="Log Files", how="outer", sort=False)
@@ -203,6 +181,7 @@ def path_matcher(
 #csv_data_file = str(csv_data_file)
 csv_data_file
 result, files = path_matcher(col_idx=1) 
+
 #|%%--%%| <JeDJzfEcwi|l0JiY4r8BC>
 print(len(result["Missing"]))
 print(len(result["Found"]))
@@ -211,6 +190,7 @@ print(len(set(all_files)))
 miss_arr = result["Missing"]
 
 txt_generator(miss_arr)
+
 #|%%--%%| <l0JiY4r8BC|p32xSXam5j>
 dir1= '/mnt/d/J' 
 dir2= '/mnt/d/K'
@@ -230,5 +210,48 @@ with csv_path.open(newline="") as f:
         if len(row) > 1:
             print(row[1].strip()) 
 
+
+
+
+#|%%--%%| <p32xSXam5j|LinBL5yqln>
+# Cleaning up txt files 
+nasa_df = pd.read_csv(nasa7_290, sep=r"\s+", header=None, names=["Molecule", "a0", "a1", "a2", "a3", "a4", "H_f_0K", "S(300K)"]) 
+nasa_df = nasa_df.drop_duplicates() 
+print(nasa_df.head(290).to_string(index=False)) 
+
+#|%%--%%| <LinBL5yqln|3ylHujnnS9>
+csv_generator(nasa_df, "nasa7_290") 
+
+
+
+
+ 
+# -- NUMBER 4 --
+#
+#smi_nlog_flog = []
+#log_smis = []
+#log_names = []
+#log_files = []
+#
+#with open(f"{smi_data_file.parent / smi_data_file.stem}.txt") as f:
+#    for line in f: 
+#        parts = line.split() 
+#        log_names.append(parts[0])
+#        log_smis.append(parts[1])
+#        log_files.append(parts[2]) 
+#
+#for idx, (smi, name, file) in enumerate(zip(log_smis, log_names, log_files)):
+#    smi_nlog_flog.append([smi, name, file])
+#
+#j#|%%--%%| <3ylHujnnS9|fYhdO5RQ1e>
+## -- NUMBER 5 --
+#
+## Dataframe generated from .log file directory containing SMILES and .log names
+#smidf = pd.DataFrame(smi_nlog_flog, columns=["SMILES", "Log Names", "Log Files"]) 
+#smidf = smidf.drop_duplicates(keep=False) 
+#smidf = smidf.map(lambda x: x.strip() if isinstance(x, str) else x) 
+##smidf.keys() 
+##pd.set_option("display.max_columns", None) 
+#print(smidf.head(100).to_string(index=False))  
 
 
