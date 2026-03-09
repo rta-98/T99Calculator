@@ -15,13 +15,17 @@ class BytesPDB:
                  data_path: Optional[str] = None, 
                  abbrv: Optional[list[str]] = None, # .csv mol abbreviations 
                  log_abbrvs: Optional[list[str]] = None, 
+                 log_mols: Optional[list] = None, 
                  smiles: Optional[list[str]] = None, 
                  fparse: SmileFileParser | None = None): 
         self.data_path = data_path
         self.fparse = fparse or SmileFileParser(data_path) 
+        # --------------------------------- 
         self.abbrv = [] if abbrv is None else list(abbrv) 
         self.log_abbrvs = [] if log_abbrvs is None else list(log_abbrvs) 
         self.smiles = [] if smiles is None else list(smiles) 
+        self.log_mols = [] if log_mols is None else list(log_mols) 
+        # ---------------------------------
         self.pdb_posix = []
         self.pdb_bytes = []
         self.pdb_IUPAC = []
@@ -37,10 +41,10 @@ class BytesPDB:
     def bookeeper(self) -> dict:
         self.fparse = SmileFileParser(str(self.data_path)) 
         self.fparse.smi_populate()
-        for idx, (smiles, abbrv, log_abbrvs) in enumerate(zip_longest(self.smiles, self.abbrv, self.log_abbrvs)):
+        for idx, (smiles, abbrv, log_abbrvs, log_mols) in enumerate(zip_longest(self.smiles, self.abbrv, self.log_abbrvs, self.log_mols)):
             self.smi_pdb_dict["SMILES"].append(smiles) 
             self.smi_pdb_dict["Mol. Formula"].append(abbrv) 
-            self.smi_pdb_dict["Mol. Object"].append(Chem.MolFromSmiles(InternalValid.validator(smiles))) 
+            self.smi_pdb_dict["Mol. Object"].append(log_mols) 
             self.smi_pdb_dict[".log"].append(log_abbrvs) 
         return self.smi_pdb_dict 
 

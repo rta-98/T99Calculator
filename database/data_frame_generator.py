@@ -56,15 +56,17 @@ def rename_motif_cols(c):
         return c.replace("Motif ", "", 1) 
     return c 
 #|%%--%%| <iDvk6pEcQj|mD754zr3PI>
-df = pd.read_csv("/home/tau/projects/t99_calc/v1/qchem_data/csv/PFAS_data_130_personal.csv")
+df = pd.read_csv("/home/tau/projects/t99_calc/v1/qchem_data/csv/merged_smi_221_mol_221.csv")
 df.keys()
+df.drop(columns=["Unnamed: 0"]) 
 abbrv_col = df['Molecule'].tolist() 
-log_col = df['Log Files (Rel. Path)'].tolist()
+log_col = df['Log Name'].tolist()
+log_mols = df['Log Mol. Objects'].tolist() 
 smiles_col = df['SMILES'].tolist() 
 #|%%--%%| <mD754zr3PI|LhPKZvIDLK>
-zed = BytesPDB(abbrv=abbrv_col, log_abbrvs=log_col, smiles=smiles_col) 
+zed = BytesPDB(abbrv=abbrv_col, log_abbrvs=log_col, smiles=smiles_col, log_mols=log_mols) 
 inst = MoleculeSorter(zed)
-inst.analyze_all() 
+inst.analyze_all()j
 dict_inst = inst.mol_sorted_dict
 #|%%--%%| <LhPKZvIDLK|8tJXQAAfnQ>
 rows = [] 

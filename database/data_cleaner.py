@@ -13,7 +13,7 @@ import json
 import sqlite3 
 import re 
 import os
-#|%%--%%| <Vxwft8jhX2|iCzaKnuydH>
+#|%%--%%| <9f0YTRzAjY|iCzaKnuydH>
 # -- NUMBER 2 --
 
 base = Path.cwd() 
@@ -55,6 +55,7 @@ def txt_generator(arr: list, fname: Optional[str]=None):
 
 smi_log_290_dict = {
         "SMILES": [],
+        "Molecule": [], 
         "Veri. SMILES": [], 
         "Log Name": [],
         "Log Path": [] }
@@ -74,43 +75,43 @@ with open(smi_data_file) as f:
 # Array containing smiles, file, and fname created. 
 for idx, (smi, file) in enumerate(zip(log_smis, log_files)):
     fname = Path(file).stem
+    file = Path(file) 
     try: 
         vsmi = InternalValid.validator(smi) 
     except ValueError: 
         log_smi_duds.append([idx, smi]) 
         log_abbrv = None
         continue
-    log_abbrv = CalcMolFormula(MolFromSmiles(vsmi)) 
+    mol_abbrv = CalcMolFormula(MolFromSmiles(vsmi)) 
     smi_log_290_dict["SMILES"].append(smi) 
     smi_log_290_dict["Veri. SMILES"].append(vsmi) 
     smi_log_290_dict["Log Name"].append(fname) 
-    smi_log_290_dict["Log Path"].append(file) 
+    smi_log_290_dict["Log Path"].append((file))
+    smi_log_290_dict["Molecule"].append(mol_abbrv)  
 
 #|%%--%%| <D8DWRZPK7T|QsOzaZYYL6>
 # -- NUMBER 4 --
-# Parsing .log files form ./qchem_data/log into a single array and df 
-def logf_dict_pop(): 
-    logf_dict = {
-            "frpath_col": [],
-            "frpath_stem_col": []}
-    for fpath in log_files:
-        frpath = f"{fpath.relative_to(os.getcwd())}" 
-        frpath_stem = fpath.name
-        logf_dict['frpath_stem_col'].append(frpath_stem) 
-        logf_dict['frpath_col'].append(frpath) 
-    return logf_dict 
+## Parsing .log files form ./qchem_data/log into a single array and df 
+#def logf_dict_pop(): 
+#    logf_dict = {
+#            "frpath_col": [],
+#            "frpath_stem_col": []}
+#    for fpath in log_files:
+#        frpath = f"{fpath.relative_to(os.getcwd())}" 
+#        frpath_stem = fpath.name
+#        logf_dict['frpath_stem_col'].append(frpath_stem) 
+#        logf_dict['frpath_col'].append(frpath) 
+#    return logf_dict 
+#
 
 
-logf_dict = logf_dict_pop()
-logf_dict 
-logfdf = pd.DataFrame(logf_dict)
-logfdf = logfdf.rename(columns={"frpath_col": "Log Files (Rel. Path)", "frpath_stem_col": "Log Files"})
-
-
-#logfdf = logfdf.map(lambda x: x.strip() if isinstance(x, str) else x)
-print(logfdf.head(290).to_string(index=False))
-print(len(logfdf))
-
+#logf_dict = logf_dict_pop()
+#logf_dict 
+#logfdf = pd.DataFrame(logf_dict)
+smi_290_df = pd.DataFrame(smi_log_290_dict) 
+smi_221_df = smi_290_df.drop_duplicates(subset=["Veri. SMILES"]) 
+len(smi_221_df)
+csv_generator(smi_221_df, "smi_221_df") 
 #|%%--%%| <QsOzaZYYL6|xg6ouOpjlK>
 |%%--%%| <xg6ouOpjlK|E1I76lVlbT>
 # Parsing nasa7 parameter csv file for smiles
