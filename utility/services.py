@@ -109,19 +109,6 @@ class InternalValid:
            mol = rdMolStandardize.Cleanup(mol)
            return Chem.MolToSmiles(mol, canonical=True)
 
-# class InternalValid: 
-#     @staticmethod
-#     def validator(non_canon): 
-#         non_canon = non_canon.strip()
-#         if not non_canon: 
-#             raise TypeError('SMILES are of type str, not None') 
-#         try:
-#             canoning = Chem.MolFromSmiles(non_canon)
-#             if canoning is not None:
-#                 canon = Chem.MolToSmiles(canoning)
-#                 return canon
-#         except Exception as v: 
-#             raise ValueError(f'Invalid SMILES string: {v}')
 
 class SubstMatch(InternalValid):
 

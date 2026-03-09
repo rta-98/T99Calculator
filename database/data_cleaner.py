@@ -1,8 +1,11 @@
 # -- NUMBER 1 --
 from database.sorting import * 
 from utility.smiles import * 
+from utility.services import *
 from openbabel import openbabel as ob
 from pathlib import Path
+from rdkit.Chem import MolFromSmiles 
+from rdkit.Chem.rdMolDescriptors import CalcMolFormula 
 import pandas as pd
 from typing import Optional, List 
 from pathlib import Path 
@@ -10,21 +13,18 @@ import json
 import sqlite3 
 import re 
 import os
-#|%%--%%| <3Od0QjNGbL|QsOzaZYYL6>
+#|%%--%%| <Vxwft8jhX2|iCzaKnuydH>
 # -- NUMBER 2 --
 
 base = Path.cwd() 
 print(base)
 rpath = str("relative_to(os.getcwd())") 
-print(rpath)
 
-smi_data_path = base / "./qchem_data/smi"
-smi_data_file = smi_data_path / "pfas_smi_log_153.txt"
-print(smi_data_file.stem)
+smi_data_path = base / "./qchem_data/smi/log_to_smi_out"
+smi_data_file = smi_data_path / "smi_290.txt"
 
 log_data_path = base / "./qchem_data/log"
 log_files = list(log_data_path.glob("*.log")) 
-print(log_data_path)
 
 csv_data_path = base / "./qchem_data/csv"
 csv_data_file = csv_data_path / "nasa7_parms_final.csv" # must be this file path
@@ -38,7 +38,6 @@ with open(csv_data_file, 'r') as f:
 
 def df_generator(sort: Optional[bool]=False):
     pfas_data_df = pd.merge(csvdf, logcat1, on=['SMILES', 'Log Files'], how='left', sort=sort, suffixes=['_csv', '_txt']) 
-    print(pfas_data_df.head(131).to_string(index=False)) 
     return pfas_data_df
 
 def csv_generator(df, fname: str, index: Optional[bool]=False):
@@ -51,15 +50,44 @@ def txt_generator(arr: list, fname: Optional[str]=None):
         for elm in arr: 
             txtf.write(f"{elm}\n") 
 
-#txt_data_path = base / "./qchem_data/txt"
-#txt_data_file = txt_data_path / "nasa7_parms.txt"
-#with open(txt_data_file, 'r') as f:
-#    content = f.read()
-#    nasa7_txt_arr = content.split('\n')
-#arr = [line.strip() for line in nasa7_txt_arr]
-#|%%--%%| <QsOzaZYYL6|D8DWRZPK7T>
+#|%%--%%| <iCzaKnuydH|D8DWRZPK7T>
 # -- NUMBER 3 --
 
+smi_log_290_dict = {
+        "SMILES": [],
+        "Veri. SMILES": [], 
+        "Log Name": [],
+        "Log Path": [] }
+log_smis = []
+log_names = []
+log_files = []
+log_smi_duds = [] 
+
+with open(smi_data_file) as f:
+    for line in f: 
+        if not line.strip():
+            continue 
+        parts = line.split() 
+        log_smis.append(parts[0])
+        log_files.append(parts[1]) 
+
+# Array containing smiles, file, and fname created. 
+for idx, (smi, file) in enumerate(zip(log_smis, log_files)):
+    fname = Path(file).stem
+    try: 
+        vsmi = InternalValid.validator(smi) 
+    except ValueError: 
+        log_smi_duds.append([idx, smi]) 
+        log_abbrv = None
+        continue
+    log_abbrv = CalcMolFormula(MolFromSmiles(vsmi)) 
+    smi_log_290_dict["SMILES"].append(smi) 
+    smi_log_290_dict["Veri. SMILES"].append(vsmi) 
+    smi_log_290_dict["Log Name"].append(fname) 
+    smi_log_290_dict["Log Path"].append(file) 
+
+#|%%--%%| <D8DWRZPK7T|QsOzaZYYL6>
+# -- NUMBER 4 --
 # Parsing .log files form ./qchem_data/log into a single array and df 
 def logf_dict_pop(): 
     logf_dict = {
@@ -82,7 +110,9 @@ logfdf = logfdf.rename(columns={"frpath_col": "Log Files (Rel. Path)", "frpath_s
 #logfdf = logfdf.map(lambda x: x.strip() if isinstance(x, str) else x)
 print(logfdf.head(290).to_string(index=False))
 print(len(logfdf))
-|%%--%%| <D8DWRZPK7T|E1I76lVlbT>
+
+#|%%--%%| <QsOzaZYYL6|xg6ouOpjlK>
+|%%--%%| <xg6ouOpjlK|E1I76lVlbT>
 # Parsing nasa7 parameter csv file for smiles
 csv = pd.read_csv(PFAS_290_csv, dtype={"big_id": "Int64"}) 
 csvdf = csv.rename(columns={"S_300K ": "S(300K)", "Log_file": "Log Files"}) 
@@ -219,31 +249,7 @@ nasa_df = pd.read_csv(nasa7_290, sep=r"\s+", header=None, names=["Molecule", "a0
 nasa_df = nasa_df.drop_duplicates() 
 print(nasa_df.head(290).to_string(index=False)) 
 
-#|%%--%%| <LinBL5yqln|3ylHujnnS9>
-csv_generator(nasa_df, "nasa7_290") 
-
-
-
-
- 
-# -- NUMBER 4 --
-#
-#smi_nlog_flog = []
-#log_smis = []
-#log_names = []
-#log_files = []
-#
-#with open(f"{smi_data_file.parent / smi_data_file.stem}.txt") as f:
-#    for line in f: 
-#        parts = line.split() 
-#        log_names.append(parts[0])
-#        log_smis.append(parts[1])
-#        log_files.append(parts[2]) 
-#
-#for idx, (smi, name, file) in enumerate(zip(log_smis, log_names, log_files)):
-#    smi_nlog_flog.append([smi, name, file])
-#
-#j#|%%--%%| <3ylHujnnS9|fYhdO5RQ1e>
+#j#|%%--%%| <LinBL5yqln|fYhdO5RQ1e>
 ## -- NUMBER 5 --
 #
 ## Dataframe generated from .log file directory containing SMILES and .log names

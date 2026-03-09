@@ -48,7 +48,6 @@ class SmileFileParser(InternalValid):
 
     def smi_populate(self):
         for smi_file in Path(self.dir).rglob('*.smi'): 
-            pdb_file = smi_file.with_suffix('.pdb') 
             with open(smi_file) as f: 
                 for line in f: 
                     tmp_smile = line.split()
@@ -66,33 +65,9 @@ class SmileFileParser(InternalValid):
                             self.smiles_list.append(canon_smi)
                             self.mols_list.append(mol)
                             self.smi_fname.append(smi_file) 
-                            self.pdb_files.append(pdb_file) 
                         else: 
                             self.smiles_dud_list.append(smiles)
-#                         for i in self.smiles_dud_list:
-#                             print(self.smiles_dud_list[i])
                     except Exception as e: 
                         self.smiles_dud_list.append(smiles)
                         print(f"Error in smi_populate() {smiles}: {e}") 
                         continue 
-
-# #                     if not parts: 
-# #                         continue 
-# #                     smiles = parts[0]
-# #                     if smiles is not None: 
-#                     try:
-#                         canon = InternalValid.validator(smiles) 
-#                         mol = Chem.MolFromSmiles(canon)
-#                         if mol is None: 
-#                             self.smiles_dud_list.append(mol)
-#                             continue 
-#                         self.smiles_list.append(canon) 
-#                         self.mols_list.append(mol) 
-#                         self.smi_fname.append(smi_file)
-#                     except Exception as e: 
-#                         self.smiles_dud_list.append(smiles) 
-#                         continue 
- #                             print(InternalValid.validator(smiles))  
-
-
-
