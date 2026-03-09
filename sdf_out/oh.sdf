@@ -1,0 +1,15 @@
+/home/tau/projects/t99_calc/v1/qchem_data/log/oh.log
+ OpenBabel03092615213D
+Gaussian applications/g16/g16/g16 # opt wb97xd/6-311+g(2d,2p) freq geom=connecti
+  2  1  0  0  0  0  0  0  0  0999 V2000
+    0.0000    0.0000   -0.8618 H   0  0  0  0  0  0  0  0  0  0  0  0
+   -0.0000   -0.0000    0.1077 O   0  0  0  0  0  1  0  0  0  0  0  0
+  1  2  1  0  0  0  0
+M  END
+>  <program>
+Gaussian 16, Revision A.03
+
+>  <basis>
+6-311+G(2d,2p) (5D, 7F)
+
+$$$$

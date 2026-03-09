@@ -21,11 +21,14 @@ from itertools import zip_longest, product
 from collections import Counter 
 import subprocess
 from rdkit.Chem.MolStandardize import rdMolStandardize 
-#|%%--%%| <VS1Fzw2SX5|xPKJXsl1PN>
+#|%%--%%| <zWzZr5LIkF|fw77UvbU0w>
+base = Path.cwd() 
+log_data_path = base / "./qchem_data/log"
+log_data_path 
+#|%%--%%| <fw77UvbU0w|Z3cJvKMS9u>
 class LogToMol: 
-    def __init__(self, log_col_fpath: Optional[list]=None): 
-        self.log_col_fpath = log_col_fpath
-#        self.log_col = log_col 
+    def __init__(self, log_list: Optional[list] = None): 
+        self.log_list = log_list
         self.log_mols = {
                 'Log Files (Rel. Path)': [],
                 'Log Mol. Objects': []
@@ -34,16 +37,17 @@ class LogToMol:
     
     def log_mol_list_gen(self) -> dict: 
         fmt = "g09"
-        for log_file in self.log_col_fpath:  
-            log_file = Path(log_file)
-#            print(log_file.with_suffix('.sdf'))
-            sdf = log_file.with_suffix('.sdf')
+        out_dir = Path("./sdf_out")
+        out_dir.mkdir(exist_ok=True)
+        for log in self.log_list:
+            log_file = log_data_path / log
+            sdf = out_dir / f"{log_file.stem}.sdf"
             subprocess.run(
                 ["obabel", f"-i{fmt}", str(log_file), "-osdf", "-O", str(sdf)],
                 check=True
             )
             mol = Chem.SDMolSupplier(str(sdf), removeHs=False)[0]
-            self.log_mols['Log Files (Rel. Path)'].append(log_file) 
+            self.log_mols['Log Files (Rel. Path)'].append(log_file.stem) 
             self.log_mols['Log Mol. Objects'].append(mol) 
         return self.log_mols 
 
@@ -52,7 +56,7 @@ class LogToMol:
         log_mols_df = pd.DataFrame(mols) 
         return log_mols_df
 
-#|%%--%%| <xPKJXsl1PN|kJDVW0mpA2>
+#|%%--%%| <Z3cJvKMS9u|VPRHdGIqUU>
 class AppendToCSV: 
     def __init__(self, 
                  csv_path: Optional[Path] = None,
@@ -72,26 +76,81 @@ class AppendToCSV:
         self.merged_df = self.csv_df.join(df_right, how="left", sort=False).reset_index() 
         return self.merged_df
 
+#|%%--%%| <VPRHdGIqUU|IMACPFeKJo>
+# Mol objects generated in-situ saved to a single SDF file for reuse purposes 
+def save_mols_sdf(mols, path): 
+    writer = Chem.SDWriter(str(path)) 
+    try: 
+        for m in mols: 
+            if m is not None:
+                writer.write(m) 
+    finally: 
+        writer.close() 
+
+#|%%--%%| <IMACPFeKJo|2b5Iwe9IVf>
+# Mol objects loaded from the single sdf. 
+def load_mols_sdf(path): 
+    suppl = Chem.SDMolSupplier(str(path), sanitize=True, removeHs=False) 
+    return [m for m in suppl if m is not None] 
+#|%%--%%| <2b5Iwe9IVf|kJDVW0mpA2>
 def csv_generator(df, fname: str, index: Optional[bool]=False):
     filename = f"{fname}.csv" 
     csvdf = df.to_csv(filename, index=index) # include index positional argument for to_csv() 
     return csvdf
-#|%%--%%| <kJDVW0mpA2|gKORvpbmVp>
-df = pd.read_csv('/mnt/d/academic/tmp/PFAS_data_130_personal.csv') 
-MolAbbrv = df['Molecule']
-SmilesAbbrv = df['SMILES']
-log_col_rfpath = df['Log Files (Rel. Path)']
-rfpath_list = log_col_rfpath.tolist()
-#|%%--%%| <gKORvpbmVp|orETn1G454>
-log_mol_inst = LogToMol(rfpath_list) 
-list1 = log_mol_inst.log_mol_list_gen()
-list1
-#|%%--%%| <orETn1G454|MJaYpbuhf9>
-df1_mol = log_mol_inst.log_mol_df_gen()
-df1_mol # this is working
-df1_mol_csv = df1_mol.to_csv('df1_mol_csv.csv') 
+#|%%--%%| <kJDVW0mpA2|Q2IXbtVEa9>
+# smi_22_df.csv contains smiles, molecule abbreviations, log files and names generated from openbabel for all 221 unique molecules 
+smi_221_df = pd.read_csv('~/projects/t99_calc/v1/smi_221_df.csv')
+smi_221_df.keys() 
+# Convert each df column to a list 
+MolAbbrv = smi_221_df['Molecule']
+abbrv = MolAbbrv.tolist() 
+abbrv
+
+SmilesAbbrv = smi_221_df['Veri. SMILES']
+smiles = SmilesAbbrv.tolist() 
+smiles 
+
+log_col_rfpath = smi_221_df['Log Path']
+log_abbrvs = log_col_rfpath.tolist()  
+log_abbrvs 
+
+# This is used to generate a list of log fpath names which is used to correlate a list of mol objects. 
+#df = pd.read_csv('/mnt/d/academic/tmp/PFAS_data_130_personal.csv') 
+rfpath_list = log_abbrvs 
+path_names = [] 
+for i in rfpath_list: 
+    path_name = Path(i).name 
+    path_names.append(path_name) 
+
+log_mol_inst = LogToMol(path_names) 
+smi_221_mol_dict = log_mol_inst.log_mol_list_gen()
+smi_221_mol_dict.keys()
+log_mols = smi_221_mol_dict.get('Log Mol. Objects') 
+log_mols
+
+#|%%--%%| <Q2IXbtVEa9|MJaYpbuhf9>
+# Saving mols to a single sdf file
+save_mols_sdf(mols=log_mols, path=(str("./qchem_data/cache/221_log_mol.sdf"))) 
+
+# Loading mols from the single sdf file 
+log_mols_sdf = load_mols_sdf("./qchem_data/cache/221_log_mol.sdf") 
+#|%%--%%| <MJaYpbuhf9|0H7tUsKila>
+zed = BytesPDB(abbrv=abbrv, log_abbrvs=log_abbrvs, smiles=smiles, log_mols=log_mols) 
+inst = MoleculeSorter(zed)
+inst.analyze_all()
+dict_inst = inst.mol_sorted_dict
+
+# WORKING  
+dict_inst
+
+#|%%--%%| <0H7tUsKila|orETn1G454>
+smi_221_mol_df = log_mol_inst.log_mol_df_gen()
+smi_221_mol_df = smi_221_mol_df.rename(columns={"Log Files (Rel. Path)": "Log Name"}) 
+smi_221_mol_df.keys()  # this is working
+df1_mol_csv = smi_221_mol_df.to_csv('mol_221_df.csv') 
 #csv_generator(mol_merge_df, fname='PFAS_data_130_plus_mol') 
-#|%%--%%| <MJaYpbuhf9|Qdt8pYRChn>
+
+#|%%--%%| <orETn1G454|Qdt8pYRChn>
 #df_left = df1.set_index('Log Files (Rel. Path)')
 #df_right = csv
 csv_path = Path('/mnt/d/academic/tmp/PFAS_data_130_personal.csv') 
@@ -99,8 +158,10 @@ df2_mol = pd.read_csv(csv_path)
 df2_mol
 
 print(df2_mol.head(100).to_string(index=False))
+
 #|%%--%%| <Qdt8pYRChn|NJZceCMubo>
-merged_df = pd.merge(df1_mol_csv, df2_mol, on="Log Files (Rel. Path)", how="right") 
+merged_df = pd.merge(smi_221_df, smi_221_mol_df, on="Log Name", how="right") 
+merged_df.keys() 
 print(merged_df.head(20).to_string(index=False)) 
 #|%%--%%| <NJZceCMubo|ecrzYxG8p2>
 append_inst = AppendToCSV(csv_path=csv_path, imp_df=df1, merge_key='Log Files (Rel. Path)')
@@ -119,4 +180,16 @@ keys
 #|%%--%%| <etdZtaVQG3|5uqXfId71G>
 # Concatenating Shomate polynomial coefs.  ---------------------------------
 
-
+fmt = str('g09') 
+log_file = Path(str('/qchem_data/log_to_pdb_in/o.log')) 
+sdf = log_file.with_suffix('.sdf')
+result = subprocess.run(
+    ["obabel", f"-i{fmt}", str('/qchem_data/log_to_pdb_in/o.log'), "-osdf", "-O", str(sdf)],
+    capture_output=True,
+    text=True
+)
+print("returncode:", result.returncode)
+print("stdout:", result.stdout)
+print("stderr:", result.stderr)
+print("sdf exists:", sdf.exists())
+print("sdf size:", sdf.stat().st_size if sdf.exists() else "missing")
