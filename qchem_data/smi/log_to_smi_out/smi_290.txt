@@ -1,0 +1,580 @@
+FC(C(C(C(C(C(C(F)(F)F)(F)F)(F)F)(F)F)(F)F)(F)F)F	/qchem_data/log_to_pdb_in/heptane1H.log
+
+[O]C([C@@](C(F)(F)F)(OC(C(C(F)(F)F)(F)F)(F)F)F)(F)O	/qchem_data/log_to_pdb_in/frd_903_cof_OH.log
+
+OC(F)(F)F	/qchem_data/log_to_pdb_in/cf3oh.log
+
+FC(C(F)(F)F)F	/qchem_data/log_to_pdb_in/1H_ethane.log
+
+OC(=O)[C@@](C(F)(F)F)(OC(C(C(F)(F)F)(F)F)(F)F)F	/qchem_data/log_to_pdb_in/frd_903.log
+
+F[C](C(F)(F)F)F	/qchem_data/log_to_pdb_in/c2_rad.log
+
+F[C]([C@@](C(C(F)(F)F)(F)F)(F)O)F	/qchem_data/log_to_pdb_in/butene_2OH.log
+
+OC(=O)C(C(C(C(C(C(F)(F)F)(F)F)(F)F)(F)F)(F)F)(F)F	/qchem_data/log_to_pdb_in/pfhpa.log
+
+FC(=C=C(F)F)F	/qchem_data/log_to_pdb_in/allene.log
+
+FC(=O)C(C(C(C(C(C(F)(F)F)(F)F)(F)F)(F)F)(F)F)(F)F	/qchem_data/log_to_pdb_in/pfhpal.log
+
+OC(C(C(C(C(F)(F)F)(F)F)(F)F)(F)F)(F)F	/qchem_data/log_to_pdb_in/pfpeoh.log
+
+FC(=C)C(C(F)(F)F)(F)F	/qchem_data/log_to_pdb_in/31_butene.log
+
+FC(C(C(F)(F)F)(F)F)(C(C(F)(F)F)(F)F)F	/qchem_data/log_to_pdb_in/pentane.log
+
+OC(=O)C(C(C(C(F)(F)F)(F)F)(F)F)(F)F	/qchem_data/log_to_pdb_in/1_pentane.log
+
+F[C](C(C(C(F)(F)F)(F)F)(F)F)C(F)(F)F	/qchem_data/log_to_pdb_in/c5_secondary_rad.log
+
+FC(=O)[C](C(F)(F)F)F.F	/qchem_data/log_to_pdb_in/hfp_1oh_2rad_scanhf.log
+
+F[C](C(C(F)(F)F)(F)F)F	/qchem_data/log_to_pdb_in/1_propyl.log
+
+OC=O	/qchem_data/log_to_pdb_in/cho2h.log
+
+FC(=[C]C(F)(F)F)F	/qchem_data/log_to_pdb_in/cf3ccf2.log
+
+OC(=O)C(C(C(C(C(C(F)(F)F)(F)F)(F)F)(F)F)(F)F)(F)F	/qchem_data/log_to_pdb_in/1_heptane.log
+
+FC(C(F)(F)O)(F)F	/qchem_data/log_to_pdb_in/pfeoh.log
+
+FC1(F)OC1(F)F	/qchem_data/log_to_pdb_in/epoxide.log
+
+[CH3]	/qchem_data/log_to_pdb_in/ch3.log
+
+FC(=C)C(C(C(F)(F)F)(F)F)(F)F	/qchem_data/log_to_pdb_in/41_pentene.log
+
+[O]OC([C](F)F)(F)F	/qchem_data/log_to_pdb_in/c2f4o2.log
+
+OCCC(C(F)(F)F)(F)F	/qchem_data/log_to_pdb_in/22ftoh.log
+
+[O]C(=O)C[N](CCCNS(=O)(=O)CCC(C(C(C(C(C(F)(F)F)(F)F)(F)F)(F)F)(F)F)(F)F)(C)C	/qchem_data/log_to_pdb_in/62ftab.log
+
+F[CH]F	/qchem_data/log_to_pdb_in/cf2h.log
+
+FC(=[C]C(F)(F)F)F	/qchem_data/log_to_pdb_in/propene_betaF_rad.log
+
+FC(C(C(C(C(C(C(F)(F)F)(F)F)(F)F)(F)F)(F)F)(F)F)(S([O])(O)[O])F	/qchem_data/log_to_pdb_in/pfhps.log
+
+O=C1OC1(F)F	/qchem_data/log_to_pdb_in/lactone.log
+
+FC(C(C(S(=O)(=O)N)(F)F)(F)F)(C(F)(F)F)F	/qchem_data/log_to_pdb_in/fbsa.log
+
+C=CC(C(C(C(C(F)(F)F)(F)F)(F)F)(F)F)(F)F	/qchem_data/log_to_pdb_in/52_heptene.log
+
+F/C(=C(\C(C(F)(F)F)(F)F)/F)/C(F)(F)F.[F]	/qchem_data/log_to_pdb_in/c5_sec_tert_rad_isots.log
+
+FC(C(C(C(C(C(C(F)(F)F)(F)F)(F)F)(F)F)(F)F)(F)F)F	/qchem_data/log_to_pdb_in/1H_heptane.log
+
+[O]C(OC(F)(F)F)(F)F	/qchem_data/log_to_pdb_in/cf3o_cf2o_prod.log
+
+OC(F)(F)O.O	/qchem_data/log_to_pdb_in/cf2o_2h2oprod.log
+
+FC(C(C(C(C(C(C(C(C(C(C(C(F)(F)F)(F)F)(F)F)(F)F)(F)F)(F)F)(F)F)(F)F)(F)F)(F)F)(F)F)F	/qchem_data/log_to_pdb_in/1H_dodecane.log
+
+CCC(C(C(C(F)(F)F)(F)F)(F)F)(F)F	/qchem_data/log_to_pdb_in/42rh.log
+
+FC(C(C(C(C(S(=O)(=O)N)(F)F)(F)F)(F)F)(F)F)(C(C(C(F)(F)F)(F)F)(F)F)F	/qchem_data/log_to_pdb_in/fosa.log
+
+FC(=O)[C@@](C(F)(F)F)(OC(C(C(F)(F)F)(F)F)(F)F)F	/qchem_data/log_to_pdb_in/frd_903_carbF.log
+
+O[C](F)F	/qchem_data/log_to_pdb_in/cf2oh.log
+
+NS(=O)(=O)CCC(C(C(C(C(F)(F)F)(F)F)(F)F)(F)F)(F)F	/qchem_data/log_to_pdb_in/52_ftsa.log
+
+F[C](C(C(C(C(C(C(F)(F)F)(F)F)(F)F)(F)F)(F)F)(F)F)C(F)(F)F	/qchem_data/log_to_pdb_in/c8_secondary_rad.log
+
+FC(F)(F)F	/qchem_data/log_to_pdb_in/cf4.log
+
+F[C](C(C(C(F)(F)F)(F)F)(F)F)F	/qchem_data/log_to_pdb_in/1_octane_c4_rad.log
+
+F[C]C(F)(F)F	/qchem_data/log_to_pdb_in/cf3cf_carbene.log
+
+C=CC(C(C(C(F)(F)F)(F)F)(F)F)(F)F	/qchem_data/log_to_pdb_in/42_hexene.log
+
+[C]=O	/qchem_data/log_to_pdb_in/co.log
+
+F[C](C(F)(F)F)C(F)(F)O	/qchem_data/log_to_pdb_in/hfp_1oh_2nd.log
+
+FC(C(C(C(C(C(C(C(C(C(F)(F)F)(F)F)(F)F)(F)F)(F)F)(F)F)(F)F)(F)F)(F)F)F	/qchem_data/log_to_pdb_in/1H_decane.log
+
+FC(C(F)(F)F)(CCS([O])([O])O)F	/qchem_data/log_to_pdb_in/22_fts.log
+
+FC(=C(C(F)(F)F)F)F	/qchem_data/log_to_pdb_in/c3f6.log
+
+F[C](C(F)(F)F)C(F)(F)F	/qchem_data/log_to_pdb_in/c3f7_2nd.log
+
+FC([C@@]1(F)OOC1(F)F)(F)F	/qchem_data/log_to_pdb_in/c3f6o2_ring.log
+
+F[C](C(C(C(F)(F)F)(F)F)(F)F)F	/qchem_data/log_to_pdb_in/c4_rad.log
+
+F[C](C(C(C(C(F)(F)F)(F)F)(F)F)(F)F)C(F)(F)F	/qchem_data/log_to_pdb_in/2_hexyl.log
+
+O[C]=O	/qchem_data/log_to_pdb_in/co2h.log
+
+F[C](C(C(C(C(C(C(F)(F)F)(F)F)(F)F)(F)F)(F)F)(F)F)C(F)(F)F	/qchem_data/log_to_pdb_in/2_octyl.log
+
+FC(=C(C(F)(F)F)F)F.[OH]	/qchem_data/log_to_pdb_in/hfp_1oh_2rad_scan.log
+
+O=C1O[C@]1(OC(C(C(F)(F)F)(F)F)(F)F)C(F)(F)F.F	/qchem_data/log_to_pdb_in/frd_903_0HFAts_prod.log
+
+FC(C(C(C(C(C(C(C(F)(F)F)(F)F)(F)F)(F)F)(F)F)(F)F)(F)F)F	/qchem_data/log_to_pdb_in/octane1H.log
+
+FC(C(C(C(C(C(C(C(C(F)(F)F)(F)F)(F)F)(F)F)(F)F)(F)F)(F)F)(F)F)F	/qchem_data/log_to_pdb_in/1H_nonane.log
+
+FC(C(F)(F)O)F	/qchem_data/log_to_pdb_in/c2f4h2o_prod.log
+
+F[C]C(F)(F)F	/qchem_data/log_to_pdb_in/c2f4_carbene.log
+
+F[C](C(C(F)(F)F)(F)F)C(F)(F)O	/qchem_data/log_to_pdb_in/butene_OH.log
+
+FC(S(O)([O])[O])(F)F	/qchem_data/log_to_pdb_in/triflic.log
+
+FC(C(C(C(C(C(C(C(C(C(C(F)(F)F)(F)F)(F)F)(F)F)(F)F)(F)F)(F)F)(F)F)(F)F)(F)F)F	/qchem_data/log_to_pdb_in/1H_undecane.log
+
+FC(C(C(S(O)([O])[O])(F)F)(F)F)(F)F	/qchem_data/log_to_pdb_in/pfprs.log
+
+FC(=C(C(C(F)(F)F)(F)F)F)F	/qchem_data/log_to_pdb_in/butene.log
+
+FC(C(F)(F)F)F	/qchem_data/log_to_pdb_in/ethane1H.log
+
+OC(=O)CCC(C(C(C(C(F)(F)F)(F)F)(F)F)(F)F)(F)F	/qchem_data/log_to_pdb_in/53_ftca.log
+
+FC(=C(C(C(C(C(C(F)(F)F)(F)F)(F)F)(F)F)(F)F)F)F	/qchem_data/log_to_pdb_in/heptene.log
+
+OC(F)(O)O	/qchem_data/log_to_pdb_in/cfoh3.log
+
+OC(F)(F)O	/qchem_data/log_to_pdb_in/cf2oh2.log
+
+F[C](C(C(F)(F)F)(F)F)F	/qchem_data/log_to_pdb_in/c3_rad.log
+
+F[CH]C(F)(F)F	/qchem_data/log_to_pdb_in/cf3chf.log
+
+FC(C(F)(F)F)(S([O])([O])O)F	/qchem_data/log_to_pdb_in/pfets.log
+
+O[C](C(F)(F)F)C(F)(F)F	/qchem_data/log_to_pdb_in/hfp_2oh_2rad_prod.log
+
+FC(C(C(C(F)(F)F)(F)F)(F)F)(CCS([O])([O])O)F	/qchem_data/log_to_pdb_in/42_fts.log
+
+FC(=O)C(F)(F)F	/qchem_data/log_to_pdb_in/c2f4o.log
+
+FC(C(C(C(F)(F)F)(F)F)(F)F)F	/qchem_data/log_to_pdb_in/butane1H.log
+
+[F]	/qchem_data/log_to_pdb_in/f.log
+
+F[C]C(C(C(C(C(C(F)(F)F)(F)F)(F)F)(F)F)(F)F)(F)F	/qchem_data/log_to_pdb_in/1_octane_c7_carbene.log
+
+OC(C(C(C(F)(F)F)(F)F)(F)F)(F)F	/qchem_data/log_to_pdb_in/pfboh.log
+
+FC(C(C(F)(F)F)(F)F)(C(C(C(F)(F)F)(F)F)(F)F)F	/qchem_data/log_to_pdb_in/hexane.log
+
+FC(=O)C(C(C(C(C(C(F)(F)F)(F)F)(F)F)(F)F)(F)F)(F)F	/qchem_data/log_to_pdb_in/pfocof.log
+
+F[C](C(F)(F)F)C(F)(F)F	/qchem_data/log_to_pdb_in/c3_secondary_rad.log
+
+FC(=O)F.O.O	/qchem_data/log_to_pdb_in/cf2o_2h2oreact.log
+
+FC(C(C(F)(F)F)(F)F)(CCS(=O)(=O)N)F	/qchem_data/log_to_pdb_in/32_ftsa.log
+
+FC(C(C(C(C(C(F)(F)F)(F)F)(F)F)(F)F)(F)F)(C(C(S([O])(O)[O])(F)F)(F)F)F	/qchem_data/log_to_pdb_in/pfos.log
+
+F[C](C(C(F)(F)F)(F)F)C(F)(F)F	/qchem_data/log_to_pdb_in/c4_secondary_rad.log
+
+OC(=O)CCC(C(F)(F)F)(F)F	/qchem_data/log_to_pdb_in/23_ftca.log
+
+F/C(=C(\C(C(C(C(C(F)(F)F)(F)F)(F)F)(F)F)(F)F)/F)/C(F)(F)F	/qchem_data/log_to_pdb_in/2_octene.log
+
+FC(=O)C(C(C(F)(F)F)(F)F)(F)F	/qchem_data/log_to_pdb_in/pfbcof.log
+
+FC(C(C(S(=O)(=O)N)(F)F)(F)F)(F)F	/qchem_data/log_to_pdb_in/fprsa.log
+
+OC(=O)OC(C(C(F)(F)F)(F)F)(F)F	/qchem_data/log_to_pdb_in/c3_oco2h.log
+
+O[C](C(C(F)(F)F)(F)F)F	/qchem_data/log_to_pdb_in/hfp_1oh_1rad_prod.log
+
+FC(=O)C(F)(F)F	/qchem_data/log_to_pdb_in/tfal.log
+
+FC(C(C(C(F)(F)F)(F)F)(F)F)F	/qchem_data/log_to_pdb_in/1Hbutane.log
+
+F[C](C(C(C(C(C(F)(F)F)(F)F)(F)F)(F)F)(F)F)C(C(F)(F)F)(F)F	/qchem_data/log_to_pdb_in/3_octyl.log
+
+F[C](C(C(F)(F)F)(F)F)C(F)(F)F	/qchem_data/log_to_pdb_in/c4f9_2_rad.log
+
+FC1(F)C(F)(F)C(C1(F)F)(F)F	/qchem_data/log_to_pdb_in/cbutane.log
+
+FC(C(C(C(F)(F)F)(F)F)(F)F)(CCS(=O)(=O)N)F	/qchem_data/log_to_pdb_in/42_ftsa.log
+
+FC(C(C(C(C(C(C(C(F)(F)F)(F)F)(F)F)(F)F)(F)F)(F)F)(F)F)F	/qchem_data/log_to_pdb_in/1H_octane.log
+
+FC(C(C(C(F)(F)F)(F)F)(F)F)F	/qchem_data/log_to_pdb_in/1H_butane.log
+
+FC(C(OC(C(C(F)(F)F)(F)F)(F)F)(O)[O])(F)F	/qchem_data/log_to_pdb_in/ester_oh.log
+
+OC(=O)C(C(C(F)(F)F)(F)F)(F)F	/qchem_data/log_to_pdb_in/pfba.log
+
+F/C(=C(\C(F)(F)F)/F)/C(F)(F)F	/qchem_data/log_to_pdb_in/2_butene_ip.log
+
+F[C](C(C(C(C(F)(F)F)(F)F)(F)F)(F)F)F	/qchem_data/log_to_pdb_in/c5_rad.log
+
+O=[C]C(F)(F)F	/qchem_data/log_to_pdb_in/cf3co.log
+
+O=O	/qchem_data/log_to_pdb_in/o2.log
+
+OC(=O)C(C(C(F)(F)F)(F)F)(F)F	/qchem_data/log_to_pdb_in/1_butane.log
+
+F/[C]=C(/C(F)(F)F)\F	/qchem_data/log_to_pdb_in/propene_calpha_rad.log
+
+OC(F)F.O	/qchem_data/log_to_pdb_in/cf2_2h2o_prod.log
+
+FC([C@@]1(F)OC1(F)F)(F)F	/qchem_data/log_to_pdb_in/c3f6o.log
+
+OC(=O)CCC(C(C(C(F)(F)F)(F)F)(F)F)(F)F	/qchem_data/log_to_pdb_in/43_ftca.log
+
+FC(C(C(F)(F)F)(F)F)(C(F)(F)F)F	/qchem_data/log_to_pdb_in/butane.log
+
+O=C(C(F)(F)F)OC(C(C(F)(F)F)(F)F)(F)F	/qchem_data/log_to_pdb_in/frd_903_0HFAts_prod_COlossprod.log
+
+F[C](C(C(C(C(C(F)(F)F)(F)F)(F)F)(F)F)(F)F)C(F)(F)F	/qchem_data/log_to_pdb_in/c7_secondary_rad.log
+
+O	/qchem_data/log_to_pdb_in/h2o.log
+
+OC(=O)C(C(C(C(C(F)(F)F)(F)F)(F)F)(F)F)(F)F	/qchem_data/log_to_pdb_in/1_hexane.log
+
+[O]S(CCC(C(C(C(C(F)(F)F)(F)F)(F)F)(F)F)(F)F)(O)[O]	/qchem_data/log_to_pdb_in/52_fts.log
+
+FC(=O)C(C(C(C(C(F)(F)F)(F)F)(F)F)(F)F)(F)F	/qchem_data/log_to_pdb_in/pfhxal.log
+
+OC(=O)F	/qchem_data/log_to_pdb_in/chfo2.log
+
+FC(=C(C(C(C(F)(F)F)(F)F)(F)F)F)F	/qchem_data/log_to_pdb_in/pentene.log
+
+F/C(=C(\C(C(C(F)(F)F)(F)F)(F)F)/F)/C(F)(F)F	/qchem_data/log_to_pdb_in/2_hexene.log
+
+FC(=O)C(C(F)(F)F)(F)F	/qchem_data/log_to_pdb_in/c2f5cof.log
+
+[O]S(C(C(C(C(C(F)(F)F)(F)F)(F)F)(F)F)(F)F)(O)[O]	/qchem_data/log_to_pdb_in/pfpes.log
+
+F[C](C(=O)O)F	/qchem_data/log_to_pdb_in/cf2coho.log
+
+FC(=C(C(F)(F)F)F)F	/qchem_data/log_to_pdb_in/propene.log
+
+[O]C(F)(F)O	/qchem_data/log_to_pdb_in/cf2o_oh.log
+
+F/C(=C(\C(F)(F)F)/F)/C(F)(F)F	/qchem_data/log_to_pdb_in/2butene.log
+
+F[C]F.O	/qchem_data/log_to_pdb_in/cf2_h2o_ts_react.log
+
+F[C@H](C(C(F)(F)F)(F)F)C(F)(F)F	/qchem_data/log_to_pdb_in/c4f9H_secondary.log
+
+F[C](C(C(C(C(F)(F)F)(F)F)(F)F)(F)F)C(F)(F)F	/qchem_data/log_to_pdb_in/c6_secondary_rad.log
+
+F[C](C(F)(F)F)OC(C(C(F)(F)F)(F)F)(F)F	/qchem_data/log_to_pdb_in/frd_c5f11o.log
+
+OCCC(C(C(C(C(C(F)(F)F)(F)F)(F)F)(F)F)(F)F)(F)F	/qchem_data/log_to_pdb_in/62ftoh.log
+
+FC(C(C(C(C(C(S(=O)(=O)N)(F)F)(F)F)(F)F)(F)F)(F)F)(C(F)(F)F)F	/qchem_data/log_to_pdb_in/fhpsa.log
+
+F[C](C(C(F)(F)F)(F)F)F	/qchem_data/log_to_pdb_in/c3f7.log
+
+OC(F)F	/qchem_data/log_to_pdb_in/cf2_h2o_ts_prod.log
+
+F/[C]=C(\C(F)(F)F)/F	/qchem_data/log_to_pdb_in/propene_talphaF_rad.log
+
+F[C]=C(F)F	/qchem_data/log_to_pdb_in/cf2cf.log
+
+FC(=O)C(C(C(C(F)(F)F)(F)F)(F)F)(F)F	/qchem_data/log_to_pdb_in/pfpnal.log
+
+F[C](C(C(C(C(C(C(F)(F)F)(F)F)(F)F)(F)F)(F)F)(F)F)F	/qchem_data/log_to_pdb_in/1_octane_c7_rad.log
+
+F[C](C(C(C(C(F)(F)F)(F)F)(F)F)(F)F)C(C(C(F)(F)F)(F)F)(F)F	/qchem_data/log_to_pdb_in/4_octyl.log
+
+FC(C(C(C(C(F)(F)F)(F)F)(F)F)(F)F)F	/qchem_data/log_to_pdb_in/pentane1H.log
+
+OCCC(C(C(C(C(F)(F)F)(F)F)(F)F)(F)F)(F)F	/qchem_data/log_to_pdb_in/52ftoh.log
+
+OCCC(C(C(F)(F)F)(F)F)(F)F	/qchem_data/log_to_pdb_in/32ftoh.log
+
+O[C]F	/qchem_data/log_to_pdb_in/cfoh_cis.log
+
+FC(C(F)(F)F)(C(F)(F)[O])F	/qchem_data/log_to_pdb_in/c3f7o.log
+
+[O]C(F)(F)F	/qchem_data/log_to_pdb_in/cf3o.log
+
+F[C]=O	/qchem_data/log_to_pdb_in/cof.log
+
+FC(C(C(C(F)(F)F)(F)F)(F)F)(C(C(C(C(F)(F)F)(F)F)(F)F)(F)F)F	/qchem_data/log_to_pdb_in/n_octane_twisted.log
+
+O=C1O[C@]1(OC(C(C(F)(F)F)(F)F)(F)F)C(F)(F)F	/qchem_data/log_to_pdb_in/frd_903_0HFAts_prod_minusHF.log
+
+FC(=O)C(C(C(C(C(F)(F)F)(F)F)(F)F)(F)F)(F)F	/qchem_data/log_to_pdb_in/pfhxcof.log
+
+O[C]F	/qchem_data/log_to_pdb_in/cfoh.log
+
+FC(=O)[C](C(C(F)(F)F)(F)F)F	/qchem_data/log_to_pdb_in/c4f7_o.log
+
+FC(=C(C(C(C(F)(F)F)(F)F)(F)F)F)F.[F]	/qchem_data/log_to_pdb_in/c5_prim_sec_rad_isots.log
+
+FC(=O)F.O	/qchem_data/log_to_pdb_in/cf2o_h2o.log
+
+OC(=O)O	/qchem_data/log_to_pdb_in/cooh2.log
+
+FC(C(C(C(C(C(F)(F)F)(F)F)(F)F)(F)F)(F)F)(C(F)(F)O)F	/qchem_data/log_to_pdb_in/c7f15oh.log
+
+F[C](C(=C(F)F)F)F	/qchem_data/log_to_pdb_in/allyl.log
+
+FC(C(F)(F)F)(C(F)(O)[O])F	/qchem_data/log_to_pdb_in/c3f6oOH2nd.log
+
+FC(=O)C(C(C(F)(F)F)(F)F)(F)F	/qchem_data/log_to_pdb_in/pfbal.log
+
+OC(=O)C(C(C(C(C(C(C(F)(F)F)(F)F)(F)F)(F)F)(F)F)(F)F)(F)F	/qchem_data/log_to_pdb_in/pfoa.log
+
+F[C](C(F)(F)F)C(F)(F)O	/qchem_data/log_to_pdb_in/hfp_1oh_2rad_prod.log
+
+FC(C(C(C(C(F)(F)F)(F)F)(F)F)(F)F)(C(F)(F)O)F	/qchem_data/log_to_pdb_in/pfhxoh.log
+
+F[C](C(F)(F)F)OC(C(C(F)(F)F)(F)F)(F)F	/qchem_data/log_to_pdb_in/e1_minusH.log
+
+FC(C(C(F)(F)F)(F)F)(CCS(O)([O])[O])F	/qchem_data/log_to_pdb_in/32_fts.log
+
+FC(C(F)(F)F)(CCS(=O)(=O)N)F	/qchem_data/log_to_pdb_in/22_ftsa.log
+
+CCC(C(C(C(C(C(F)(F)F)(F)F)(F)F)(F)F)(F)F)(F)F	/qchem_data/log_to_pdb_in/62rh.log
+
+FC=O	/qchem_data/log_to_pdb_in/cfho.log
+
+F[C](C(C(C(C(C(F)(F)F)(F)F)(F)F)(F)F)(F)F)F	/qchem_data/log_to_pdb_in/c6_rad.log
+
+OC(=O)[C@@](C(F)(F)F)(OC(C(C(F)(F)F)(F)F)(F)F)F	/qchem_data/log_to_pdb_in/hfpo_da.log
+
+F[C](C(C(C(C(C(C(C(F)(F)F)(F)F)(F)F)(F)F)(F)F)(F)F)(F)F)F	/qchem_data/log_to_pdb_in/1_octane_c8_rad.log
+
+CC	/qchem_data/log_to_pdb_in/c2h6.log
+
+[O]C(=O)F	/qchem_data/log_to_pdb_in/cfo2.log
+
+F[C](C(C(C(F)(F)F)(F)F)(F)F)C(C(F)(F)F)(F)F	/qchem_data/log_to_pdb_in/3_pentyl.log
+
+FC(C(F)(F)F)(C(F)(F)O)F	/qchem_data/log_to_pdb_in/c3f7oh.log
+
+FC(=C)C(C(C(C(C(F)(F)F)(F)F)(F)F)(F)F)(F)F	/qchem_data/log_to_pdb_in/61_heptene.log
+
+[O]OC([C](C(F)(F)F)F)(F)F	/qchem_data/log_to_pdb_in/c3f6o2_1st.log
+
+F/C(=C(\C(F)(F)F)/F)/C(F)(F)F.[F]	/qchem_data/log_to_pdb_in/c4_sec_sec_rad_isots.log
+
+FC(C(F)(F)F)F	/qchem_data/log_to_pdb_in/c2f5h.log
+
+FC(=O)C(C(F)(F)F)(F)F	/qchem_data/log_to_pdb_in/pfprcof.log
+
+FC(C(C(C(F)(F)F)(F)F)(F)F)(S(O)([O])[O])F	/qchem_data/log_to_pdb_in/pfbs.log
+
+F[C]([C@@](C(F)(F)F)(F)O)F	/qchem_data/log_to_pdb_in/hfp_2oh.log
+
+CCC(C(C(C(C(F)(F)F)(F)F)(F)F)(F)F)(F)F	/qchem_data/log_to_pdb_in/52rh.log
+
+[CH2]F	/qchem_data/log_to_pdb_in/ch2F.log
+
+OC(=O)F	/qchem_data/log_to_pdb_in/cfo2h.log
+
+F[C](C([C](F)F)(F)F)F	/qchem_data/log_to_pdb_in/cpropane_intts_prod.log
+
+F[C](C(C(C(F)(F)F)(F)F)(F)F)C(F)(F)F	/qchem_data/log_to_pdb_in/2_pentyl.log
+
+FC(=O)[C@@](C(F)(F)F)(OC(C(C(F)(F)F)(F)F)(F)F)F	/qchem_data/log_to_pdb_in/frd_903_cof.log
+
+FC(=C)C(F)(F)F	/qchem_data/log_to_pdb_in/21_propene.log
+
+OC(=O)C(C(F)(F)F)(F)F	/qchem_data/log_to_pdb_in/pfpra.log
+
+[OH]	/qchem_data/log_to_pdb_in/oh.log
+
+FC(C(C(F)(F)F)(F)F)F	/qchem_data/log_to_pdb_in/propane1H.log
+
+OC(C(C(C(F)(F)F)(F)F)(F)F)(F)F	/qchem_data/log_to_pdb_in/c4f9oh.log
+
+FC(=C(F)F)F	/qchem_data/log_to_pdb_in/c2f4.log
+
+FC(=C(C(C(F)(F)F)(F)F)F)F	/qchem_data/log_to_pdb_in/1_butene.log
+
+CCC(C(C(F)(F)F)(F)F)(F)F	/qchem_data/log_to_pdb_in/32rh.log
+
+F[C]=O	/qchem_data/log_to_pdb_in/cfo.log
+
+O[C]=O	/qchem_data/log_to_pdb_in/cooh.log
+
+F[C](C(F)(F)F)C(F)(F)F	/qchem_data/log_to_pdb_in/2_propyl.log
+
+FC(S(=O)(=O)N)(F)F	/qchem_data/log_to_pdb_in/triflate_amide.log
+
+F	/qchem_data/log_to_pdb_in/hf.log
+
+F[C](C(C(C(F)(F)F)(F)F)(F)F)C(C(C(F)(F)F)(F)F)(F)F	/qchem_data/log_to_pdb_in/4_heptyl.log
+
+OC(=O)C(C(C(C(F)(F)F)(F)F)(F)F)(F)F	/qchem_data/log_to_pdb_in/pfpna.log
+
+FC(=C)C(C(C(C(C(C(F)(F)F)(F)F)(F)F)(F)F)(F)F)(F)F	/qchem_data/log_to_pdb_in/71_octene.log
+
+C=CC(C(C(F)(F)F)(F)F)(F)F	/qchem_data/log_to_pdb_in/32_pentene.log
+
+[O]S(C(C(C(C(C(C(F)(F)F)(F)F)(F)F)(F)F)(F)F)(F)F)(O)[O]	/qchem_data/log_to_pdb_in/pfhxs.log
+
+FC(OC(=O)C(F)(F)F)F	/qchem_data/log_to_pdb_in/cf2_tfa_prod.log
+
+FC(=C(C(C(C(C(C(C(F)(F)F)(F)F)(F)F)(F)F)(F)F)(F)F)F)F	/qchem_data/log_to_pdb_in/octene.log
+
+O=C=O	/qchem_data/log_to_pdb_in/co2.log
+
+F[C@H](C(F)(F)F)OC(C(C(F)(F)F)(F)F)(F)F	/qchem_data/log_to_pdb_in/e1.log
+
+OC(=O)CCC(C(C(F)(F)F)(F)F)(F)F	/qchem_data/log_to_pdb_in/33_ftca.log
+
+F/C(=C(\C(C(F)(F)F)(F)F)/F)/C(F)(F)F	/qchem_data/log_to_pdb_in/2_pentene.log
+
+FC(C(C(F)(F)F)(F)F)F	/qchem_data/log_to_pdb_in/1H_propane.log
+
+FC(C(F)([O])O)(F)F	/qchem_data/log_to_pdb_in/tfcof_oh.log
+
+O[C](C(F)(F)F)F	/qchem_data/log_to_pdb_in/cf3cfoh.log
+
+C=CC(C(F)(F)F)(F)F	/qchem_data/log_to_pdb_in/22_butene.log
+
+FC(C(C(C(C(C(F)(F)F)(F)F)(F)F)(F)F)(F)F)F	/qchem_data/log_to_pdb_in/1H_hexane.log
+
+FC(C(C(C(C(C(S(=O)(=O)N)(F)F)(F)F)(F)F)(F)F)(F)F)(F)F	/qchem_data/log_to_pdb_in/fhxsa.log
+
+CCC(C(F)(F)F)(F)F	/qchem_data/log_to_pdb_in/22rh.log
+
+C=CC(C(C(C(C(C(F)(F)F)(F)F)(F)F)(F)F)(F)F)(F)F	/qchem_data/log_to_pdb_in/62_octene.log
+
+FC(=C([C](C(F)(F)F)F)F)F	/qchem_data/log_to_pdb_in/butylallyl.log
+
+FC(=O)[C](F)F	/qchem_data/log_to_pdb_in/c2f3_o.log
+
+F[C](C(C(F)(F)F)(F)F)F	/qchem_data/log_to_pdb_in/c3f7_t.log
+
+F[C](C(C(F)(F)F)(F)F)C(F)(F)F	/qchem_data/log_to_pdb_in/2_butyl.log
+
+OC(=O)C(C(F)(F)F)(F)F	/qchem_data/log_to_pdb_in/1_propane.log
+
+F[C](C(F)(F)O)F	/qchem_data/log_to_pdb_in/c2f4_oh.log
+
+FC(C(C(C(F)(F)F)(F)F)(F)F)(C(C(C(F)(F)F)(F)F)(F)F)F	/qchem_data/log_to_pdb_in/heptane.log
+
+F/C(=C(\C(C(C(C(F)(F)F)(F)F)(F)F)(F)F)/F)/C(F)(F)F	/qchem_data/log_to_pdb_in/2_heptene.log
+
+F[C]F.O.O	/qchem_data/log_to_pdb_in/cf2_2h2o.log
+
+OC(=O)C(C(C(C(C(F)(F)F)(F)F)(F)F)(F)F)(F)F	/qchem_data/log_to_pdb_in/pfhxa.log
+
+OC(F)(F)F	/qchem_data/log_to_pdb_in/pftoh.log
+
+OCCC(C(C(C(F)(F)F)(F)F)(F)F)(F)F	/qchem_data/log_to_pdb_in/42ftoh.log
+
+FC(=O)C(C(C(C(C(C(F)(F)F)(F)F)(F)F)(F)F)(F)F)(F)F	/qchem_data/log_to_pdb_in/pfhpcof.log
+
+FC(=C(C(C(C(C(F)(F)F)(F)F)(F)F)(F)F)F)F	/qchem_data/log_to_pdb_in/hexene.log
+
+FC(=C(F)F)F.F[C]F	/qchem_data/log_to_pdb_in/cpropane_picomplex.log
+
+FC(F)F	/qchem_data/log_to_pdb_in/1H_methane.log
+
+OC(=O)C(F)(F)F	/qchem_data/log_to_pdb_in/tfa.log
+
+FC(=O)C(C(C(C(F)(F)F)(F)F)(F)F)(F)F	/qchem_data/log_to_pdb_in/pfpncof.log
+
+OC(C(C(C(C(C(C(C(F)(F)F)(F)F)(F)F)(F)F)(F)F)(F)F)(F)F)(F)F	/qchem_data/log_to_pdb_in/pfooh.log
+
+FC(S(=O)(=O)N)(C(F)(F)F)F	/qchem_data/log_to_pdb_in/fetsa.log
+
+FC(C(C(C(C(S(=O)(=O)N)(F)F)(F)F)(F)F)(F)F)(F)F	/qchem_data/log_to_pdb_in/fpnsa.log
+
+FC(C(C(C(C(F)(F)F)(F)F)(F)F)(F)F)(C(F)(F)O)F	/qchem_data/log_to_pdb_in/c6f13oh.log
+
+OC(C(C(C(C(F)(F)F)(F)F)(F)F)(F)F)(F)F	/qchem_data/log_to_pdb_in/c5f11oh.log
+
+[O]O[C](F)F	/qchem_data/log_to_pdb_in/cf2o2_rad.log
+
+CCC	/qchem_data/log_to_pdb_in/propane.log
+
+F[CH]C(C(F)(F)F)(F)F	/qchem_data/log_to_pdb_in/cf3cf2chf.log
+
+F[C]([C@](C(F)(F)F)(F)O)F	/qchem_data/log_to_pdb_in/hfp_2oh_1rad_prod.log
+
+FC(C(F)(F)F)(C(F)([O])O)F	/qchem_data/log_to_pdb_in/c2f5cof_oh.log
+
+F/C(=C(\C(F)(F)F)/F)/C(F)(F)F	/qchem_data/log_to_pdb_in/2_butene.log
+
+FC(=C(C(C(C(C(C(F)(F)F)(F)F)(F)F)(F)F)(F)F)F)F	/qchem_data/log_to_pdb_in/1_octane_alpha_prod_prod_ene.log
+
+F[C](C(F)(F)F)F	/qchem_data/log_to_pdb_in/c2f5.log
+
+F[C](C(F)(F)F)C(F)(F)O	/qchem_data/log_to_pdb_in/hfp_1oh.log
+
+FC1(F)C(C1(F)F)(F)F	/qchem_data/log_to_pdb_in/cpropane.log
+
+FC(C(C(C(C(F)(F)F)(F)F)(F)F)(F)F)F	/qchem_data/log_to_pdb_in/1H_pentane.log
+
+FC(C(F)(F)F)(C(F)(F)F)F	/qchem_data/log_to_pdb_in/c3f8.log
+
+F[C@@H](C(C(F)(F)F)(F)F)C(F)(F)F	/qchem_data/log_to_pdb_in/2Hbutane.log
+
+FC(=O)F	/qchem_data/log_to_pdb_in/cf2o.log
+
+O=C(C(F)(F)F)OC(C(C(F)(F)F)(F)F)(F)F	/qchem_data/log_to_pdb_in/ester.log
+
+FC(C(F)(F)O)(F)F	/qchem_data/log_to_pdb_in/c2f5oh.log
+
+O/C(=C(\C(F)(F)F)/F)/F.[F]	/qchem_data/log_to_pdb_in/hfp_1oh_ts.log
+
+F[C](C(C(C(C(F)(F)F)(F)F)(F)F)(F)F)C(C(F)(F)F)(F)F	/qchem_data/log_to_pdb_in/3_heptyl.log
+
+OC(=O)C(F)(F)F	/qchem_data/log_to_pdb_in/ethane_2000.log
+
+FC(=C)C(C(C(C(F)(F)F)(F)F)(F)F)(F)F	/qchem_data/log_to_pdb_in/51_hexene.log
+
+F[C](C(C(C(F)(F)F)(F)F)(F)F)C(C(F)(F)F)(F)F	/qchem_data/log_to_pdb_in/3_hexyl.log
+
+OC(=O)CNS(=O)(=O)C(C(C(C(F)(F)F)(F)F)(F)F)(F)F	/qchem_data/log_to_pdb_in/nmefosaa.log
+
+O[C](C(F)(F)F)F	/qchem_data/log_to_pdb_in/cf3cfoh_cis.log
+
+FC(F)F	/qchem_data/log_to_pdb_in/cf3h.log
+
+F[C]F	/qchem_data/log_to_pdb_in/cf2.log
+
+FC(C(C(C(C(C(F)(F)F)(F)F)(F)F)(F)F)(F)F)(C(F)(F)O)F	/qchem_data/log_to_pdb_in/pfhpoh.log
+
+FC(C(F)(F)F)(C(F)(F)O)F	/qchem_data/log_to_pdb_in/pfproh.log
+
+F[C](F)F	/qchem_data/log_to_pdb_in/cf3.log
+
+FC([C](F)F)F	/qchem_data/log_to_pdb_in/cf2hcf2.log
+
+F[C](C(C(C(F)(F)F)(F)F)(F)F)F	/qchem_data/log_to_pdb_in/c4f9_1_rad.log
+
+[O]S(CCC(C(C(C(C(C(F)(F)F)(F)F)(F)F)(F)F)(F)F)(F)F)([O])O	/qchem_data/log_to_pdb_in/62_fts.log
+
+NS(=O)(=O)CCC(C(C(C(C(C(F)(F)F)(F)F)(F)F)(F)F)(F)F)(F)F	/qchem_data/log_to_pdb_in/62_ftsa.log
+
+[O]C([C@@](C(F)(F)F)(OC(C(C(F)(F)F)(F)F)(F)F)F)(F)O	/qchem_data/log_to_pdb_in/frd_903_carbF_OH.log
+
+FC(=O)C(F)(F)F	/qchem_data/log_to_pdb_in/tfcof.log
+
+F[C]=O	/qchem_data/log_to_pdb_in/cof2nd_.log
+
+FC(C(F)(F)F)(F)F	/qchem_data/log_to_pdb_in/c2f6.log
+
+FC(=O)[C](C(F)(F)F)F	/qchem_data/log_to_pdb_in/c3f5co.log
+
+F[C](C(C([C](F)F)(F)F)(F)F)F	/qchem_data/log_to_pdb_in/cbutane_diradical.log
+
+OC(=O)C(C(C(C(C(C(C(F)(F)F)(F)F)(F)F)(F)F)(F)F)(F)F)(F)F	/qchem_data/log_to_pdb_in/1_octane.log
+
+[O]	/qchem_data/log_to_pdb_in/o.log
+
+FC(C(C(C(C(C(F)(F)F)(F)F)(F)F)(F)F)(F)F)F	/qchem_data/log_to_pdb_in/hexane1H.log
+
+FC(=O)C(C(F)(F)F)(F)F	/qchem_data/log_to_pdb_in/pfpal.log
+
