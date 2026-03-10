@@ -9,7 +9,10 @@ from rdkit.Chem.rdchem import Mol
 from pathlib import Path 
 from itertools import zip_longest, product 
 from collections import Counter 
-#|%%--%%| <dVOXJZmJLu|LPbpOa590o>
+from collections.abc import Collection 
+
+FORBIDDEN = frozenset({ "S", "N" }) 
+
 class BytesPDB:
     def __init__(self, 
                  data_path: Optional[str] = None, 
@@ -35,7 +38,7 @@ class BytesPDB:
                 "SMILES": [],
                 "Mol. Object": [],
                 ".log": [],
-                "Mol. Formula": [],
+#                "Mol. Formula": [],
         }
 
     def bookeeper(self) -> dict:
@@ -43,31 +46,53 @@ class BytesPDB:
         self.fparse.smi_populate()
         for idx, (smiles, abbrv, log_abbrvs, log_mols) in enumerate(zip_longest(self.smiles, self.abbrv, self.log_abbrvs, self.log_mols)):
             self.smi_pdb_dict["SMILES"].append(smiles) 
-            self.smi_pdb_dict["Mol. Formula"].append(abbrv) 
+#            self.smi_pdb_dict["Mol. Formula"].append(abbrv) 
             self.smi_pdb_dict["Mol. Object"].append(log_mols) 
             self.smi_pdb_dict[".log"].append(log_abbrvs) 
         return self.smi_pdb_dict 
 
 class MoleculeSorter: 
+
     def __init__(self, molecule_sorter: BytesPDB): 
         self.molecule_sorter: BytesPDB = molecule_sorter 
         self.imported_mol_data: dict = molecule_sorter.bookeeper() 
-        self.iupacs = self.imported_mol_data["Mol. Formula"]
+#        self.iupacs = self.imported_mol_data["Mol. Formula"]
+        self.smiles = self.imported_mol_data["SMILES"] 
         self.mols = self.imported_mol_data["Mol. Object"]
         self.logs = self.imported_mol_data[".log"] 
-        self.mol_sorted_dict: dict = {}
-#
-    def analyze_all(self): 
-       for i, (iupac, mol) in enumerate(zip_longest(self.iupacs, self.mols)):
-           self.mol_sorted_dict[iupac] = self.analyzer(mol) 
-       return self.mol_sorted_dict 
+        self.mol_sorted_dict: dict = {} 
+        self.forbidden_dict: dict = {} 
+        self.dud_list = [] 
 
-    def analyzer(self, mol):
+    def debug(self):
+        for i in self.logs:
+            if i is not None: 
+                zed = i 
+        return self.logs 
+
+    def analyze_all(self): 
+        for i, (log, mol, smiles) in enumerate(
+                zip(self.logs, self.mols, self.smiles, strict=True)
+        ):
+            if not self.has_atom(mol):
+                self.mol_sorted_dict[log] = self.analyzer(mol, smiles) 
+            elif self.has_atom(mol):  
+                self.forbidden_dict[log] = self.analyzer(mol, smiles)
+        return (self.mol_sorted_dict, self.forbidden_dict) 
+    
+    def has_atom(
+            self,
+            mol: Optional[Mol] = None, 
+            smiles: Optional[str] = None, 
+            forbidden: Collection[str] = FORBIDDEN) -> bool: 
+        return any(atom.GetSymbol() in forbidden for atom in mol.GetAtoms()) 
+
+    def analyzer(self, mol, smiles):
         return {
+            "SMILES": smiles,  
             "Num. Atoms": self.count_atoms(mol),
             "Motif": self.count_motif(mol),
-            "Torsions": self.count_dihedral(mol),
-#            "Torsions": self.count_dihedral(mol)
+            "Torsions": self.count_dihedral(mol)
         }
 
     def count_atoms(self, mol): 
@@ -87,7 +112,7 @@ class MoleculeSorter:
             Chem.BondType.SINGLE: "sp3", 
             Chem.BondType.DOUBLE: "sp2", 
             Chem.BondType.TRIPLE: "sp",
-            Chem.BondType.AROMATIC: "aromatic",
+            Chem.BondType.AROMATIC: "Aromatic",
         }
         bonds_in_mol = {
             "sp3": [],
@@ -96,7 +121,9 @@ class MoleculeSorter:
             "Aromatic": [],
             "Unk": []
         } 
-        for bond_obj in mol.GetBonds():
+
+        mol_h = Chem.AddHs(mol) 
+        for bond_obj in mol_h.GetBonds():
             # -- Two Steps: --
             # 1. bond.GetBondType() returns RDKit enum
             # 2. .get(...) searchs that enum in the map -- if the bond type isnt in the map then return "other" 
@@ -112,7 +139,7 @@ class MoleculeSorter:
             e2 = Chem.GetPeriodicTable().GetElementSymbol(z2) if z2 > 0 else atom2.GetSmarts() 
             # append atomic symbols (E) to the bonds_in_mol dict.
             bonds_in_mol[bond_obj_type].append({
-                "Pair": f"{e1}-{e2}",
+                "Pair": "-".join(sorted((e1, e2))),
                 "Mol. Obj Idxs": (bond_obj.GetBeginAtomIdx(), bond_obj.GetEndAtomIdx())
             }) 
 
@@ -124,24 +151,14 @@ class MoleculeSorter:
                     "Total Count": len(bond_idx),
                     "Pair Count": dict(Counter(bond["Pair"] for bond in bond_idx)), 
 #                    "More Details": bond_idx,
-                }
+            }
         return result 
 
-    def count_dihedral(self, mol=None):
+    def count_dihedral(self, mol, smiles: Optional[str] = None):
         ROT_BONDS = str('[!$(*#*)&!D1]-&!@[!$(*#*)&!D1]')
         rot_bonds_smarts = Chem.MolFromSmarts(ROT_BONDS)
-        dud_list = []
-        try: 
-            confs = mol.GetConformer() 
-            matches = mol.GetSubstructMatches(rot_bonds_smarts)
-            imp_mol = mol
-        except ValueError: 
-            dud_list.append(mol)
-            print(dud_list)
-            return 
-#            confs = DUMMY_MOL.GetConformer() 
-#            matches = DUMMY_MOL.GetSubstructMatches(rot_bonds_smarts) 
-#            imp_mol = DUMMY_MOL
+        confs = mol.GetConformer() 
+        matches = mol.GetSubstructMatches(rot_bonds_smarts)
         traversed = set() 
         unique_matches = []
         for j, k in matches: 
@@ -153,8 +170,8 @@ class MoleculeSorter:
         bonds = []
         torsion_counts = {} 
         for j, k in unique_matches:
-            atom_j = imp_mol.GetAtomWithIdx(j)
-            atom_k = imp_mol.GetAtomWithIdx(k)
+            atom_j = mol.GetAtomWithIdx(j)
+            atom_k = mol.GetAtomWithIdx(k)
             i = [n.GetIdx() for n in atom_j.GetNeighbors() if n.GetIdx() != k] # Neighbor atom that is not k = left side
             l = [n.GetIdx() for n in atom_k.GetNeighbors() if n.GetIdx() != j] # Neighbor atom that is not j = right side 
             num_tbond = 0 # counter for num torsions around central bond
@@ -166,7 +183,7 @@ class MoleculeSorter:
                 if m == n: # skips degenerate pairs
                     continue
                 phi = rdMolTransforms.GetDihedralDeg(confs, m, j, k, n) 
-                atoms = [imp_mol.GetAtomWithIdx(idx) for idx in (m, j, k, n)]
+                atoms = [mol.GetAtomWithIdx(idx) for idx in (m, j, k, n)]
                 atom_symbols = tuple(a.GetSymbol() for a in atoms) 
                 torsions.append({
                     "Atoms": tuple(a.GetSymbol() for a in atoms),
@@ -176,16 +193,16 @@ class MoleculeSorter:
                 label = "-".join(atom_symbols) 
                 torsion_counts[label] = torsion_counts.get(label, 0) + 1 
             bonds.append({
-                "Central Bond": f"{imp_mol.GetAtomWithIdx(j).GetSymbol()}-{imp_mol.GetAtomWithIdx(k).GetSymbol()}",
-                "Central Bond Idx": (j, k),
+                "Central Bond": f"{mol.GetAtomWithIdx(j).GetSymbol()}-{mol.GetAtomWithIdx(k).GetSymbol()}",
+#                "Central Bond Idx": (j, k),
                 "Torsions Per Bond": num_tbond, 
-                "Torsions": torsions
+#                "Torsions": torsions
             }) 
 
         return {
                 "Number of Rot. Bonds": len(unique_matches), 
                 "Torsion Counts": torsion_counts, 
-                "Torsions Info": bonds,
+#                "Torsions Info": bonds,
         }
 
 
