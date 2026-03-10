@@ -1,5 +1,5 @@
 /home/tau/projects/t99_calc/v1/qchem_data/log/cf2_2h2o_prod.log
- OpenBabel03092615213D
+ OpenBabel03102617043D
 Gaussian 16 # opt freq wb97xd/6-311+g(2d,2p) geom=connectivity scf=xqc
   9  7  0  0  0  0  0  0  0  0999 V2000
     0.5198   -0.0026   -0.1739 C   0  0  0  0  0  0  0  0  0  0  0  0

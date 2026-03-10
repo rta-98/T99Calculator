@@ -1,5 +1,5 @@
 /home/tau/projects/t99_calc/v1/qchem_data/log/cf2o_h2o.log
- OpenBabel03092615213D
+ OpenBabel03102617043D
 Gaussian applications/g16/g16/g16 # opt wb97xd/6-311+g(2d,2p) geom=connectivity 
   7  5  0  0  0  0  0  0  0  0999 V2000
    -0.6408    0.1342   -0.0475 C   0  0  0  0  0  0  0  0  0  0  0  0

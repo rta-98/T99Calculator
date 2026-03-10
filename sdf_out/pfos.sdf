@@ -1,5 +1,5 @@
 /home/tau/projects/t99_calc/v1/qchem_data/log/pfos.log
- OpenBabel03092615213D
+ OpenBabel03102617043D
 Gaussian 16 # opt wb97xd/6-311+g(2d,2p) geom=connectivity scf=xqc freq
  30 29  0  0  0  0  0  0  0  0999 V2000
     1.0827   -0.5086   -0.1464 C   0  0  0  0  0  0  0  0  0  0  0  0
