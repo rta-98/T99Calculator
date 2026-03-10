@@ -10,52 +10,62 @@ import sqlite3
 import re 
 import csv 
 #|%%--%%| <2hkp2sVB7w|FHoHj5Arg7>
-#conn = sqlite3.connect("PFAS_thermal_data.db") 
-#df.to_sql("pfas", conn, if_exists="replace", index=False)
-#result = pd.read_sql("SELECT * FROM people", conn) 
-#print(result) 
-#conn.close() 
-#
-#
-#df = pd.read_json("PFAS_data.json") 
-#for col in df.columns:
-#    df[col] = df[col].apply(lambda x: json.dumps(x) if isinstance(x, (dict, list, tuple)) else x)
-#conn = sqlite3.connect("PFAS_thermal_data.db") 
-#df.to_sql("pfas", conn, if_exists="replace", index=False) 
-#conn.close()
-#|%%--%%| <FHoHj5Arg7|TOY63qQAWN>
-def flatten(obj, parent_key="", sep="__"):
-    items = {} 
-    if isinstance(obj, dict):
-        for k, v in obj.items():
-            new_key = f"{parent_key}{sep}{k}" if parent_key else str(k) 
-            items.update(flatten(v, new_key, sep=sep)) 
-    elif isinstance(obj, (list, tuple)): 
-        for i, v in enumerate(obj): 
-            new_key = f"{parent_key}{sep}{i}" if parent_key else str(i) 
-            items.update(flatten(v, new_key, sep=sep)) 
-    else: 
-        items[parent_key] = obj
-    return items
+class Flattener: 
 
-#|%%--%%| <TOY63qQAWN|iDvk6pEcQj>
-def canon_col(c):
-    m = re.match(r"^(Motif\s+\w+\s+Pair Count)\s+([A-Za-z]+)-([A-Za-z]+)$", c)
-    if not m:
-        return c
-    prefix, a, b = m.groups() 
-    a, b = sorted([a, b])
-    return f"{prefix} {a}-{b}"
-def rename_torsion_cols(c): 
-    if "Torsion Counts" in c:
-        tail = c.split()[-1]
-        return f"{tail} Torsions" 
-    return c 
-def rename_motif_cols(c):
-    if c.startswith("Motif "):
-        return c.replace("Motif ", "", 1) 
-    return c 
-#|%%--%%| <iDvk6pEcQj|mD754zr3PI>
+    def __init__(self, dict_inst: Optional[dict] = None): 
+        self.dict_inst = dict_inst 
+        self.rows = [] 
+        self.final_df: pd.DataFrame = pd.DataFrame() 
+
+    def amalgam(self): 
+        for mol_id, payload in self.dict_inst.items():
+            row = {"Molecule": mol_id, **flatten(payload, sep=" ")}
+            self.rows.append(row) 
+
+        final_df = pd.DataFrame(rows).fillna(0)
+        cols = ["Molecule"] + sorted(c for c in final_df.columns if c != "Molecule")
+        final_df = final_df[cols]
+        final_df = final_df.rename(columns=self.canon_col) 
+        final_df = final_df.rename(columns=self.rename_torsion_cols)
+        final_df = final_df.rename(columns=self.rename_motif_cols) 
+        final_df = final_df.T.groupby(final_df.columns, sort=False).sum().T
+        final_df = final_df.T.groupby(final_df.columns, sort=False).first().T
+        return final_df 
+
+    def flatten(self, obj, parent_key="", sep="__"):
+        items = {} 
+        if isinstance(obj, dict):
+            for k, v in obj.items():
+                new_key = f"{parent_key}{sep}{k}" if parent_key else str(k) 
+                items.update(flatten(v, new_key, sep=sep)) 
+        elif isinstance(obj, (list, tuple)): 
+            for i, v in enumerate(obj): 
+                new_key = f"{parent_key}{sep}{i}" if parent_key else str(i) 
+                items.update(flatten(v, new_key, sep=sep)) 
+        else: 
+            items[parent_key] = obj
+        return items
+
+    def canon_col(self, c):
+        m = re.match(r"^(Motif\s+\w+\s+Pair Count)\s+([A-Za-z]+)-([A-Za-z]+)$", c)
+        if not m:
+            return c
+        prefix, a, b = m.groups() 
+        a, b = sorted([a, b])
+        return f"{prefix} {a}-{b}"
+
+    def rename_torsion_cols(self, c): 
+        if "Torsion Counts" in c:
+            tail = c.split()[-1]
+            return f"{tail} Torsions" 
+        return c 
+
+    def rename_motif_cols(self, c):
+        if c.startswith("Motif "):
+            return c.replace("Motif ", "", 1) 
+        return c 
+
+#|%%--%%| <FHoHj5Arg7|mD754zr3PI>
 df = pd.read_csv("/home/tau/projects/t99_calc/v1/qchem_data/csv/merged_smi_221_mol_221.csv")
 df.keys()
 df.drop(columns=["Unnamed: 0"]) 
@@ -69,21 +79,8 @@ inst = MoleculeSorter(zed)
 inst.analyze_all()j
 dict_inst = inst.mol_sorted_dict
 #|%%--%%| <LhPKZvIDLK|8tJXQAAfnQ>
-rows = [] 
-for mol_id, payload in dict_inst.items():
-    row = {"Molecule": mol_id, **flatten(payload, sep=" ")}
-    rows.append(row) 
 
-#|%%--%%| <8tJXQAAfnQ|5sgAiiqsae>j
-df = pd.DataFrame(rows).fillna(0)
-cols = ["Molecule"] + sorted(c for c in df.columns if c != "Molecule")
-df = df[cols]
-df = df.rename(columns=canon_col) 
-df = df.rename(columns=rename_torsion_cols)
-df = df.rename(columns=rename_motif_cols) 
-df = df.T.groupby(df.columns, sort=False).sum().T
-df = df.T.groupby(df.columns, sort=False).first().T
-###|%%--%%| <5sgAiiqsae|EmirmaL8Et>
+###|%%--%%| <8tJXQAAfnQ|EmirmaL8Et>
 # --FINAL STEP---
 df.to_csv("PFAS_data_130_part2.csv", index=False) 
 #|%%--%%| <EmirmaL8Et|pfbkhAiokF>

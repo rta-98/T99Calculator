@@ -1,1 +1,1 @@
-{"cmd":"len(log_mols_sdf)","cmd_opts":"","import_complete":1,"terminal":"tmux"}
+{"cmd":"dict_inst = inst.analyze_all()\nprint(\n    len(dict_inst[1]),\n    len(dict_inst[0]) \n    ) \n\nno_sn = dict_inst[0]\nyes_sn = dict_inst[1]\n\nyes_sn","cmd_opts":" --cell_id=5iYrY7LQ8Y -s","import_complete":1,"terminal":"tmux"}

@@ -1,5 +1,5 @@
 /home/tau/projects/t99_calc/v1/qchem_data/log/52_fts.log
- OpenBabel03092615213D
+ OpenBabel03102617043D
 Gaussian 16 # opt freq wb97xd/6-311+g(2d,2p) geom=connectivity scf=xqc
  27 26  0  0  0  0  0  0  0  0999 V2000
    -0.8829    0.5481   -0.1744 C   0  0  0  0  0  0  0  0  0  0  0  0

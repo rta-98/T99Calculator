@@ -26,6 +26,67 @@ base = Path.cwd()
 log_data_path = base / "./qchem_data/log"
 log_data_path 
 #|%%--%%| <fw77UvbU0w|Z3cJvKMS9u>
+class Flattener: 
+
+    def __init__(self, dict_inst: Optional[dict] = None): 
+        self.dict_inst = dict_inst 
+        self.rows = [] 
+        self.items = {}  
+        self.final_df: pd.DataFrame = pd.DataFrame() 
+
+    def amalgam(self): 
+        for mol_id, payload in self.dict_inst.items():
+            row = {"Molecule": mol_id, **self.flatten(payload, sep=" ")}
+            self.rows.append(row) 
+
+        final_df = pd.DataFrame(self.rows).fillna(0)
+        cols = ["Molecule"] + sorted(c for c in final_df.columns if c != "Molecule")
+        final_df = final_df[cols]
+        final_df = final_df.rename(columns=self.canon_col) 
+        final_df = final_df.rename(columns=self.rename_torsion_cols)
+        final_df = final_df.rename(columns=self.rename_motif_cols) 
+        final_df = final_df.T.groupby(final_df.columns, sort=False).sum().T
+        final_df = final_df.T.groupby(final_df.columns, sort=False).first().T
+
+        return final_df 
+
+    def flatten(self, obj, parent_key="", sep="__"):
+        self.items = {} 
+        if isinstance(obj, dict):
+            for k, v in obj.items():
+                new_key = f"{parent_key}{sep}{k}" if parent_key else str(k) 
+                self.items.update(self.flatten(v, new_key, sep=sep)) 
+        elif isinstance(obj, (list, tuple)): 
+            for i, v in enumerate(obj): 
+                new_key = f"{parent_key}{sep}{i}" if parent_key else str(i) 
+                self.items.update(self.flatten(v, new_key, sep=sep)) 
+        else: 
+            self.items[parent_key] = obj
+
+        return self.items
+
+    def canon_col(self, c):
+        m = re.match(r"^(Motif\s+\w+\s+Pair Count)\s+([A-Za-z]+)-([A-Za-z]+)$", c)
+        if not m:
+            return c
+        prefix, a, b = m.groups() 
+        a, b = sorted([a, b])
+
+        return f"{prefix} {a}-{b}"
+
+    def rename_torsion_cols(self, c): 
+        if "Torsion Counts" in c:
+            tail = c.split()[-1]
+            return f"{tail} Torsions" 
+
+        return c 
+
+    def rename_motif_cols(self, c):
+        if c.startswith("Motif "):
+            return c.replace("Motif ", "", 1) 
+        return c 
+
+#|%%--%%| <Z3cJvKMS9u|MjpSa4aA3S>
 class LogToMol: 
     def __init__(self, log_list: Optional[list] = None): 
         self.log_list = log_list
@@ -56,7 +117,7 @@ class LogToMol:
         log_mols_df = pd.DataFrame(mols) 
         return log_mols_df
 
-#|%%--%%| <Z3cJvKMS9u|VPRHdGIqUU>
+#|%%--%%| <MjpSa4aA3S|VPRHdGIqUU>
 class AppendToCSV: 
     def __init__(self, 
                  csv_path: Optional[Path] = None,
@@ -111,7 +172,10 @@ smiles = SmilesAbbrv.tolist()
 smiles 
 
 log_col_rfpath = smi_221_df['Log Path']
-log_abbrvs = log_col_rfpath.tolist()  
+log_abbrvs = []
+for i in log_col_rfpath:
+    log_abbrvs.append(Path(i).name) 
+#log_abbrvs = log_col_rfpath.tolist()  
 log_abbrvs 
 
 # This is used to generate a list of log fpath names which is used to correlate a list of mol objects. 
@@ -134,19 +198,47 @@ save_mols_sdf(mols=log_mols, path=(str("./qchem_data/cache/221_log_mol.sdf")))
 
 # Loading mols from the single sdf file 
 log_mols_sdf = load_mols_sdf("./qchem_data/cache/221_log_mol.sdf") 
-#|%%--%%| <MJaYpbuhf9|0H7tUsKila>
-zed = BytesPDB(abbrv=abbrv, log_abbrvs=log_abbrvs, smiles=smiles, log_mols=log_mols) 
+#|%%--%%| <MJaYpbuhf9|lD3N60D8bz>
+zed = BytesPDB(log_abbrvs=log_abbrvs, smiles=smiles, log_mols=log_mols) 
+#|%%--%%| <lD3N60D8bz|Ueh57pSU6k>
 inst = MoleculeSorter(zed)
-inst.analyze_all()
+#|%%--%%| <Ueh57pSU6k|5iYrY7LQ8Y>
+dict_inst = inst.analyze_all()
+print(
+    len(dict_inst[1]),
+    len(dict_inst[0]) 
+    ) 
+
+no_sn = dict_inst[0]
+yes_sn = dict_inst[1]
+
+yes_sn
+#|%%--%%| <5iYrY7LQ8Y|VtJOwyfZHF>
+out_tmp = []
+out_smis_list = [] 
+for mol, smile in zip(log_mols, smiles):
+    out = inst.count_dihedral(mol, smiles)
+    out_tmp.append(out['Number of Rot. Bonds']) 
+    print(out, '\n') 
+
 dict_inst = inst.mol_sorted_dict
+len(dict_inst)
+list_inst = inst.dud_list 
+#|%%--%%| <VtJOwyfZHF|hZCm21zB9V>
+flat_dict_inst = Flattener(dict_inst) 
+df3 = flat_dict_inst.amalgam() 
+csv_generator(df3, "tmp_df3") 
+#|%%--%%| <hZCm21zB9V|UW43u8j1ir>
+df2 = pd.DataFrame(dict_inst)
 
 # WORKING  
-dict_inst
+len(dict_inst)
 
-#|%%--%%| <0H7tUsKila|orETn1G454>
+#|%%--%%| <UW43u8j1ir|orETn1G454>
 smi_221_mol_df = log_mol_inst.log_mol_df_gen()
 smi_221_mol_df = smi_221_mol_df.rename(columns={"Log Files (Rel. Path)": "Log Name"}) 
 smi_221_mol_df.keys()  # this is working
+
 df1_mol_csv = smi_221_mol_df.to_csv('mol_221_df.csv') 
 #csv_generator(mol_merge_df, fname='PFAS_data_130_plus_mol') 
 
@@ -167,6 +259,7 @@ print(merged_df.head(20).to_string(index=False))
 append_inst = AppendToCSV(csv_path=csv_path, imp_df=df1, merge_key='Log Files (Rel. Path)')
 mol_merge_df = append_inst.converter()
 mol_merge_df['Log Mol. Objects']
+
 #|%%--%%| <ecrzYxG8p2|9smJxrBgHU>
 keys = df.keys().tolist()
 with open("pfas_csv_keys_requested.txt", "w", encoding="utf-8") as f: 
@@ -179,7 +272,6 @@ keys
 
 #|%%--%%| <etdZtaVQG3|5uqXfId71G>
 # Concatenating Shomate polynomial coefs.  ---------------------------------
-
 fmt = str('g09') 
 log_file = Path(str('/qchem_data/log_to_pdb_in/o.log')) 
 sdf = log_file.with_suffix('.sdf')
