@@ -1,5 +1,5 @@
 /home/tau/projects/t99_calc/v1/qchem_data/log/propane1H.log
- OpenBabel03102617043D
+ OpenBabel03102621333D
 Gaussian applications/g16/g16/g16 # opt freq rwb97xd/6-311+g(2d,2p) geom=connect
  11 10  0  0  0  0  0  0  0  0999 V2000
    -1.0339   -0.3719    0.0007 C   0  0  0  0  0  0  0  0  0  0  0  0

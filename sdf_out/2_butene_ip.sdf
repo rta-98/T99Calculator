@@ -1,5 +1,5 @@
 /home/tau/projects/t99_calc/v1/qchem_data/log/2_butene_ip.log
- OpenBabel03102617043D
+ OpenBabel03102621333D
 Gaussian 16 # opt wb97xd/6-311+g(2d,2p) geom=connectivity scf=xqc
  12 11  0  0  0  0  0  0  0  0999 V2000
     2.0361    0.0509    0.0003 C   0  0  0  0  0  0  0  0  0  0  0  0

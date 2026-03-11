@@ -1,5 +1,5 @@
 /home/tau/projects/t99_calc/v1/qchem_data/log/c2h6.log
- OpenBabel03102617043D
+ OpenBabel03102621333D
 Gaussian applications/g16/g16/g16 # opt freq wb97xd/6-311+g(2d) geom=connectivit
   8  7  0  0  0  0  0  0  0  0999 V2000
     0.0000   -0.0000    0.7609 C   0  0  0  0  0  0  0  0  0  0  0  0

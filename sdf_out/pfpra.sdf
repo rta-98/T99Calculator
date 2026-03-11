@@ -1,5 +1,5 @@
 /home/tau/projects/t99_calc/v1/qchem_data/log/pfpra.log
- OpenBabel03102617043D
+ OpenBabel03102621333D
 Gaussian applications/g16/g16/g16 # opt wb97xd/6-311+g(2d,2p) geom=connectivity
  11 10  0  0  0  0  0  0  0  0999 V2000
     1.0806    0.2743   -0.2011 C   0  0  0  0  0  0  0  0  0  0  0  0

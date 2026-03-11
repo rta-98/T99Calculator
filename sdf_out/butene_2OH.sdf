@@ -1,5 +1,5 @@
 /home/tau/projects/t99_calc/v1/qchem_data/log/butene_2OH.log
- OpenBabel03102617043D
+ OpenBabel03102621333D
 Gaussian 16 # opt freq wb97xd/6-311+g(2d,2p) geom=connectivity scf=xqc
  14 13  0  0  1  0  0  0  0  0999 V2000
     2.5989   -0.8212    0.8048 F   0  0  0  0  0  0  0  0  0  0  0  0

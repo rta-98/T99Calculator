@@ -13,7 +13,7 @@ import json
 import sqlite3 
 import re 
 import os
-#|%%--%%| <9f0YTRzAjY|iCzaKnuydH>
+#|%%--%%| <JkzKOW8WG9|iCzaKnuydH>
 # -- NUMBER 2 --
 
 base = Path.cwd() 
@@ -110,9 +110,17 @@ for idx, (smi, file) in enumerate(zip(log_smis, log_files)):
 #logfdf = pd.DataFrame(logf_dict)
 smi_290_df = pd.DataFrame(smi_log_290_dict) 
 smi_221_df = smi_290_df.drop_duplicates(subset=["Veri. SMILES"]) 
+#total_pfas_df_clean = total_pfas_df.drop(columns=['Log Files (Rel. Path)']) 
+#|%%--%%| <QsOzaZYYL6|sQYTnalZ3a>
+shomate_221 = smi_221_df.drop(columns=['Veri. SMILES', 'Log Path', 'Molecule'])  
+csv_generator(shomate_221, "shomate_221") 
+print(shomate_221.head(20).to_string(index=False)) 
+#|%%--%%| <sQYTnalZ3a|bsu9wHOMlV>
 len(smi_221_df)
+smi_221_df.keys()
+
 csv_generator(smi_221_df, "smi_221_df") 
-#|%%--%%| <QsOzaZYYL6|xg6ouOpjlK>
+#|%%--%%| <bsu9wHOMlV|xg6ouOpjlK>
 |%%--%%| <xg6ouOpjlK|E1I76lVlbT>
 # Parsing nasa7 parameter csv file for smiles
 csv = pd.read_csv(PFAS_290_csv, dtype={"big_id": "Int64"}) 
@@ -248,6 +256,8 @@ with csv_path.open(newline="") as f:
 # Cleaning up txt files 
 nasa_df = pd.read_csv(nasa7_290, sep=r"\s+", header=None, names=["Molecule", "a0", "a1", "a2", "a3", "a4", "H_f_0K", "S(300K)"]) 
 nasa_df = nasa_df.drop_duplicates() 
+nasa_df_mols = nasa_df["Molecule"]
+
 print(nasa_df.head(290).to_string(index=False)) 
 
 #j#|%%--%%| <LinBL5yqln|fYhdO5RQ1e>

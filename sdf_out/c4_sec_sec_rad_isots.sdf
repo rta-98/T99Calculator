@@ -1,5 +1,5 @@
 /home/tau/projects/t99_calc/v1/qchem_data/log/c4_sec_sec_rad_isots.log
- OpenBabel03102617043D
+ OpenBabel03102621333D
 Gaussian 16 # opt=(calcall,ts,noeigentest,maxstep=5) uwb97xd/6-311+g(2d,2p) geom
  13 11  0  0  0  0  0  0  0  0999 V2000
     2.0012    0.0707   -0.1498 C   0  0  0  0  0  0  0  0  0  0  0  0
