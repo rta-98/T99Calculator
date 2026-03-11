@@ -1,5 +1,5 @@
 /home/tau/projects/t99_calc/v1/qchem_data/log/cbutane_diradical.log
- OpenBabel03102617043D
+ OpenBabel03102621333D
 Gaussian 16 # opt uwb97xd/6-311+g(2d,2p) guess=read geom=connectivity freq
  12 11  0  0  0  0  0  0  0  0999 V2000
     1.9220    0.3026   -0.2275 C   0  0  0  0  0  3  0  0  0  0  0  0

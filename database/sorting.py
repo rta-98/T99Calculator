@@ -38,7 +38,7 @@ class BytesPDB:
                 "SMILES": [],
                 "Mol. Object": [],
                 ".log": [],
-#                "Mol. Formula": [],
+                "Mol. Formula": [],
         }
 
     def bookeeper(self) -> dict:
@@ -46,7 +46,7 @@ class BytesPDB:
         self.fparse.smi_populate()
         for idx, (smiles, abbrv, log_abbrvs, log_mols) in enumerate(zip_longest(self.smiles, self.abbrv, self.log_abbrvs, self.log_mols)):
             self.smi_pdb_dict["SMILES"].append(smiles) 
-#            self.smi_pdb_dict["Mol. Formula"].append(abbrv) 
+            self.smi_pdb_dict["Mol. Formula"].append(abbrv) 
             self.smi_pdb_dict["Mol. Object"].append(log_mols) 
             self.smi_pdb_dict[".log"].append(log_abbrvs) 
         return self.smi_pdb_dict 
@@ -56,12 +56,13 @@ class MoleculeSorter:
     def __init__(self, molecule_sorter: BytesPDB): 
         self.molecule_sorter: BytesPDB = molecule_sorter 
         self.imported_mol_data: dict = molecule_sorter.bookeeper() 
-#        self.iupacs = self.imported_mol_data["Mol. Formula"]
+        self.iupacs = self.imported_mol_data["Mol. Formula"]
         self.smiles = self.imported_mol_data["SMILES"] 
         self.mols = self.imported_mol_data["Mol. Object"]
         self.logs = self.imported_mol_data[".log"] 
         self.mol_sorted_dict: dict = {} 
         self.forbidden_dict: dict = {} 
+        self.non_rot_dict: dict = {} 
         self.dud_list = [] 
 
     def debug(self):
@@ -71,14 +72,17 @@ class MoleculeSorter:
         return self.logs 
 
     def analyze_all(self): 
-        for i, (log, mol, smiles) in enumerate(
-                zip(self.logs, self.mols, self.smiles, strict=True)
+        for i, (log, mol, smiles, iupac) in enumerate(
+                zip(self.logs, self.mols, self.smiles, self.iupacs, strict=True)
         ):
+            if not self.has_rot(mol):
+                self.non_rot_dict[log] = self.analyzer(mol, smiles, iupac) 
+                continue 
             if not self.has_atom(mol):
-                self.mol_sorted_dict[log] = self.analyzer(mol, smiles) 
+                self.mol_sorted_dict[log] = self.analyzer(mol, smiles, iupac) 
             elif self.has_atom(mol):  
-                self.forbidden_dict[log] = self.analyzer(mol, smiles)
-        return (self.mol_sorted_dict, self.forbidden_dict) 
+                self.forbidden_dict[log] = self.analyzer(mol, smiles, iupac)
+        return (self.mol_sorted_dict, self.forbidden_dict, self.non_rot_dict) 
     
     def has_atom(
             self,
@@ -87,9 +91,29 @@ class MoleculeSorter:
             forbidden: Collection[str] = FORBIDDEN) -> bool: 
         return any(atom.GetSymbol() in forbidden for atom in mol.GetAtoms()) 
 
-    def analyzer(self, mol, smiles):
+    def has_rot(
+            self, 
+            mol: Optional[Mol] = None) -> bool: 
+        try: 
+            n_rot = rdMolDescriptors.CalcNumRotatableBonds(
+                mol, rdMolDescriptors.NumRotatableBondsOptions.Strict
+            ) 
+        except AttributeError:
+            n_rot = rdMolDescriptors.CalcNumRotatableBonds(mol, strict=True) 
+        return n_rot > 0 
+
+#        if mol is None:
+#            return False
+#        if rdMolDescriptors.CalcNumRotatableBonds(mol) == 0: 
+#            return False
+#        if require_conformer and mol.GetNumConformers() == 0: 
+#            return False 
+#        return True 
+
+    def analyzer(self, mol, smiles, iupac):
         return {
             "SMILES": smiles,  
+            "IUPAC": iupac,  
             "Num. Atoms": self.count_atoms(mol),
             "Motif": self.count_motif(mol),
             "Torsions": self.count_dihedral(mol)
@@ -198,10 +222,10 @@ class MoleculeSorter:
                 "Torsions Per Bond": num_tbond, 
 #                "Torsions": torsions
             }) 
-
+        is_rot = self.has_rot(mol) 
         return {
-                "Number of Rot. Bonds": len(unique_matches), 
-                "Torsion Counts": torsion_counts, 
+                "Number of Rot. Bonds": len(unique_matches) if is_rot else 0, 
+                "Torsion Counts": torsion_counts if is_rot else {}
 #                "Torsions Info": bonds,
         }
 
