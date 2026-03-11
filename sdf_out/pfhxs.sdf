@@ -1,5 +1,5 @@
 /home/tau/projects/t99_calc/v1/qchem_data/log/pfhxs.log
- OpenBabel03102617043D
+ OpenBabel03102621333D
 Gaussian 16 # opt wb97xd/6-311+g(2d) geom=connectivity scf=xqc freq
  24 23  0  0  0  0  0  0  0  0999 V2000
     0.2120    0.5375   -0.0016 C   0  0  0  0  0  0  0  0  0  0  0  0
