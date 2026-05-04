@@ -7,13 +7,13 @@ from pathlib import Path
 from rdkit.Chem import MolFromSmiles 
 from rdkit.Chem.rdMolDescriptors import CalcMolFormula 
 import pandas as pd
-from typing import Optional, List 
+
 from pathlib import Path 
 import json 
 import sqlite3 
 import re 
 import os
-#|%%--%%| <JkzKOW8WG9|iCzaKnuydH>
+#|%%--%%| <4Raiy9onNv|iCzaKnuydH>
 # -- NUMBER 2 --
 
 base = Path.cwd() 
@@ -108,21 +108,27 @@ for idx, (smi, file) in enumerate(zip(log_smis, log_files)):
 #logf_dict = logf_dict_pop()
 #logf_dict 
 #logfdf = pd.DataFrame(logf_dict)
+#|%%--%%| <QsOzaZYYL6|AD2buxTGY4>
+smi_290_df = pd.DataFrame(smi_log_290_dict)
+smi_221_df = smi_290_df.drop_duplicates(subset=["Veri. SMILES"])
+csv_generator(smi_221_df, "221_NASA7_logf_smi")
+#|%%--%%| <AD2buxTGY4|UQWHqF2ByV>
 smi_290_df = pd.DataFrame(smi_log_290_dict) 
 smi_221_df = smi_290_df.drop_duplicates(subset=["Veri. SMILES"]) 
 #total_pfas_df_clean = total_pfas_df.drop(columns=['Log Files (Rel. Path)']) 
-#|%%--%%| <QsOzaZYYL6|sQYTnalZ3a>
+#|%%--%%| <UQWHqF2ByV|sQYTnalZ3a>
 shomate_221 = smi_221_df.drop(columns=['Veri. SMILES', 'Log Path', 'Molecule'])  
 csv_generator(shomate_221, "shomate_221") 
 print(shomate_221.head(20).to_string(index=False)) 
-#|%%--%%| <sQYTnalZ3a|bsu9wHOMlV>
+#|%%--%%| <sQYTnalZ3a|6pbCcKSKep>
 len(smi_221_df)
 smi_221_df.keys()
 
 csv_generator(smi_221_df, "smi_221_df") 
-#|%%--%%| <bsu9wHOMlV|xg6ouOpjlK>
-|%%--%%| <xg6ouOpjlK|E1I76lVlbT>
+#|%%--%%| <6pbCcKSKep|270I11AJmV>
+|%%--%%| <270I11AJmV|E1I76lVlbT> 
 # Parsing nasa7 parameter csv file for smiles
+#|%%--%%| <E1I76lVlbT|bsu9wHOMlV>
 csv = pd.read_csv(PFAS_290_csv, dtype={"big_id": "Int64"}) 
 csvdf = csv.rename(columns={"S_300K ": "S(300K)", "Log_file": "Log Files"}) 
 #csvdf.keys()
@@ -132,7 +138,9 @@ csvdf.keys()
 #csvdf[['a0', 'a1', 'a2', 'a3', 'a4', 'H_f_0K', 'S(300K)']] = csvdf[['a0', 'a1', 'a2', 'a3', 'a4', 'H_f_0K', 'S(300K)']].round()
 print(csvdf.head(290).to_string(index=False))
 print(csvdf.keys())
-#|%%--%%| <E1I76lVlbT|6C4y7p8lWU>
+len(csvdf)
+csv_generator(csv_df, "269_NASA7")
+#|%%--%%| <bsu9wHOMlV|6C4y7p8lWU>
 # -- NUMBER 7 --
 # Concatenating a0, a1 ... S(300K), SMILES, Abbreviations, .log names 
 log_csv_df = pd.merge(csvdf, logfdf, on="Log Files", how="outer", sort=False)
@@ -269,6 +277,9 @@ print(nasa_df.head(290).to_string(index=False))
 #smidf = smidf.map(lambda x: x.strip() if isinstance(x, str) else x) 
 ##smidf.keys() 
 ##pd.set_option("display.max_columns", None) 
-#print(smidf.head(100).to_string(index=False))  
+    #print(smidf.head(100).to_string(index=False))  
 
 
+
+
+#|%%--%%| <fYhdO5RQ1e|nowEPUAagk
