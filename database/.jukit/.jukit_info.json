@@ -1,1 +1,1 @@
-{"cmd":"len(org_nasa_df)","cmd_opts":"","import_complete":1,"terminal":"tmux"}
+{"cmd":"print(df_unmatch_smi_log_parm.head(100).to_string(index=False)) ","cmd_opts":"","import_complete":1,"terminal":"tmux"}
