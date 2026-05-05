@@ -1,1 +1,1 @@
-{"cmd":"#rows = [] \n#for mol_id, payload in yes_sn.items():\n#    row = {\"Molecule\": mol_id, **flatten(payload, sep=\" \")}\n#    rows.append(row) \n\nno_sn_df = dict_to_df(no_sn, fname=\"no_sn\")\ndict_to_df(yes_sn, fname=\"yes_sn\")\ndict_to_df(no_rot, fname=\"no_rot\")\n\n#print(no_sn_df.head(10).to_string(index=False)) ","cmd_opts":" --cell_id=8tJXQAAfnQ -s","import_complete":1,"terminal":"tmux"}
+{"cmd":"len(org_nasa_df)","cmd_opts":"","import_complete":1,"terminal":"tmux"}
