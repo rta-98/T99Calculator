@@ -13,7 +13,7 @@ import json
 import sqlite3 
 import re 
 import os
-#|%%--%%| <JkzKOW8WG9|iCzaKnuydH>
+#|%%--%%| <cig1EKuGeP|iCzaKnuydH>
 # -- NUMBER 2 --
 
 base = Path.cwd() 
@@ -79,7 +79,6 @@ for idx, (smi, file) in enumerate(zip(log_smis, log_files)):
     try: 
         vsmi = InternalValid.validator(smi) 
     except ValueError: 
-        log_smi_duds.append([idx, smi]) 
         log_abbrv = None
         continue
     mol_abbrv = CalcMolFormula(MolFromSmiles(vsmi)) 
@@ -135,7 +134,7 @@ print(csvdf.keys())
 #|%%--%%| <E1I76lVlbT|6C4y7p8lWU>
 # -- NUMBER 7 --
 # Concatenating a0, a1 ... S(300K), SMILES, Abbreviations, .log names 
-log_csv_df = pd.merge(csvdf, logfdf, on="Log Files", how="outer", sort=False)
+log_csv_df = pd.merge(csvdf, logfdf, on="Log Files", how="outer", sort=False
 log_csv_df = logcat1.map(lambda x: x.strip() if isinstance(x, str) else x) 
 log_csv_df.keys() 
 print(log_csv_df.head(100).to_string(index=False))

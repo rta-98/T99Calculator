@@ -298,21 +298,7 @@ import json
 import sqlite3 
 import re 
 import csv 
-#|%%--%%| <5uqXfId71G|FHoHj5Arg7>
-#conn = sqlite3.connect("PFAS_thermal_data.db") 
-#df.to_sql("pfas", conn, if_exists="replace", index=False)
-#result = pd.read_sql("SELECT * FROM people", conn) 
-#print(result) 
-#conn.close() 
-#
-#
-#df = pd.read_json("PFAS_data.json") 
-#for col in df.columns:
-#    df[col] = df[col].apply(lambda x: json.dumps(x) if isinstance(x, (dict, list, tuple)) else x)
-#conn = sqlite3.connect("PFAS_thermal_data.db") 
-#df.to_sql("pfas", conn, if_exists="replace", index=False) 
-#conn.close()
-#|%%--%%| <FHoHj5Arg7|TOY63qQAWN>
+#|%%--%%| <5uqXfId71G|TOY63qQAWN>
 def flatten(obj, parent_key="", sep="__"):
     items = {} 
     if isinstance(obj, dict):
