@@ -76,13 +76,14 @@ smiles_col = df['SMILES'].tolist()
 #|%%--%%| <mD754zr3PI|LhPKZvIDLK>
 zed = BytesPDB(abbrv=abbrv_col, log_abbrvs=log_col, smiles=smiles_col, log_mols=log_mols) 
 inst = MoleculeSorter(zed)
-inst.analyze_all()j
+inst.analyze_all()
 dict_inst = inst.mol_sorted_dict
 #|%%--%%| <LhPKZvIDLK|8tJXQAAfnQ>
 
 ###|%%--%%| <8tJXQAAfnQ|EmirmaL8Et>
 # --FINAL STEP---
 df.to_csv("PFAS_data_130_part2.csv", index=False) 
+
 #|%%--%%| <EmirmaL8Et|pfbkhAiokF>
 #data_path 
 #inst = BytesPDB(abbrv=abbrv_col, smiles=smiles_col)
