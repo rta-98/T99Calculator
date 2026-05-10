@@ -21,7 +21,7 @@ rdkit_mol_obab_smi_csv = csv / "./merged_smi_221_mol_221.csv"
 
 unmatch_molecules_csv = csv / "./unmatch_molecules.csv" 
 
-pfas_data_130_df = csv / "./PFAS_data_130_strip.csv"
+pfas_data_130_csv = csv / "./PFAS_data_130_strip.csv"
 
 Molecule_unmatch_log_csv = csv / "./Molecule_unmatch_log.csv" 
 
@@ -30,38 +30,40 @@ nasagen_fit_csv = csv / "./nasagen_fit_130.csv"
 
 nasa7_242_parms_csv = csv / "./nasa7_242_parms_df.csv"
 
+nasagen_112_clean_csv = csv / "./nasagen_plus_112_clean.csv"
+
+nasa7_202_clean_csv = csv / "./nasa7_202_clean.csv"
+
 # Junk ---------------------------------
 #nasagen_fit_csv = csv / "./nasagen_fit_results.csv" 
 #|%%--%%| <YtzL7VqY3s|RftDWjuiQ4>
 # df generation ---------------------------------
-nasa7_242_parms_df = pd.read_csv(nasa7_242_parms_csv, dtype={"big_id": "Int64"})
-
-no_rot = pd.read_csv(no_rot, dtype={"big_id": "Int64"}) 
-no_sn = pd.read_csv(no_sn, dtype={"big_id": "Int64"}) 
-yes_sn = pd.read_csv(yes_sn, dtype={"big_id": "Int64"}) 
-
-org_nasa_df = pd.read_csv(original_nasa7_csv, dtype={"big_id": "Int64"})
-rd_mol_df = pd.read_csv(rdkit_mol_obab_smi_csv, dtype={"big_id": "Int64"})
-
-unmatch_molecules_df = pd.read_csv(unmatch_molecules_csv, dtype={"big_id": "Int64"}) 
-
-pfas_data_130_df = pd.read_csv(pfas_data_130, dtype={"big_id": "Int64"})
-
-Molecule_unmatch_log_df = pd.read_csv(Molecule_unmatch_log_csv, dtype={"big_id": "Int64"}) 
-
-nasagen_fit_df = pd.read_csv(nasagen_fit_csv, dtype={"big_id": "Int64"})
-
+#nasa7_242_parms_df = pd.read_csv(nasa7_242_parms_csv, dtype={"big_id": "Int64"})
+#
+#no_rot = pd.read_csv(no_rot, dtype={"big_id": "Int64"}) 
+#no_sn = pd.read_csv(no_sn, dtype={"big_id": "Int64"}) 
+#yes_sn = pd.read_csv(yes_sn, dtype={"big_id": "Int64"}) 
+#
+#org_nasa_df = pd.read_csv(original_nasa7_csv, dtype={"big_id": "Int64"})
+#org_nasa_df_clean = org_nasa_df.drop(columns=['Log_file', 'Veri. SMILES']) 
+#rd_mol_df = pd.read_csv(rdkit_mol_obab_smi_csv, dtype={"big_id": "Int64"})
+#
+#unmatch_molecules_df = pd.read_csv(unmatch_molecules_csv, dtype={"big_id": "Int64"}) 
+#
+#pfas_data_130_df = pd.read_csv(pfas_data_130_csv, dtype={"big_id": "Int64"})
+#
+#Molecule_unmatch_log_df = pd.read_csv(Molecule_unmatch_log_csv, dtype={"big_id": "Int64"}) 
+#
+#nasagen_fit_df = pd.read_csv(nasagen_fit_csv, dtype={"big_id": "Int64"})
+#
+#nasagen_112_clean_df = pd.read_csv(nasagen_112_clean_csv, dtype={"big_id": "Int64"})
+#
+nasa7_202_clean_df = pd.read_csv(nasa7_202_clean_csv, dtype={"big_id": "Int64"})
 # Junk ---------------------------------
 #dup_290_df = pd.read_csv(dup_290_csv, dtype={"big_id": "Int64"}) 
 #nasa7_242_parms_df = dedup_290_df
 #|%%--%%| <RftDWjuiQ4|Onesi0p6GT>
 # Df modification ---------------------------------
-
-col = org_nasa_df.pop('Abbreviation') 
-org_nasa_df.insert(0, 'Molecule', col) 
-
-entropy_unmatch_df["Molecule"] 
-# Temp. Junk ---------------------------------
 
 
 # Junk ---------------------------------
@@ -131,11 +133,11 @@ entropy_unmatch_df["Molecule"]
 #
 #entropy_col_nasagen = nasagen_fit_df["S(300K)"].to_list() 
 #entropy_col_242 = nasa7_242_parms_df["S(300K)"].to_list() 
-entropy_col_112 = unmatch_nasa7_112["S(300K)"].to_list() 
+#entropy_col_112 = unmatch_nasa7_112["S(300K)"].to_list() 
 #
 #ngen_rounded = [] 
 #n7_rounded = [] 
-n7_112_rounded = []
+#n7_112_rounded = []
 #
 #for nasagen in entropy_col_nasagen:
 #    ngrnd = round(nasagen, 2)
@@ -145,9 +147,9 @@ n7_112_rounded = []
 #    n7rnd = round(nasa7, 2) 
 #    n7_rounded.append(n7rnd) 
 
-for nasa7 in entropy_col_112: 
-    n7rnd = round(nasa7, 2) 
-    n7_112_rounded.append(n7rnd) 
+#for nasa7 in entropy_col_112: 
+#    n7rnd = round(nasa7, 2) 
+#    n7_112_rounded.append(n7rnd) 
 #
 ##entropy_col_nasagen = nasagen_fit_df.pop("S(300K)") 
 #nasagen_fit_df.insert(7,"S(300K)_rnd", ngen_rounded)
@@ -156,8 +158,18 @@ for nasa7 in entropy_col_112:
 #nasa7_242_parms_df.insert(8,"S(300K)_rnd", n7_rounded) 
 #
 #col_112 = unmatch_nasa7_112.pop("S(300K)_rnd") 
-unmatch_nasa7_112.insert(8, "S(300K)_rnd", n7_112_rounded) 
-
+#unmatch_nasa7_112.insert(8, "S(300K)_rnd", n7_112_rounded) 
+#
+#col = org_nasa_df.pop('Abbreviation') 
+#org_nasa_df.insert(0, 'Molecule', col) 
+#
+#col_abbrv = org_nasa_df_clean.pop('Abbreviation')
+#org_nasa_df_clean.insert(0, 'Molecule', col_abbrv) 
+#
+#entropy_unmatch_df["Molecule"] 
+#
+#nasagen_112_clean_df.drop(columns=['Unnamed: 0'])
+#nasagen_112_clean_df.keys()
 #|%%--%%| <Onesi0p6GT|sMVNkOfdM0>
 # Merge 0 ---------------------------------
 org_nasa_df.head(5)
@@ -198,22 +210,31 @@ unmatch1_nasa7_242.head(100)
 #Log_Name_unmatch_df = m_Log_Name.loc[m_Log_Name['_merge'] == "right_only"].drop(columns='_merge')  
 #|%%--%%| <sMVNkOfdM0|YjYSETzf3P>
 # Correlating matches; merging nasagen fits, and the 60 remaining unmatches ---------------------------------
-# 1. nasagen_fit_df + Log_Name_unmatch_strip merged on right (unmatched should be the df with log paths to see what remains) 
-#    and key='Molecule'
+len(org_nasa_df)
+len(nasagen_112_clean_df)
+org_nasa_df.head(100)
+nasagen_112_clean_df.head(100)
 
-m1_Molecule = pd.merge(nasagen_fit_df, Log_Name_unmatch_strip, on="Molecule", how="right", indicator=True, sort=False) 
-Log_Name_unmatch_df1 = m1_Molecule.loc[m1_Molecule["_merge"] == "right_only"].drop(columns="_merge") 
-len(Log_Name_unmatch_df1)
+org_nasa_df_clean.keys()
+nasagen_112_clean_df.keys()
 
-Log_Name_match_df1 = pd.merge(nasagen_fit_df, Log_Name_unmatch_strip, on="Molecule", how="inner", sort=False)
-
-m2_entropy = pd.merge(nasagen_fit_df, unmatch_nasa7_112, on="S(300K)_rnd", how="right", indicator=True, sort=False)
-entropy_unmatch_df = m2_entropy.loc[m2_entropy["_merge"] == "right_only"].drop(columns="_merge") 
-len(entropy_unmatch_df) # 0
-
-nasagen_unmatch_nasa7_112_merge_df = pd.merge(nasagen_fit_df, unmatch_nasa7_112, on="S(300K)_rnd", sort=False) 
+nasa7_202_df = pd.concat([org_nasa_df_clean, nasagen_112_clean_df], axis=0, ignore_index=True) 
 
 # Junk ---------------------------------
+## 1. nasagen_fit_df + Log_Name_unmatch_strip merged on right (unmatched should be the df with log paths to see what remains) 
+##    and key='Molecule'
+#
+#m1_Molecule = pd.merge(nasagen_fit_df, Log_Name_unmatch_strip, on="Molecule", how="right", indicator=True, sort=False) 
+#Log_Name_unmatch_df1 = m1_Molecule.loc[m1_Molecule["_merge"] == "right_only"].drop(columns="_merge") 
+#len(Log_Name_unmatch_df1)
+#
+#Log_Name_match_df1 = pd.merge(nasagen_fit_df, Log_Name_unmatch_strip, on="Molecule", how="inner", sort=False)
+#
+#m2_entropy = pd.merge(nasagen_fit_df, unmatch_nasa7_112, on="S(300K)_rnd", how="right", indicator=True, sort=False)
+#entropy_unmatch_df = m2_entropy.loc[m2_entropy["_merge"] == "right_only"].drop(columns="_merge") 
+#len(entropy_unmatch_df) # 0
+#
+#nasagen_unmatch_nasa7_112_merge_df = pd.merge(nasagen_fit_df, unmatch_nasa7_112, on="S(300K)_rnd", sort=False) 
 
 |%%--%%| <YjYSETzf3P|6MLrIVQF6W>
 # Conversion ---------------------------------
@@ -245,7 +266,11 @@ m_smi = pd.merge(org_nasa_df, rd_mol_df, on="Veri. SMILES", how="right", indicat
 df_unmatch_smi_log_parm = m_smi.loc[m_smi["_merge"] == "right_only"].drop(columns="_merge") # 97/221 
 
 
-#|%%--%%| <DIpRDtjC7d|6IguWlK26Q>
+#|%%--%%| <DIpRDtjC7d|0lRSAsXXvY>
+# Correlating SMILES with log files. 
+
+
+#|%%--%%| <0lRSAsXXvY|6IguWlK26Q>
 # Print ---------------------------------
 print(unmatch_molecules_df.head(10).to_string(index=False))  
 print(nasa7_242_parms_df.head(10).to_string(index=False))
