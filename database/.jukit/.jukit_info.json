@@ -1,1 +1,1 @@
-{"cmd":"nasa7_202_clean_df = pd.read_csv(nasa7_202_clean_csv, dtype={\"big_id\": \"Int64\"})","cmd_opts":"","import_complete":1,"terminal":"tmux"}
+{"cmd":"dict_inst ","cmd_opts":"","import_complete":1,"terminal":"tmux"}
