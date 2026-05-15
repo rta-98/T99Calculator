@@ -59,14 +59,13 @@ class MoleculeSorter:
         for i, (name, smiles, mol) in enumerate(
                 zip(self.name, self.smiles, self.mol, strict=True)
         ):
-            
             if not self.has_rot(mol):
-                self.non_rot_dict[name] = self.analyzer(smiles, mol) 
+                self.non_rot_dict[name] = self.analyzer(mol, smiles) 
                 continue 
             if not self.has_atom(mol):
-                self.mol_sorted_dict[name] = self.analyzer(smiles, mol) 
+                self.mol_sorted_dict[name] = self.analyzer(mol, smiles) 
             elif self.has_atom(mol):  
-                self.forbidden_dict[name] = self.analyzer(smiles, mol)
+                self.forbidden_dict[name] = self.analyzer(mol, smiles)
         return (self.mol_sorted_dict, self.forbidden_dict, self.non_rot_dict) 
     
     def has_atom(
@@ -87,7 +86,7 @@ class MoleculeSorter:
             n_rot = rdMolDescriptors.CalcNumRotatableBonds(mol, strict=True) 
         return n_rot > 0 
 
-    def analyzer(self, smiles, mol):
+    def analyzer(self, mol, smiles):
         analyzer_dict = {}
 
         # parsing count_atoms() dict output; appending to analyzer dict
@@ -97,14 +96,15 @@ class MoleculeSorter:
 
         # parsing count_motif() dict output; appending to analyzer dict
         motif_dict = self.count_motif(mol) 
-        for hybrid, hybrid_count in motif_dict.items():
+        for hybrid, hybrid_vals in motif_dict.items():
             analyzer_dict[hybrid] = hybrid_vals
        
         # parsing count_dihedral() dict output; appending to analyzer dict
         torsions_dict = self.count_dihedral(mol)
         for tor, tor_vals in torsions_dict.items():
             analyzer_dict[tor] = tor_vals
-
+        
+        analyzer_dict["SMILES"] = smiles
         return analyzer_dict
 
     def count_atoms(self, mol): 
@@ -164,10 +164,11 @@ class MoleculeSorter:
         motif_result = {} 
 
         # Loop over the key (hybrid) and the value (bond_idx) in bonds_in_mol dict.  
-        for hybrid_key, bond_dict in bonds_in_mol.items():
-            motif_result[f"{hybrid_key} Total Bond Count"] = len(bond_dict) 
-            for bond_dict_key, bond_vals in bond_dict.items():
-                motif_result["{hybrid_key} {bond_dict_key} Total Pair Count"] = len(bond_vals)
+        for hybrid_key, bond_list in bonds_in_mol.items():
+            motif_result[f"{hybrid_key} Total Bond Count"] = len(bond_list) 
+            for bond_dict in bond_list:
+                for bond_dict_key, bond_vals in bond_dict.items():
+                    motif_result[f"{hybrid_key} {bond_dict_key} Total Pair Count"] = len(bond_vals)
 
         return motif_result 
 
