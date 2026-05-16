@@ -1,0 +1,26 @@
+/home/yang/projects/t99_calc/v1/qchem_data/combined/log_fchk/c2f4_carbene.log
+ OpenBabel05152619573D
+Gaussian applications/g16/g16/g16 # opt freq wb97xd/6-311+g(2d,2p) geom=connecti
+  6  5  0  0  0  0  0  0  0  0999 V2000
+    0.3639    0.0201   -0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
+    0.2355   -1.3042    0.0013 F   0  0  0  0  0  0  0  0  0  0  0  0
+    1.0438    0.3805    1.0869 F   0  0  0  0  0  0  0  0  0  0  0  0
+   -0.9689    0.8382   -0.0019 C   0  0  0  0  0  2  0  0  0  0  0  0
+    1.0457    0.3781   -1.0867 F   0  0  0  0  0  0  0  0  0  0  0  0
+   -1.9217   -0.0266   -0.0002 F   0  0  0  0  0  0  0  0  0  0  0  0
+  1  2  1  0  0  0  0
+  1  3  1  0  0  0  0
+  4  6  1  0  0  0  0
+  4  1  1  0  0  0  0
+  5  1  1  0  0  0  0
+M  END
+>  <program>
+Gaussian 16, Revision A.03
+
+>  <basis>
+6-311+G(2d,2p) (5D, 7F)
+
+>  <File Format>
+g03
+
+$$$$

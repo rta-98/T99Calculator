@@ -1,6 +1,6 @@
-Title Card Required
- OpenBabel05122616223D
-
+/home/yang/projects/t99_calc/v1/qchem_data/combined/log_fchk/c2f5h.log
+ OpenBabel05152619573D
+Gaussian applications/g16/g16/g16 # opt freq wb97xd/6-311+g(2d) geom=connectivit
   8  7  0  0  0  0  0  0  0  0999 V2000
     0.8570    0.0000   -0.4359 C   0  0  0  0  0  0  0  0  0  0  0  0
    -0.6165    0.0000   -0.0022 C   0  0  0  0  0  0  0  0  0  0  0  0
@@ -11,11 +11,20 @@ Title Card Required
    -1.2237    1.0811   -0.4897 F   0  0  0  0  0  0  0  0  0  0  0  0
     0.9390   -0.0000   -1.5248 H   0  0  0  0  0  0  0  0  0  0  0  0
   1  2  1  0  0  0  0
-  1  4  1  0  0  0  0
   1  6  1  0  0  0  0
-  1  8  1  0  0  0  0
-  2  3  1  0  0  0  0
+  1  4  1  0  0  0  0
   2  5  1  0  0  0  0
-  2  7  1  0  0  0  0
+  3  2  1  0  0  0  0
+  7  2  1  0  0  0  0
+  8  1  1  0  0  0  0
 M  END
+>  <program>
+Gaussian 16, Revision A.03
+
+>  <basis>
+6-311+G(2d) (5D, 7F)
+
+>  <File Format>
+g03
+
 $$$$

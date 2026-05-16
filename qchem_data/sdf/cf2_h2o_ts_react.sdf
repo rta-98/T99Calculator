@@ -1,0 +1,25 @@
+/home/yang/projects/t99_calc/v1/qchem_data/combined/log_fchk/cf2_h2o_ts_react.log
+ OpenBabel05152619573D
+Gaussian applications/g16/g16/g16 # opt wb97xd/6-311+g(2d,2p) geom=connectivity 
+  6  4  0  0  0  0  0  0  0  0999 V2000
+    0.6602   -0.0091    0.5736 C   0  0  0  0  0  2  0  0  0  0  0  0
+   -2.1028   -0.2326    0.8362 H   0  0  0  0  0  0  0  0  0  0  0  0
+    0.8953    1.0456   -0.1524 F   0  0  0  0  0  0  0  0  0  0  0  0
+    0.9482   -1.0115   -0.1965 F   0  0  0  0  0  0  0  0  0  0  0  0
+   -2.3840    0.7655   -0.2783 H   0  0  0  0  0  0  0  0  0  0  0  0
+   -2.0082   -0.0982   -0.1075 O   0  0  0  0  0  0  0  0  0  0  0  0
+  3  1  1  0  0  0  0
+  4  1  1  0  0  0  0
+  5  6  1  0  0  0  0
+  6  2  1  0  0  0  0
+M  END
+>  <program>
+Gaussian 16, Revision A.03
+
+>  <basis>
+6-311+G(2d,2p) (5D, 7F)
+
+>  <File Format>
+g03
+
+$$$$

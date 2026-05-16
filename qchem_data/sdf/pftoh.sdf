@@ -1,0 +1,26 @@
+/home/yang/projects/t99_calc/v1/qchem_data/combined/log_fchk/pftoh.log
+ OpenBabel05152619573D
+Gaussian applications/g16/g16/g16 # opt freq wb97xd/6-311+g(2d) geom=connectivit
+  6  5  0  0  0  0  0  0  0  0999 V2000
+   -0.0067    0.0237   -0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
+    0.2794   -0.7298    1.0734 F   0  0  0  0  0  0  0  0  0  0  0  0
+    0.2791   -0.7261   -1.0758 F   0  0  0  0  0  0  0  0  0  0  0  0
+   -1.2779    0.4478    0.0009 O   0  0  0  0  0  0  0  0  0  0  0  0
+   -1.8636   -0.3171   -0.0004 H   0  0  0  0  0  0  0  0  0  0  0  0
+    0.7888    1.0773    0.0016 F   0  0  0  0  0  0  0  0  0  0  0  0
+  1  4  1  0  0  0  0
+  1  6  1  0  0  0  0
+  1  2  1  0  0  0  0
+  3  1  1  0  0  0  0
+  5  4  1  0  0  0  0
+M  END
+>  <program>
+Gaussian 16, Revision A.03
+
+>  <basis>
+6-311+G(2d) (5D, 7F)
+
+>  <File Format>
+g03
+
+$$$$

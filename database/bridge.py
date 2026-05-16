@@ -24,10 +24,13 @@ from rdkit.Chem.MolStandardize import rdMolStandardize
 #|%%--%%| <Vnrl1Lh6UJ|fw77UvbU0w>
 base = Path.cwd() 
 qdata = base / "./qchem_data"
-
+csv = qdata / "./csv" 
+combined = qdata / "./combined"
 log_path = qdata / "./log"
 fchk_path = qdata / "./fchk" 
-
+log_fchk_path = qdata / "./combined/log_fchk"
+nasa7_202_clean_csv = csv / "nasa7_202_clean.csv" 
+smiles_directory = qdata / "./file_to_smi"
 #|%%--%%| <fw77UvbU0w|Z3cJvKMS9u>
 class Flattener: 
     def __init__(self, dict_inst: Optional[dict] = None): 
@@ -89,7 +92,7 @@ class Flattener:
         return c 
 
 #|%%--%%| <Z3cJvKMS9u|MjpSa4aA3S>
-class FileToMol: 
+class LogFchkToMol: 
     def __init__(self, 
                  source_dir: Path): 
         self.source_dir = source_dir
@@ -121,8 +124,25 @@ class FileToMol:
         file_mols_df = pd.DataFrame(dict_inst) 
         return self.file_mols_df
 
+#|%%--%%| <MjpSa4aA3S|jTBUiMypUt>
+class SDFtoMol: 
+    def __init__(self, 
+                 source_dir: Path):
+        self.source_dir = source_dir
+        self.sdf_mol_dict = {
+                'sdf': [],
+                'mol': []
+        }
+        
+    def sdf_mol_dict_gen(self) -> dict:
+        for file in self.source_dir.iterdir():
+            mol_obj = Chem.SDMolSupplier(str(file), removeHs=False)[0] 
+            self.sdf_mol_dict['sdf'].append(file.stem)
+            self.sdf_mol_dict['mol'].append(mol_obj) 
+        return self.sdf_mol_dict 
 
-#|%%--%%| <MjpSa4aA3S|VPRHdGIqUU>
+
+#|%%--%%| <jTBUiMypUt|VPRHdGIqUU>
 class AppendToCSV: 
     def __init__(self, 
                  csv_path: Optional[Path] = None,
@@ -144,6 +164,7 @@ class AppendToCSV:
 
 #|%%--%%| <VPRHdGIqUU|IMACPFeKJo>
 # Mol objects generated in-situ saved to a single SDF file for reuse purposes 
+# Identified by order 
 def save_mols_sdf(mols, path): 
     writer = Chem.SDWriter(str(path)) 
     try: 
@@ -168,6 +189,7 @@ def csv_generator(df, fname: str, index: Optional[bool]=False):
 
 #|%%--%%| <kJDVW0mpA2|phvAsb4NZ9>
 # Implementation ---------------------------------
+# Instance of FileToMol() 
 
 
 
@@ -184,3 +206,18 @@ def csv_generator(df, fname: str, index: Optional[bool]=False):
 #        out = fchk_path / f"{file.stem}"
 #        print(out.stem)
         #print(f"{file.stem}") 
+
+#
+#nasa7_202_clean_df = pd.read_csv(nasa7_202_clean_csv)
+#
+#mol_202_list = nasa7_202_clean_df["Molecule"].to_list()
+#
+#nasa7_202_dict = {
+#        "Molecule": [],
+#        "SMILES": [], 
+#        "Mol": [], 
+#    }
+#
+#
+#
+

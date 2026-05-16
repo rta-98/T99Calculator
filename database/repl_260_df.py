@@ -3,11 +3,14 @@ import os
 from pathlib import Path 
 from rdkit import Chem 
 from rdkit.Chem import MolFromSmiles 
-
+from database.bridge import *
+from database.sorting import *
 #|%%--%%| <X5YfMo6nSA|YtzL7VqY3s>j
 # File paths ---------------------------------
 base = Path.cwd() 
 
+qdata = base / "./qchem_data" 
+combined = qdata / "./combined" 
 csv = base / "./qchem_data/csv" 
 
 dup_290_csv = base / "./nasa7_290.csv" 
@@ -34,12 +37,230 @@ nasagen_112_clean_csv = csv / "./nasagen_plus_112_clean.csv"
 
 nasa7_202_clean_csv = csv / "./nasa7_202_clean.csv"
 
+sdf_dir = base / "./qchem_data/sdf" 
+smi_dir = base / "./qchem_data/combined/log_fchk_to_smiles"
+
+f2mol_csv = csv / "./f2mol_289.csv"
+combined_sdf = base / "./qchem_data/combined/mols.sdf"
+
+log_fchk_path = combined / "./log_fchk"
+
 # Junk ---------------------------------
 #nasagen_fit_csv = csv / "./nasagen_fit_results.csv" 
-#|%%--%%| <YtzL7VqY3s|RftDWjuiQ4>
+#|%%--%%| <YtzL7VqY3s|JSnmY8W2m6>
+# Problem: There are duplictes (obviously) in the return dictionary from FileToMol(); solve this by creating a df from it 
+# and dropping them
+# Generate dict and store mols in RAM
+f2mol_inst = FileToMol(log_fchk_path)
+f2mol_dict = f2mol_inst.file_mol_list_gen()
+#|%%--%%| <JSnmY8W2m6|G6Jg1VAZXV>
+# Dictionary from instance; duplicates and NaNs dropped 
+f2mol_df_org0 = pd.DataFrame(f2mol_dict)
+f2mol_df_org1 = f2mol_df_org0.drop_duplicates(subset=['Output File'], keep="first")
+f2mol_df = f2mol_df_org1.dropna(subset=['mol']) 
+f2mol_df # 289 x 3 
+
+# Extracting mol column from the dict
+mols_289 = f2mol_df['mol']
+
+# Saving these 289 mols to their own sdf
+# save_mols_sdf(mols_289, "mols.sdf") # saves in home
+#|%%--%%| <G6Jg1VAZXV|sFlDXBpJvF>
+mols = load_mols_sdf(combined / "mols.sdf")
+len(mols) # verified: 289 mols long from combined sdf file! 
+
+f2mol_df_to_csv = f2mol_df.drop(columns=['mol'])
+csv_generator(f2mol_df_to_csv, "f2mol_289")
+
+
+#Problem solved! 
+
+# some fchk files are likely corrupt; revist this later, for now use SDFtoMol
+sdf2mol_inst = SDFtoMol(sdf_dir)
+sdf2mol_dict = sdf2mol_inst.sdf_mol_dict_gen() 
+sdf2mol_dict 
+
+# Dictionary from instance; duplicates and NaNs dropped 
+sdf2mol_df_org0 = pd.DataFrame(sdf2mol_dict)
+sdf2mol_df_org1 = sdf2mol_df_org0.drop_duplicates(subset=['sdf'], keep="first")
+sdf2mol_df = sdf2mol_df_org1.dropna(subset=['mol']) 
+sdf2mol_df # 289 x 3 
+
+# Extracting mol column from the dict
+mols_289 = sdf2mol_df['mol']
+
+# Saving these 289 mols to their own sdf
+save_mols_sdf(mols_289, "mols.sdf") 
+mols = load_mols_sdf(combined / "mols.sdf")
+len(mols) # verified: 289 mols long from combined sdf file! 
+
+
+sdf2mol_df_to_csv = sdf2mol_df.drop(columns=['mol'])
+csv_generator(sdf2mol_df_to_csv, "sdf2mol_289")
+
+# Junk ---------------------------------
+#|%%--%%| <sFlDXBpJvF|RftDWjuiQ4>
+# Creating a dataframe that houses all 290 smiles, mols, their file names ('Molecules'), nasa7 parameters, and torsional data 
+
+# f2mol.csv contains the input and output files, which correlate to the mol objects that are loaded in the next line:
+f2mol_df_org = pd.read_csv(f2mol_csv)
+
+# Loading the mol objects from bridge.py into a new list, to be combined into the master df
+f2mol_mol_list = load_mols_sdf(combined_sdf)
+
+len(f2mol_mol_list)
+
+f2mol_df = f2mol_df_org.assign(mol=f2mol_mol_list)
+output_files = f2mol_df['Output File']
+
+# Generating a smiles column 
+file_name_smi = []
+for sdf_file in output_files:
+    sdf_file_name = Path(sdf_file).stem 
+    #print(file_name)
+    for smile_file in smi_dir.iterdir():
+        smile_file_name = Path(smile_file).stem 
+        if smile_file_name == sdf_file_name:
+            with open(smile_file) as f:
+                for line in f: 
+                    line = line.strip() 
+                    parts = line.split(maxsplit=1)
+                    file = Path(parts[1]).stem
+                    name = parts[1] 
+                    smi = parts[0]
+                    file_name_smi.append((file, name, smi))
+
+len(file_name_smi) # 289
+
+smiles_289 = [smiles[2] for smiles in file_name_smi]
+
+f2mol_smile_df = f2mol_df.assign(SMILES=smiles_289)
+f2mol_smile_df # smiles column added
+
+# Generating a mol column based off nasa7_202_clean.csv 
+
+nasa7_clean_df = pd.read_csv(nasa7_202_clean_csv)
+molecules_202 = nasa7_clean_df['Molecule']
+
+
+name_smile_mol_72_dict = {
+        "Molecule": [],
+        "SMILES"  : [], 
+        "mol"     : []
+    }
+
+i = 0
+for name_202 in molecules_202: 
+    for row_index, row in f2mol_smile_df.iterrows():
+        path_289 = row["Output File"]
+        name_289 = Path(path_289).stem
+        smiles_289 = row["SMILES"]
+        mol_289 = row["mol"]
+        if name_289 == name_202:
+            name_smile_mol_72_dict["Molecule"].append(name_289)
+            name_smile_mol_72_dict["SMILES"].append(smiles_289)
+            name_smile_mol_72_dict["mol"].append(mol_289)
+            #print(name_289) 
+            i += 1
+            # i = 72: Success! 
+         
+name_smile_mol_72_dict 
+
+#|%%--%%| <RftDWjuiQ4|p6D3wDefs2>
+# Now to run BytesPDB on the mol objects; extract dictonary values to lists to enter; utilize 
+# bridge.py methods to flatten the nested dictionary 
+
+"""
+            name: list, # Usually derived from Path(<file>).stem and contained in "Molecules"  
+            mol: list, # Mol objects stored in RAM  
+            smiles: list): # Accepts non-canonical SMILES
+            
+             inst = BytesPDB(abbrv=abbrv_col, smiles=smiles_col)
+             tmp = MoleculeSorter(inst)
+             tmp.analyze_all()
+"""
+
+# Converting dictionary values to lists
+
+name_smile_mol_72_dict.keys()
+
+name_col = name_smile_mol_72_dict['Molecule']
+smiles_col = name_smile_mol_72_dict['SMILES'] 
+mol_col = name_smile_mol_72_dict['mol']
+
+bpdb_inst = BytesPDB(name=name_col, mol=mol_col, smiles=smiles_col)
+ms_inst = MoleculeSorter(bpdb_inst)
+ms_inst.analyze_all()
+
+
+#|%%--%%| <p6D3wDefs2|Fte0BiOlyj>
 # df generation ---------------------------------
 #nasa7_242_parms_df = pd.read_csv(nasa7_242_parms_csv, dtype={"big_id": "Int64"})
-#
+
+arr1 = set() 
+arr2 = set()
+
+for sdf in sdf_dir.iterdir():
+    file = sdf_dir / f"{sdf.stem}"
+    arr1.add(sdf)
+    print(file.stem)
+    
+len(arr1)
+
+arr2 = set()
+
+for smi in smi_dir.iterdir():
+    file = smi_dir / f"{smi.stem}" 
+    arr2.add(smi)
+
+len(arr2)
+
+file_name_smi = [] 
+for smi in smi_dir.iterdir():
+    with open(f"{smi}") as f:
+        for line in f: 
+            line = line.strip() 
+            if not line:
+                continue
+            parts = line.split(maxsplit=1)
+            file = Path(parts[1]).stem
+            name = parts[1] 
+            smi = parts[0]
+            file_name_smi.append((file, name, smi))
+
+nasa7_clean_df = pd.read_csv(nasa7_202_clean_csv)
+
+nasa7_242_parms_df = pd.read_csv(nasa7_242_parms_csv)
+
+nasa7_242_parms_df.keys() 
+
+#listb = nasa7_242_parms_df['Molecule'].to_list()
+
+listb = nasagen_112_clean_csv_df['Molecule'].to_list()
+
+file_name_smi_df = pd.DataFrame(file_name_smi)
+
+lista = file_name_smi_df.iloc[:, 0].to_list()
+
+len(listb)
+len(lista)
+
+set(listb).issubset(set(lista)) # True! 
+
+missing = list(set(listb) - set(lista))
+
+missing # 0!  
+
+# Generating a smiles column 
+
+for sdf_file in output_files:
+    sdf_file_name = Path(file).stem 
+    #print(file_name)
+    for smile_file in smiles_directory.iterdir():
+        smile_file_name = Path(smile_file).stem 
+        if smile_file_name == sdf_file_name:
+            with open(smile_file) as f:
+
 #no_rot = pd.read_csv(no_rot, dtype={"big_id": "Int64"}) 
 #no_sn = pd.read_csv(no_sn, dtype={"big_id": "Int64"}) 
 #yes_sn = pd.read_csv(yes_sn, dtype={"big_id": "Int64"}) 
@@ -59,10 +280,14 @@ nasa7_202_clean_csv = csv / "./nasa7_202_clean.csv"
 #nasagen_112_clean_df = pd.read_csv(nasagen_112_clean_csv, dtype={"big_id": "Int64"})
 #
 nasa7_202_clean_df = pd.read_csv(nasa7_202_clean_csv, dtype={"big_id": "Int64"})
+nasagen_112_clean_csv_df = pd.read_csv(nasagen_112_clean_csv)
+nasagen_112_clean_csv_df 
 # Junk ---------------------------------
 #dup_290_df = pd.read_csv(dup_290_csv, dtype={"big_id": "Int64"}) 
 #nasa7_242_parms_df = dedup_290_df
-#|%%--%%| <RftDWjuiQ4|Onesi0p6GT>
+
+
+#|%%--%%| <Fte0BiOlyj|Onesi0p6GT>
 # Df modification ---------------------------------
 
 
@@ -315,3 +540,4 @@ nasagen_fit_df
 #print(m.head(10).to_string(index=False)) 
 #
 #df_diff_account # frd_903_cof_OH 
+

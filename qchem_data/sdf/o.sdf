@@ -1,7 +1,16 @@
-Title Card Required
- OpenBabel05122616213D
-
+/home/yang/projects/t99_calc/v1/qchem_data/combined/log_fchk/o.log
+ OpenBabel05152619573D
+Gaussian applications/g16/g16/g16 # freq wb97xd/6-311+g(2d)
   1  0  0  0  0  0  0  0  0  0999 V2000
     0.0000    0.0000    0.0000 O   0  0  0  0  0 15  0  0  0  0  0  0
 M  END
+>  <program>
+Gaussian 16, Revision A.03
+
+>  <basis>
+6-311+G(2d) (5D, 7F)
+
+>  <File Format>
+g03
+
 $$$$

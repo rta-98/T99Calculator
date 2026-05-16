@@ -1,0 +1,24 @@
+/home/yang/projects/t99_calc/v1/qchem_data/combined/log_fchk/cf2cf.log
+ OpenBabel05152619573D
+Gaussian applications/g16/g16/g16 # opt freq uwb97xd/6-311+g(2d) geom=connectivi
+  5  4  0  0  0  0  0  0  0  0999 V2000
+   -0.7762   -0.6024    0.0000 C   0  0  0  0  0  3  0  0  0  0  0  0
+    0.4163   -0.0608    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
+   -1.9418   -0.0301    0.0000 F   0  0  0  0  0  0  0  0  0  0  0  0
+    1.5251   -0.7637   -0.0000 F   0  0  0  0  0  0  0  0  0  0  0  0
+    0.6566    1.2359   -0.0000 F   0  0  0  0  0  0  0  0  0  0  0  0
+  1  3  1  0  0  0  0
+  2  1  2  0  0  0  0
+  4  2  1  0  0  0  0
+  5  2  1  0  0  0  0
+M  END
+>  <program>
+Gaussian 16, Revision A.03
+
+>  <basis>
+6-311+G(2d) (5D, 7F)
+
+>  <File Format>
+g03
+
+$$$$

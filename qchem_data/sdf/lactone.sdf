@@ -1,0 +1,27 @@
+/home/yang/projects/t99_calc/v1/qchem_data/combined/log_fchk/lactone.log
+ OpenBabel05152619573D
+Gaussian applications/g16/g16/g16 # opt wb97xd/6-311+g(2d,2p) geom=connectivity 
+  6  6  0  0  0  0  0  0  0  0999 V2000
+   -0.4831    0.0000   -0.0628 C   0  0  0  0  0  0  0  0  0  0  0  0
+   -1.2161   -1.0777   -0.2426 F   0  0  0  0  0  0  0  0  0  0  0  0
+    0.9638    0.0000   -0.0701 C   0  0  0  0  0  0  0  0  0  0  0  0
+    0.3139    0.0000    1.1251 O   0  0  0  0  0  0  0  0  0  0  0  0
+    2.0619   -0.0000   -0.4797 O   0  0  0  0  0  0  0  0  0  0  0  0
+   -1.2161    1.0777   -0.2426 F   0  0  0  0  0  0  0  0  0  0  0  0
+  1  4  1  0  0  0  0
+  2  1  1  0  0  0  0
+  3  1  1  0  0  0  0
+  3  4  1  0  0  0  0
+  5  3  2  0  0  0  0
+  6  1  1  0  0  0  0
+M  END
+>  <program>
+Gaussian 16, Revision A.03
+
+>  <basis>
+6-311+G(2d,2p) (5D, 7F)
+
+>  <File Format>
+g03
+
+$$$$
