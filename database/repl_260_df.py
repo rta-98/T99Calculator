@@ -37,6 +37,8 @@ nasagen_112_clean_csv = csv / "./nasagen_plus_112_clean.csv"
 
 nasa7_202_clean_csv = csv / "./nasa7_202_clean.csv"
 
+pfas_data_130_personal_csv  = csv / "./PFAS_data_130_personal.csv"
+
 sdf_dir = base / "./qchem_data/sdf" 
 smi_dir = base / "./qchem_data/combined/log_fchk_to_smiles"
 
@@ -45,12 +47,14 @@ combined_sdf = base / "./qchem_data/combined/mols.sdf"
 
 log_fchk_path = combined / "./log_fchk"
 
+
 # Junk ---------------------------------
 #nasagen_fit_csv = csv / "./nasagen_fit_results.csv" 
 #|%%--%%| <YtzL7VqY3s|JSnmY8W2m6>
 # Problem: There are duplictes (obviously) in the return dictionary from FileToMol(); solve this by creating a df from it 
 # and dropping them
 # Generate dict and store mols in RAM
+
 f2mol_inst = FileToMol(log_fchk_path)
 f2mol_dict = f2mol_inst.file_mol_list_gen()
 #|%%--%%| <JSnmY8W2m6|G6Jg1VAZXV>
@@ -71,7 +75,6 @@ len(mols) # verified: 289 mols long from combined sdf file!
 
 f2mol_df_to_csv = f2mol_df.drop(columns=['mol'])
 csv_generator(f2mol_df_to_csv, "f2mol_289")
-
 
 #Problem solved! 
 
@@ -136,35 +139,36 @@ smiles_289 = [smiles[2] for smiles in file_name_smi]
 
 f2mol_smile_df = f2mol_df.assign(SMILES=smiles_289)
 f2mol_smile_df # smiles column added
+f2mol_smile_df.keys()
 
 # Generating a mol column based off nasa7_202_clean.csv 
 
-nasa7_clean_df = pd.read_csv(nasa7_202_clean_csv)
-molecules_202 = nasa7_clean_df['Molecule']
+# INSERT HERE ---------------------------------
 
-
-name_smile_mol_72_dict = {
+name_smile_mol_202_dict = {
         "Molecule": [],
         "SMILES"  : [], 
         "mol"     : []
     }
 
 i = 0
-for name_202 in molecules_202: 
+for name_202 in name_202_list: 
     for row_index, row in f2mol_smile_df.iterrows():
         path_289 = row["Output File"]
         name_289 = Path(path_289).stem
         smiles_289 = row["SMILES"]
         mol_289 = row["mol"]
         if name_289 == name_202:
-            name_smile_mol_72_dict["Molecule"].append(name_289)
-            name_smile_mol_72_dict["SMILES"].append(smiles_289)
-            name_smile_mol_72_dict["mol"].append(mol_289)
+            name_smile_mol_202_dict["Molecule"].append(name_289)
+            name_smile_mol_202_dict["SMILES"].append(smiles_289)
+            name_smile_mol_202_dict["mol"].append(mol_289)
             #print(name_289) 
             i += 1
             # i = 72: Success! 
          
-name_smile_mol_72_dict 
+len(name_smile_mol_202_dict['mol'])
+
+#Junk--------------------------------- 
 
 #|%%--%%| <RftDWjuiQ4|p6D3wDefs2>
 # Now to run BytesPDB on the mol objects; extract dictonary values to lists to enter; utilize 
@@ -182,17 +186,33 @@ name_smile_mol_72_dict
 
 # Converting dictionary values to lists
 
-name_smile_mol_72_dict.keys()
+name_smile_mol_202_dict.keys()
 
-name_col = name_smile_mol_72_dict['Molecule']
-smiles_col = name_smile_mol_72_dict['SMILES'] 
-mol_col = name_smile_mol_72_dict['mol']
+name_col = name_smile_mol_202_dict['Molecule']
+smiles_col = name_smile_mol_202_dict['SMILES'] 
+mol_col = name_smile_mol_202_dict['mol']
 
 bpdb_inst = BytesPDB(name=name_col, mol=mol_col, smiles=smiles_col)
 ms_inst = MoleculeSorter(bpdb_inst)
-ms_inst.analyze_all()
 
+torsions_202_dict_no_rot = ms_inst.analyze_all()[0]
+torsions_202_dict_yes_sn = ms_inst.analyze_all()[1]
+torsions_202_dict_no_sn = ms_inst.analyze_all()[2]
 
+torsions_202_df_no_rot = pd.DataFrame(torsions_202_dict_no_rot)
+torsions_202_df_yes_sn = pd.DataFrame(torsions_202_dict_yes_sn)
+torsions_202_df_no_sn = pd.DataFrame(torsions_202_dict_no_sn)
+
+no_rot_202_T = torsions_202_df_no_rot.T
+yes_sn_202_T = torsions_202_df_yes_sn.T
+no_sn_202_T = torsions_202_df_no_sn.T
+
+csv_generator(no_rot_202_T, "no_rot_202_T")
+csv_generator(yes_sn_202_T, "yes_sn_202_T")
+csv_generator(no_sn_202_T, "no_sn_202_T")
+
+# df generation ---------------------------------
+#nasa7_242_parms_df = pd.read_csv(nasa7_242_parms_csv, dtype={"big_id": "Int64"})
 #|%%--%%| <p6D3wDefs2|Fte0BiOlyj>
 # df generation ---------------------------------
 #nasa7_242_parms_df = pd.read_csv(nasa7_242_parms_csv, dtype={"big_id": "Int64"})
@@ -468,6 +488,7 @@ nasa7_202_df = pd.concat([org_nasa_df_clean, nasagen_112_clean_df], axis=0, igno
 #unmatch_nasa7_112.to_csv("unmatch_nasa7_112.csv", index=False)
 #Molecule_unmatch.to_csv("Molecule_unmatch.csv", index=False)
 #Log_Name_unmatch_df.to_csv("Log_Name_unmatch.csv", index=False) 
+
 Log_Name_match_df1.to_csv("./qchem_data/csv/Log_Name_match.csv", index=False)
 nasa7_242_parms_df.to_csv("./qchem_data/csv/nasa7_242_parms_df.csv", index=False)
 
@@ -492,8 +513,50 @@ df_unmatch_smi_log_parm = m_smi.loc[m_smi["_merge"] == "right_only"].drop(column
 
 
 #|%%--%%| <DIpRDtjC7d|0lRSAsXXvY>
-# Correlating SMILES with log files. 
+# Merging PFAS_data_130_personal.csv with nasa7_202_clean.csv on the name column to provided a key to source .log files
 
+name_log_130_df = pfas_130_df[['Molecule', 'Log Files']]
+name_log_130_list = name_log_130_df.values.tolist()
+
+name_130_list = [Path(mol[1]).stem for mol in name_log_130_list]
+len(name_130_list)
+len(name_72_list)
+sorted(name_130_list)
+sorted(name_72_list)
+name_202_list = name_130_list + name_72_list
+len(name_202_list) # 202 
+
+#pfas_130_df = pd.read_csv(pfas_data_130_personal_csv)
+#pfas_130_df.keys()
+#
+#name_log_130_df = pfas_130_df[['Molecule', 'Log Files']]
+#
+## In order to convert a pandas data frame to a list that is more than one column, one must first access the NumPy array using .values (or .to_numpy()) a
+## name_log_130_list = name_log_130_df.to_list() # this will NOT work
+#
+## Now one can use .tolist(), NOT to_list()
+#name_logs_130_list = name_log_130_df.values.tolist()
+#
+## molecules_202: copy and swap the first 130 indices with name_log_smile_130['Log Files']  
+#molecules_202_list = molecules_202.to_list() 
+#molecules_130_list = [] 
+#for idx, i in enumerate(molecules_202_list):
+#    if idx < 130:
+#        molecules_130_list.append(i)
+#    
+#molecules_130_list     
+#       
+## also, can be done via list comprehension:
+#molecules_130_list = [i for idx, i in enumerate(molecules_202_list) if idx < 130]
+#len(molecules_130_list)
+#
+#name_130_arr = [Path(mol[1]).stem for mol in name_logs_130_list]
+#
+#name_logs_130_list
+#
+## This will be taken back to like 
+#sorted_name_130_arr = sorted(name_130_arr)
+#
 
 #|%%--%%| <0lRSAsXXvY|6IguWlK26Q>
 # Print ---------------------------------
@@ -506,6 +569,7 @@ len(unmatch_nasa7_242)
 print(unmatch_nasa7_242.head(10).to_string(index=False))
 
 nasagen_fit_df
+
 # Junk ---------------------------------
 #
 #print(dedup_290_df.head(10).to_string(index=False))
@@ -540,4 +604,5 @@ nasagen_fit_df
 #print(m.head(10).to_string(index=False)) 
 #
 #df_diff_account # frd_903_cof_OH 
+
 
