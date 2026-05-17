@@ -195,9 +195,10 @@ mol_col = name_smile_mol_202_dict['mol']
 bpdb_inst = BytesPDB(name=name_col, mol=mol_col, smiles=smiles_col)
 ms_inst = MoleculeSorter(bpdb_inst)
 
-torsions_202_dict_no_rot = ms_inst.analyze_all()[0]
+# Order: 1) mol_sorted or yes_sn 2) forbidden or no_sn 3) no_rot or no_rot
+torsions_202_dict_no_sn = ms_inst.analyze_all()[0]
 torsions_202_dict_yes_sn = ms_inst.analyze_all()[1]
-torsions_202_dict_no_sn = ms_inst.analyze_all()[2]
+torsions_202_dict_no_rot = ms_inst.analyze_all()[2]
 
 torsions_202_df_no_rot = pd.DataFrame(torsions_202_dict_no_rot)
 torsions_202_df_yes_sn = pd.DataFrame(torsions_202_dict_yes_sn)
@@ -210,6 +211,13 @@ no_sn_202_T = torsions_202_df_no_sn.T
 csv_generator(no_rot_202_T, "no_rot_202_T")
 csv_generator(yes_sn_202_T, "yes_sn_202_T")
 csv_generator(no_sn_202_T, "no_sn_202_T")
+
+no_sn_202_T
+yes_sn_202_T
+no_rot_202_T 
+
+no_sn_202_T.keys()
+print(no_sn_202_T['Pair Count sp3 C-C'].head(100).to_string(index=False))
 
 # df generation ---------------------------------
 #nasa7_242_parms_df = pd.read_csv(nasa7_242_parms_csv, dtype={"big_id": "Int64"})

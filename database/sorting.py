@@ -60,12 +60,12 @@ class MoleculeSorter:
                 zip(self.name, self.smiles, self.mol, strict=True)
         ):
             if not self.has_rot(mol):
-                self.non_rot_dict[name] = self.analyzer(mol, smiles) 
+                self.non_rot_dict[name] = self.analyzer(name, smiles, mol) 
                 continue 
             if not self.has_atom(mol):
-                self.mol_sorted_dict[name] = self.analyzer(mol, smiles) 
+                self.mol_sorted_dict[name] = self.analyzer(name, smiles, mol) 
             elif self.has_atom(mol):  
-                self.forbidden_dict[name] = self.analyzer(mol, smiles)
+                self.forbidden_dict[name] = self.analyzer(name, smiles, mol)
         return (self.mol_sorted_dict, self.forbidden_dict, self.non_rot_dict) 
     
     def has_atom(
@@ -86,8 +86,10 @@ class MoleculeSorter:
             n_rot = rdMolDescriptors.CalcNumRotatableBonds(mol, strict=True) 
         return n_rot > 0 
 
-    def analyzer(self, mol, smiles):
+    def analyzer(self, name, smiles, mol):
         analyzer_dict = {}
+        analyzer_dict["Molecule"] = name
+        analyzer_dict["SMILES"] = smiles
 
         # parsing count_atoms() dict output; appending to analyzer dict
         num_atoms_dict = self.count_atoms(mol) 
@@ -103,8 +105,7 @@ class MoleculeSorter:
         torsions_dict = self.count_dihedral(mol)
         for tor, tor_vals in torsions_dict.items():
             analyzer_dict[tor] = tor_vals
-        
-        analyzer_dict["SMILES"] = smiles
+
         return analyzer_dict
 
     def count_atoms(self, mol): 
@@ -157,20 +158,37 @@ class MoleculeSorter:
             
             # append atomic symbols (E) to the bonds_in_mol dict.
             bonds_in_mol[bond_type_mapped].append({
-                "Bond Pair ID ": "-".join(sorted((e1, e2))),
+                "Bond Pair ID": "-".join(sorted((e1, e2))),
             }) 
-
+        
         # The nested dictionary result is initialized
         motif_result = {} 
 
         # Loop over the key (hybrid) and the value (bond_idx) in bonds_in_mol dict.  
+        # first for loop simply takes the list associated with one of the 4 hybridization 
+        # values, and iterates over the total number of entries, i.e., 
+        # for a given sp3 you get 
+        # [Bond Pair ID: C-C, Bond Pair ID: C-C, Bond Pair ID: C-N], which has length 3.
         for hybrid_key, bond_list in bonds_in_mol.items():
-            motif_result[f"{hybrid_key} Total Bond Count"] = len(bond_list) 
-            for bond_dict in bond_list:
-                for bond_dict_key, bond_vals in bond_dict.items():
-                    motif_result[f"{hybrid_key} {bond_dict_key} Total Pair Count"] = len(bond_vals)
-
+            if bond_list:
+                motif_result[f"{hybrid_key} Total Bond Count"] = len(bond_list) 
+                pair_list = []
+                pair_count_dict = {}
+                for bonds_in_mol_dict in bond_list: 
+                    name = bonds_in_mol_dict["Bond Pair ID"] 
+                    pair_list.append(name)
+                    i = 0
+                    for pair in pair_list:
+                        if name in pair_list:
+                            pair_count_dict[name] = pair_count_dict.get(name, 0) + 1 # alternative to dict[key] += 1 
+                        else:
+                            pair_count_dict[name] = 1
+                    
+                for pair_name, pair_count in pair_count_dict.items():
+                    motif_result[f"Pair Count {hybrid_key} {pair_name}"] = pair_count
         return motif_result 
+
+                #pair_count_dict = dict(Counter(bond["Bond Pair ID"] for bond in bond_list))
 
     def count_dihedral(self, mol, smiles: Optional[str] = None):
         # Template for rotatable bonds
