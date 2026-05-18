@@ -1,1 +1,1 @@
-{"cmd":"ms_inst.analyze_all()","cmd_opts":"","import_complete":1,"terminal":"tmux"}
+{"cmd":"csv_generator(merged_no_sn_df, \"no_sn_202\")\ncsv_generator(merged_yes_sn_df, \"yes_sn_202\")\ncsv_generator(merged_no_rot_df, \"no_rot_202\")","cmd_opts":"","import_complete":1,"terminal":"tmux"}

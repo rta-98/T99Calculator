@@ -94,7 +94,7 @@ class MoleculeSorter:
         # parsing count_atoms() dict output; appending to analyzer dict
         num_atoms_dict = self.count_atoms(mol) 
         for atom, atom_count in num_atoms_dict.items():
-            analyzer_dict[atom] = atom_count
+            analyzer_dict[f"{atom} Count"] = atom_count
 
         # parsing count_motif() dict output; appending to analyzer dict
         motif_dict = self.count_motif(mol) 
@@ -169,23 +169,23 @@ class MoleculeSorter:
         # values, and iterates over the total number of entries, i.e., 
         # for a given sp3 you get 
         # [Bond Pair ID: C-C, Bond Pair ID: C-C, Bond Pair ID: C-N], which has length 3.
+
         for hybrid_key, bond_list in bonds_in_mol.items():
             if bond_list:
-                motif_result[f"{hybrid_key} Total Bond Count"] = len(bond_list) 
+                motif_result[f"Total {hybrid_key} Count"] = len(bond_list) 
                 pair_list = []
                 pair_count_dict = {}
                 for bonds_in_mol_dict in bond_list: 
                     name = bonds_in_mol_dict["Bond Pair ID"] 
                     pair_list.append(name)
-                    i = 0
-                    for pair in pair_list:
-                        if name in pair_list:
-                            pair_count_dict[name] = pair_count_dict.get(name, 0) + 1 # alternative to dict[key] += 1 
-                        else:
-                            pair_count_dict[name] = 1
-                    
+                    if name in pair_list:
+                        pair_count_dict[name] = pair_count_dict.get(name, 0) + 1 # alternative to dict[key] += 1 
+                    else:
+                        pair_count_dict[name] = 1
+                        
                 for pair_name, pair_count in pair_count_dict.items():
-                    motif_result[f"Pair Count {hybrid_key} {pair_name}"] = pair_count
+                    motif_result[f"{hybrid_key} {pair_name} Count"] = pair_count
+
         return motif_result 
 
                 #pair_count_dict = dict(Counter(bond["Bond Pair ID"] for bond in bond_list))
@@ -248,7 +248,7 @@ class MoleculeSorter:
         torsions_result = {}
 
         for label, val in torsion_counts.items():
-            torsions_result[label] = val 
-        torsions_result["Number of Rot. Bonds"] = rotatable_bonds 
+            torsions_result[f"Torsions {label}"] = val 
+        torsions_result["Rotatable Bonds Count"] = rotatable_bonds 
 
         return torsions_result

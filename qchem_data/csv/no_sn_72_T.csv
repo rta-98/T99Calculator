@@ -1,0 +1,8 @@
+C,F,H,sp3 Total Bond Count,sp3 Bond Pair ID  Total Pair Count,sp2 Total Bond Count,sp Total Bond Count,Aromatic Total Bond Count,Unk Total Bond Count,F-C-C-F,H-C-C-F,Number of Rot. Bonds,SMILES,sp2 Bond Pair ID  Total Pair Count,F-C-C-C,O,O-C-C-F,C-C-C-F,F-C-C-O,C-C-O-H,O-C-O-H
+2,5,1,7,3,0,0,0,0,6,3,0,FC(F)C(F)(F)F,,,,,,,,
+3,4,2,7,3,1,0,0,0,3,,0,C=C(F)C(F)(F)F,3,3,,,,,,
+2,4,,4,3,1,0,0,0,,,0,FC(F)=C(F)F,3,,,,,,,
+2,4,,5,3,1,0,0,0,3,,0,O=C(F)C(F)(F)F,3,,1,3,,,,
+3,6,,7,3,1,0,0,0,3,,0,FC(F)=C(F)C(F)(F)F,3,,,,3,,,
+2,3,1,6,3,1,0,0,0,,,0,O=C(O)C(F)(F)F,3,,2,,,6,1,1
+2,4,,5,3,1,0,0,0,3,,0,O=C(F)C(F)(F)F,3,,1,,,3,,

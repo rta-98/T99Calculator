@@ -47,6 +47,7 @@ combined_sdf = base / "./qchem_data/combined/mols.sdf"
 
 log_fchk_path = combined / "./log_fchk"
 
+nasa7_parms_final_csv = qdata / "./nasa7_parms_final.csv" 
 
 # Junk ---------------------------------
 #nasagen_fit_csv = csv / "./nasagen_fit_results.csv" 
@@ -168,9 +169,65 @@ for name_202 in name_202_list:
          
 len(name_smile_mol_202_dict['mol'])
 
+name_smile_mol_202_df = pd.DataFrame(name_smile_mol_202_dict)
+name_smile_mol_202_df.keys()
+name_202_df = name_smile_mol_202_df.drop(columns={"mol", "SMILES"})
+name_202_df # name_202_df.drop_duplicates produces 201 long 
+
+nasa7_202_updated_names = pd.merge(name_202_df, nasa7_202_clean_df, on="Molecule", how="left", sort=True) 
+print(nasa7_202_updated_names.head(100).to_string(index=False))
+print(nasa7_202_clean_df['Molecule'].head(100).to_string(index=False))
+
+nasa7_202_clean_df
+name_202_df = pd.DataFrame(name_202_list, columns=["Molecule"])
+name_202_df
+
+nasa7_parms_final_df = pd.read_csv(original_nasa7_csv)
+nasa7_parms_final_df.keys() 
+nasa7_parms_final_df['Log_file']
+print(nasa7_parms_final_df.head(100).to_string(index=False))
+
 #Junk--------------------------------- 
 
-#|%%--%%| <RftDWjuiQ4|p6D3wDefs2>
+#pfas_data_130_df = pd.read_csv(pfas_data_130_csv)
+#
+#nasa7_129_log = pfas_data_130_df.drop(columns={"Molecule"}) 
+#nasa7_log_list = nasa7_129_log.T.values.tolist()
+#stem_list_130 = []
+#for i in nasa7_log_list[0]:
+#    name = Path(i).stem
+#    stem_list_130.append(name)
+#
+#stem_list_130
+#
+#name_202_to_swap = nasa7_202_clean_df["Molecule"].to_list()
+#
+
+#|%%--%%| <RftDWjuiQ4|c7gTYJMbO6>
+files_130 = nasa7_parms_final_df['Log_file']
+names_130 = []
+for file in files_130:
+    name = Path(file).stem 
+    names_130.append(name)
+
+pop_col_abv = nasa7_parms_final_df.pop('Abbreviation')
+pop_col_log = nasa7_parms_final_df.pop('Log_file')
+pop_col_smiles = nasa7_parms_final_df.pop('SMILES')
+
+nasa7_parms_final_df.insert(0, 'Molecule', names_130)
+
+nasa7_parms_final_df.keys()
+nasa7_202_clean_df.keys()
+
+nasa7_130 = nasa7_parms_final_df
+nasa7_130
+nasa7_72 = nasa7_202_clean_df.iloc[130:202, :]
+nasa7_72
+
+nasa7_202_concat = pd.concat([nasa7_130, nasa7_72], axis=0)
+csv_generator(nasa7_202_concat, "nasa7_202_concat")
+
+#|%%--%%| <c7gTYJMbO6|p6D3wDefs2>
 # Now to run BytesPDB on the mol objects; extract dictonary values to lists to enter; utilize 
 # bridge.py methods to flatten the nested dictionary 
 
@@ -212,12 +269,36 @@ csv_generator(no_rot_202_T, "no_rot_202_T")
 csv_generator(yes_sn_202_T, "yes_sn_202_T")
 csv_generator(no_sn_202_T, "no_sn_202_T")
 
-no_sn_202_T
-yes_sn_202_T
-no_rot_202_T 
+no_sn_202_T_df = pd.DataFrame(no_sn_202_T)
+yes_sn_202_T_df = pd.DataFrame(yes_sn_202_T)
+no_rot_202_T_df = pd.DataFrame(no_rot_202_T)
 
 no_sn_202_T.keys()
-print(no_sn_202_T['Pair Count sp3 C-C'].head(100).to_string(index=False))
+
+# Merging these data sets with parameters 
+
+nasa7_242_df = pd.read_csv(nasa7_242_parms_csv)
+
+nasa7_242_df.keys()
+
+def merger(left, right):
+    new = pd.merge(left, right, on="Molecule", how="inner") 
+    csv_generator(new, "{left}_{right}_merged")
+    return new 
+
+merged_no_sn_df = merger(no_sn_202_T_df, nasa7_202_concat)
+merged_no_sn_df # 126 rows 
+
+merged_yes_sn_df = merger(yes_sn_202_T_df, nasa7_202_concat)
+merged_yes_sn_df # 20 rows 
+
+merged_no_rot_df = merger(no_rot_202_T_df, nasa7_202_concat)
+merged_no_rot_df # 55 rows 
+
+csv_generator(merged_no_sn_df, "no_sn_202")
+csv_generator(merged_yes_sn_df, "yes_sn_202")
+csv_generator(merged_no_rot_df, "no_rot_202")
+
 
 # df generation ---------------------------------
 #nasa7_242_parms_df = pd.read_csv(nasa7_242_parms_csv, dtype={"big_id": "Int64"})
@@ -255,8 +336,6 @@ for smi in smi_dir.iterdir():
             name = parts[1] 
             smi = parts[0]
             file_name_smi.append((file, name, smi))
-
-nasa7_clean_df = pd.read_csv(nasa7_202_clean_csv)
 
 nasa7_242_parms_df = pd.read_csv(nasa7_242_parms_csv)
 
@@ -307,7 +386,7 @@ for sdf_file in output_files:
 #
 #nasagen_112_clean_df = pd.read_csv(nasagen_112_clean_csv, dtype={"big_id": "Int64"})
 #
-nasa7_202_clean_df = pd.read_csv(nasa7_202_clean_csv, dtype={"big_id": "Int64"})
+nasa7_202_clean_df = pd.read_csv(nasa7_202_clean_csv, dtype={"big_id": "Int64"}, index_col=0)
 nasagen_112_clean_csv_df = pd.read_csv(nasagen_112_clean_csv)
 nasagen_112_clean_csv_df 
 # Junk ---------------------------------
@@ -532,6 +611,7 @@ len(name_72_list)
 sorted(name_130_list)
 sorted(name_72_list)
 name_202_list = name_130_list + name_72_list
+name_202_list
 len(name_202_list) # 202 
 
 #pfas_130_df = pd.read_csv(pfas_data_130_personal_csv)
