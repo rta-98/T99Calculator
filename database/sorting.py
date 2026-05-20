@@ -53,6 +53,7 @@ class MoleculeSorter:
         self.mol_sorted_dict: dict = {} # rotatable bonds; S and N devoid
         self.forbidden_dict: dict = {} # rotatable bonds; S and N containing 
         self.non_rot_dict: dict = {} # non-rotatable bonds; S and N devoid
+        self.custom_dict: dict = {} # 5/19: Viet wishes to combine non-rotatable bonds, with Sulfur & Nitrogen devoid dataset
         self.dud_list = [] # err 
 
     def analyze_all(self): 
@@ -66,6 +67,9 @@ class MoleculeSorter:
                 self.mol_sorted_dict[name] = self.analyzer(name, smiles, mol) 
             elif self.has_atom(mol):  
                 self.forbidden_dict[name] = self.analyzer(name, smiles, mol)
+            if not self.has_rot(mol) and not self.has_atom(mol):
+                self.custom_dict[name] = self.anaylzer(name, smiles, mol)
+
         return (self.mol_sorted_dict, self.forbidden_dict, self.non_rot_dict) 
     
     def has_atom(
@@ -249,6 +253,6 @@ class MoleculeSorter:
 
         for label, val in torsion_counts.items():
             torsions_result[f"Torsions {label}"] = val 
-        torsions_result["Rotatable Bonds Count"] = rotatable_bonds 
+        torsions_result["Torsional Axes Count"] = rotatable_bonds 
 
         return torsions_result

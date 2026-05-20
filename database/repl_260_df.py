@@ -244,6 +244,7 @@ csv_generator(nasa7_202_concat, "nasa7_202_concat")
 # Converting dictionary values to lists
 
 name_smile_mol_202_dict.keys()
+name_smile_mol_202_dict 
 
 name_col = name_smile_mol_202_dict['Molecule']
 smiles_col = name_smile_mol_202_dict['SMILES'] 
@@ -287,17 +288,17 @@ def merger(left, right):
     return new 
 
 merged_no_sn_df = merger(no_sn_202_T_df, nasa7_202_concat)
-merged_no_sn_df # 126 rows 
+no_sn_df = merged_no_sn_df.fillna(0) # 126 rows 
 
 merged_yes_sn_df = merger(yes_sn_202_T_df, nasa7_202_concat)
-merged_yes_sn_df # 20 rows 
+yes_sn_df = merged_yes_sn_df.fillna(0) # 20 rows 
 
 merged_no_rot_df = merger(no_rot_202_T_df, nasa7_202_concat)
-merged_no_rot_df # 55 rows 
+no_rot_df = merged_no_rot_df.fillna(0) # 55 rows 
 
-csv_generator(merged_no_sn_df, "no_sn_202")
-csv_generator(merged_yes_sn_df, "yes_sn_202")
-csv_generator(merged_no_rot_df, "no_rot_202")
+csv_generator(no_sn_df, "no_sn_202")
+csv_generator(yes_sn_df, "yes_sn_202")
+csv_generator(no_rot_df, "no_rot_202")
 
 
 # df generation ---------------------------------

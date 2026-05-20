@@ -21,7 +21,7 @@ from itertools import zip_longest, product
 from collections import Counter 
 import subprocess
 from rdkit.Chem.MolStandardize import rdMolStandardize 
-#|%%--%%| <Vnrl1Lh6UJ|fw77UvbU0w>
+
 base = Path.cwd() 
 qdata = base / "./qchem_data"
 csv = qdata / "./csv" 
@@ -31,7 +31,7 @@ fchk_path = qdata / "./fchk"
 log_fchk_path = qdata / "./combined/log_fchk"
 nasa7_202_clean_csv = csv / "nasa7_202_clean.csv" 
 smiles_directory = qdata / "./file_to_smi"
-#|%%--%%| <fw77UvbU0w|Z3cJvKMS9u>
+
 class Flattener: 
     def __init__(self, dict_inst: Optional[dict] = None): 
         self.dict_inst = dict_inst 
@@ -91,7 +91,6 @@ class Flattener:
             return c.replace("Motif ", "", 1) 
         return c 
 
-#|%%--%%| <Z3cJvKMS9u|MjpSa4aA3S>
 class LogFchkToMol: 
     def __init__(self, 
                  source_dir: Path): 
@@ -124,7 +123,6 @@ class LogFchkToMol:
         file_mols_df = pd.DataFrame(dict_inst) 
         return self.file_mols_df
 
-#|%%--%%| <MjpSa4aA3S|jTBUiMypUt>
 class SDFtoMol: 
     def __init__(self, 
                  source_dir: Path):
@@ -142,7 +140,6 @@ class SDFtoMol:
         return self.sdf_mol_dict 
 
 
-#|%%--%%| <jTBUiMypUt|VPRHdGIqUU>
 class AppendToCSV: 
     def __init__(self, 
                  csv_path: Optional[Path] = None,
@@ -162,7 +159,6 @@ class AppendToCSV:
         self.merged_df = self.csv_df.join(df_right, how="left", sort=False).reset_index() 
         return self.merged_df
 
-#|%%--%%| <VPRHdGIqUU|IMACPFeKJo>
 # Mol objects generated in-situ saved to a single SDF file for reuse purposes 
 # Identified by order 
 def save_mols_sdf(mols, path): 
@@ -174,50 +170,21 @@ def save_mols_sdf(mols, path):
     finally: 
         writer.close() 
 
-#|%%--%%| <IMACPFeKJo|2b5Iwe9IVf>
-# Mol objects loaded from the single sdf. 
 def load_mols_sdf(path): 
+    """Produces Mol objects from an .sdf
+    Args:
+        path (str): directory with the concatenated sdf
+    Returns:
+        list[Mol]: a list of mol objects; the order in which 
+                    mol objects were fed in to save_mols_sdf(): 
+                    is the order in which they are returned here. 
+    out: Mol object
+    """
     suppl = Chem.SDMolSupplier(str(path), sanitize=True, removeHs=False) 
     return [m for m in suppl if m is not None] 
 
-#|%%--%%| <2b5Iwe9IVf|kJDVW0mpA2>
 def csv_generator(df, fname: str, index: Optional[bool]=False):
     filename = f"{fname}.csv" 
     csvdf = df.to_csv(filename, index=index) # include index positional argument for to_csv() 
     return csvdf
-
-
-#|%%--%%| <kJDVW0mpA2|phvAsb4NZ9>
-# Implementation ---------------------------------
-# Instance of FileToMol() 
-
-
-
-# Junk ---------------------------------
-
-#for file in log_path.iterdir():
-#    if file.is_file():
-#        print(f"{file.stem}.sdf") 
-
-# iterdir practice 
-#for file in fchk_path.iterdir():
-#    if file.is_file():
-#        print(file)
-#        out = fchk_path / f"{file.stem}"
-#        print(out.stem)
-        #print(f"{file.stem}") 
-
-#
-#nasa7_202_clean_df = pd.read_csv(nasa7_202_clean_csv)
-#
-#mol_202_list = nasa7_202_clean_df["Molecule"].to_list()
-#
-#nasa7_202_dict = {
-#        "Molecule": [],
-#        "SMILES": [], 
-#        "Mol": [], 
-#    }
-#
-#
-#
 

@@ -29,6 +29,12 @@ singluar .sdf files (which are not sourced here) that are stored in ./qchem_data
 combined_289_sdf = combined / "./mols.sdf"
 file_289_csv = csv / "./f2mol_289.csv"
 
+# imported module classes and functions
+BytesPDB = sorting.BytesPDB
+MoleculeSorter = sorting.MoleculeSorter
+csv_generator = bridge.csv_generator 
+
+# functions
 def merger(left, right):
     new = pd.merge(left, right, on="Molecule", how="inner") 
     csv_generator(new, "{left}_{right}_merged")
@@ -49,7 +55,7 @@ smiles_289_dict = {
         "SMILES": []
     }
 
-for row_index, row in name_file_mol_289_df.iterrows():
+for row_index, row in file_mol_289_df.iterrows():
     file_289 = row["Input File"]
     mol_289 = row["mol"]
     name_289 = Path(file_289).stem
@@ -74,7 +80,7 @@ smiles_202_list = []
 mol_202_list = [] 
 name_202_list = []
 
-for row_index, row in name_file_mol_289_df.iterrows():
+for row_index, row in file_mol_289_df.iterrows():
     file_289 = row["Input File"]
     mol_289 = row["mol"]
     name_289 = Path(file_289).stem
@@ -89,7 +95,6 @@ for smiles_name, smiles in zip(smiles_289_dict["File"], smiles_289_dict["SMILES"
         if name == smiles_name:
             smiles_202_list.append(smiles)
             
-BytesPDB = sorting.BytesPDB
 
 bpdb_inst = BytesPDB(name=name_202_list, mol=mol_202_list, smiles=smiles_202_list)
 ms_inst = MoleculeSorter(bpdb_inst)
