@@ -105,6 +105,9 @@ torsions_202_dict_yes_sn = ms_inst.analyze_all()[1]
 torsions_202_dict_no_rot = ms_inst.analyze_all()[2]
 torsions_202_dict_custom = ms_inst.analyze_all()[3]
 
+len(torsions_202_dict_no_rot)
+len(torsions_202_dict_custom)
+
 torsions_202_df_no_rot = pd.DataFrame(torsions_202_dict_no_rot)
 torsions_202_df_yes_sn = pd.DataFrame(torsions_202_dict_yes_sn)
 torsions_202_df_no_sn = pd.DataFrame(torsions_202_dict_no_sn)
@@ -118,7 +121,7 @@ custom_202_T = torsions_202_df_custom.T
 no_sn_202_T_df = pd.DataFrame(no_sn_202_T)
 yes_sn_202_T_df = pd.DataFrame(yes_sn_202_T)
 no_rot_202_T_df = pd.DataFrame(no_rot_202_T)
-custom_202_T = pd.DataFrame(custom_202_T)
+custom_202_T_df = pd.DataFrame(custom_202_T)
 
 merged_no_sn_df = merger(no_sn_202_T_df, name_nasa7_202_df)
 no_sn_df = merged_no_sn_df.fillna(0) # 126 rows 
@@ -129,13 +132,16 @@ yes_sn_df = merged_yes_sn_df.fillna(0) # 20 rows
 merged_no_rot_df = merger(no_rot_202_T_df, name_nasa7_202_df)
 no_rot_df = merged_no_rot_df.fillna(0) # 55 rows 
 
-merged_custom_df = merger(no_rot_202_T_df, name_nasa7_202_df)
+merged_custom_df = merger(custom_202_T_df, name_nasa7_202_df)
+merged_custom_df.drop_duplicates()
 custom_202_df = merged_custom_df.fillna(0) 
+custom_202_df_dedup = custom_202_df.drop_duplicates(subset=['Molecule'])
 
 csv_generator(no_sn_df, "no_sn_202")
 csv_generator(yes_sn_df, "yes_sn_202")
 csv_generator(no_rot_df, "no_rot_202")
-csv_generator(custom_202_df, "custom_202_df")
+csv_generator(custom_202_df_dedup, "custom_202_df")
+
 
 
 

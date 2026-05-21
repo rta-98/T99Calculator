@@ -11,7 +11,7 @@ from itertools import zip_longest, product
 from collections import Counter 
 from collections.abc import Collection 
 
-FORBIDDEN = frozenset({ "S", "N" }) # molecules to exclude 
+FORBIDDEN = frozenset({ "S", "N" }) # molecules to exclude  
 
 """
     INPUT: file name, mol objects, and SMILES as separate, equally sized lists
@@ -60,6 +60,8 @@ class MoleculeSorter:
         for i, (name, smiles, mol) in enumerate(
                 zip(self.name, self.smiles, self.mol, strict=True)
         ):
+            if not self.has_rot(mol) or not self.has_atom(mol):
+                self.custom_dict[name] = self.analyzer(name, smiles, mol)
             if not self.has_rot(mol):
                 self.non_rot_dict[name] = self.analyzer(name, smiles, mol) 
                 continue 
@@ -67,16 +69,15 @@ class MoleculeSorter:
                 self.mol_sorted_dict[name] = self.analyzer(name, smiles, mol) 
             elif self.has_atom(mol):  
                 self.forbidden_dict[name] = self.analyzer(name, smiles, mol)
-            if not self.has_rot(mol) and not self.has_atom(mol):
-                self.custom_dict[name] = self.anaylzer(name, smiles, mol)
 
-        return (self.mol_sorted_dict, self.forbidden_dict, self.non_rot_dict) 
+        return (self.mol_sorted_dict, self.forbidden_dict, self.non_rot_dict, self.custom_dict) 
     
     def has_atom(
             self,
             mol: Optional[Mol] = None, 
             smiles: Optional[str] = None, 
             forbidden: Collection[str] = FORBIDDEN) -> bool: 
+
         return any(atom.GetSymbol() in forbidden for atom in mol.GetAtoms()) 
 
     def has_rot(
@@ -196,7 +197,8 @@ class MoleculeSorter:
 
     def count_dihedral(self, mol, smiles: Optional[str] = None):
         # Template for rotatable bonds
-        ROT_BONDS = str('[!$(*#*)&!D1]-&!@[!$(*#*)&!D1]')
+        #ROT_BONDS = str('[!$(*#*)&!D1]-&!@[!$(*#*)&!D1]')
+        ROT_BONDS = str('[!$(*#*)&!D1]-!@[!$(*#*)&!D1]') 
         ROT_BONDS_SMARTS = Chem.MolFromSmarts(ROT_BONDS)
 
         rot_matches = mol.GetSubstructMatches(ROT_BONDS_SMARTS)
@@ -204,7 +206,7 @@ class MoleculeSorter:
         traversed = set() 
         unique_rot_matches = []
 
-        for j, k in rot_matches: 
+        for j, k in rot_matches:  
             bond = (min(j, k), max(j, k)) # e.g., min(7, 3), max(7, 3) -> (3, 7) 
             if bond not in traversed:
                 traversed.add(bond) # object of type set naturally removes duplicates
@@ -215,14 +217,26 @@ class MoleculeSorter:
         torsion_counts = {} 
 
         for j, k in unique_rot_matches:
+            #ipdb.set_trace()
             atom_j = mol.GetAtomWithIdx(j)
             atom_k = mol.GetAtomWithIdx(k)
 
             # Neighbor atoms not including k (left side)
-            i = [n.GetIdx() for n in atom_j.GetNeighbors() if n.GetIdx() != k]
+            i = []
+            for n in atom_j.GetNeighbors():
+                if n.GetAtomicNum() in [1, 9]:
+                    continue 
+                if n.GetIdx() != k:
+                    i.append(n.GetIdx())
 
             # Neighbor atoms not including j (right side)
-            l = [n.GetIdx() for n in atom_k.GetNeighbors() if n.GetIdx() != j] 
+            l = []
+            for n in atom_k.GetNeighbors():
+                if n.GetAtomicNum() in [1, 9]:
+                    continue 
+                if n.GetIdx() != j:
+                    l.append(n.GetIdx())
+
             num_tbond = 0 # counter for num. torsions around central bond
 
             for m, n in product(i, l): # All possible combinations via cartesian product 
