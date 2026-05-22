@@ -13,7 +13,7 @@ from collections.abc import Collection
 
 FORBIDDEN = frozenset({ "S", "N" }) # molecules to exclude  
 TEMPLATES = {
-        "sp3-sp3 torsional axes": '[!$(*#*)&!D1]-!@[!$(*#*)&!D1]', 
+        "sp3-sp3 torsional axes": '[!$(*#*)&!D1]-!@[!$(*#*)&!D1]',
         "sp3-sp2 torsional axes": '[!$(*#*)&!D1]=!@[!$(*#*)&!D1]'
         }
 
@@ -37,6 +37,7 @@ class BytesPDB:
                 "Mol Object": []
         }
 
+
     def bookeeper(self) -> dict:
         for name, smiles, mol in zip(self.name, self.smiles, self.mol):
 
@@ -58,6 +59,9 @@ class MoleculeSorter:
         self.non_rot_dict: dict = {} # non-rotatable bonds; S and N devoid
         self.custom_dict: dict = {} # 5/19: Viet wishes to combine non-rotatable bonds, with Sulfur & Nitrogen devoid dataset
         self.dud_list = [] # err 
+        self.stored_torsions = {
+                "results" : [], 
+                } 
 
     def analyze_all(self): 
         for i, (name, smiles, mol) in enumerate(
@@ -110,9 +114,8 @@ class MoleculeSorter:
             analyzer_dict[hybrid] = hybrid_vals
        
         # passing the Mol object, and torsional templates key and value to count_dihedral()
-        for key, val in TEMPLATES.items():
-            torsions_dict = self.count_dihedral(template_key=key, template_val=val, mol=mol)
-
+        for key, val in TEMPLATES: 
+            torsions_dict = self.count_dihedral(template_dict=TEMPLATES, mol=mol)
         for tor, tor_vals in torsions_dict.items():
             analyzer_dict[tor] = tor_vals
         # parsing count_dihedral() dict output; appending to analyzer dict
@@ -202,70 +205,79 @@ class MoleculeSorter:
 
                 #pair_count_dict = dict(Counter(bond["Bond Pair ID"] for bond in bond_list))
 
-    def count_dihedral(self, mol, template_key: str, template_val: str, smiles: Optional[str] = None):
+
+    def count_dihedral(self, mol, template_dict: dict):
         # Template for rotatable bonds
-        ROT_BONDS_SMARTS = Chem.MolFromSmarts(template_val)
-        
-        rot_matches = mol.GetSubstructMatches(ROT_BONDS_SMARTS)
-        confs = mol.GetConformer() 
-        traversed = set() 
-        unique_rot_matches = []
 
-        for j, k in rot_matches:  
-            bond = (min(j, k), max(j, k)) # e.g., min(7, 3), max(7, 3) -> (3, 7) 
-            if bond not in traversed:
-                traversed.add(bond) # object of type set naturally removes duplicates
-                unique_rot_matches.append(bond) # now append to list  
+        for key, val in template_dict.items():
+            template_key = key
+            template_val = val 
+            
+            ROT_BONDS_SMARTS = Chem.MolFromSmarts(template_val)
+            rot_matches = mol.GetSubstructMatches(ROT_BONDS_SMARTS)
+            confs = mol.GetConformer() 
+            traversed = set() 
+            unique_rot_matches = []
 
-        torsions = []
-        bonds = []
-        torsion_counts = {} 
+            for j, k in rot_matches:  
+                bond = (min(j, k), max(j, k)) # e.g., min(7, 3), max(7, 3) -> (3, 7) 
+                if bond not in traversed:
+                    traversed.add(bond) # object of type set naturally removes duplicates
+                    unique_rot_matches.append(bond) # now append to list  
 
-        for j, k in unique_rot_matches:
-            #ipdb.set_trace()
-            atom_j = mol.GetAtomWithIdx(j)
-            atom_k = mol.GetAtomWithIdx(k)
+            torsions = []
+            bonds = []
+            torsion_counts = {} 
 
-            # Neighbor atoms not including k (left side)
-            i = []
-            for n in atom_j.GetNeighbors():
-                if n.GetAtomicNum() in [1, 9]:
-                    continue 
-                if n.GetIdx() != k:
-                    i.append(n.GetIdx())
+            for j, k in unique_rot_matches:
+                #ipdb.set_trace()
+                atom_j = mol.GetAtomWithIdx(j)
+                atom_k = mol.GetAtomWithIdx(k)
 
-            # Neighbor atoms not including j (right side)
-            l = []
-            for n in atom_k.GetNeighbors():
-                if n.GetAtomicNum() in [1, 9]:
-                    continue 
-                if n.GetIdx() != j:
-                    l.append(n.GetIdx())
+                # Neighbor atoms not including k (left side)
+                i = []
+                for n in atom_j.GetNeighbors():
+                    if n.GetAtomicNum() in [1, 9]:
+                        continue 
+                    if n.GetIdx() != k:
+                        i.append(n.GetIdx())
 
-            num_tbond = 0 # counter for num. torsions around central bond
+                # Neighbor atoms not including j (right side)
+                l = []
+                for n in atom_k.GetNeighbors():
+                    if n.GetAtomicNum() in [1, 9]:
+                        continue 
+                    if n.GetIdx() != j:
+                        l.append(n.GetIdx())
 
-            for m, n in product(i, l): # All possible combinations via cartesian product 
-                if m != n: # skips identical indices 
-                    num_tbond += 1 
+                num_tbond = 0 # counter for num. torsions around central bond
 
-                phi = rdMolTransforms.GetDihedralDeg(confs, m, j, k, n) 
-                atoms = [mol.GetAtomWithIdx(idx) for idx in (m, j, k, n)]
-                atom_symbols = tuple(a.GetSymbol() for a in atoms) 
-                
-                # label being X-X-X-X, a key for torsion_counts dict. 
-                label = "-".join(atom_symbols) 
-                
-                # if label/key exists, append increment 
-                torsion_counts[label] = torsion_counts.get(label, 0) + 1 
-        
-        is_rot = self.has_rot(mol) 
-        rotatable_bonds = len(unique_rot_matches) if is_rot else 0
+                for m, n in product(i, l): # All possible combinations via cartesian product 
+                    if m != n: # skips identical indices 
+                        num_tbond += 1 
 
-        # final return dictionary 
-        torsions_result = {}
+                    phi = rdMolTransforms.GetDihedralDeg(confs, m, j, k, n) 
+                    atoms = [mol.GetAtomWithIdx(idx) for idx in (m, j, k, n)]
+                    atom_symbols = tuple(a.GetSymbol() for a in atoms) 
+                    
+                    # label being X-X-X-X, a key for torsion_counts dict. 
+                    label = "-".join(atom_symbols) 
+                    
+                    # if label/key exists, append increment 
+                    torsion_counts[label] = torsion_counts.get(label, 0) + 1 
+            
+            is_rot = self.has_rot(mol) 
+            rotatable_bonds = len(unique_rot_matches) if is_rot else 0
 
-        for label, val in torsion_counts.items():
-            torsions_result[f"{template_key} {label}"] = val 
-        torsions_result["{template_key} Count"] = rotatable_bonds 
+            # final return dictionary 
+            torsions_result = {}
 
-        return torsions_result
+            for label, val in torsion_counts.items():
+                torsions_result[f"{label} {template_key} Count"] = val 
+            torsions_result[f"Total {template_key} Count"] = rotatable_bonds 
+            self.stored_torsions["results"].append(torsions_result) 
+
+        for results in self.stored_torsions["results"]:
+            return_dict = results 
+
+        return return_dict
