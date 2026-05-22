@@ -12,9 +12,12 @@ from collections import Counter
 from collections.abc import Collection 
 
 FORBIDDEN = frozenset({ "S", "N" }) # molecules to exclude  
+TEMPLATES = {
+        "sp3-sp3 torsional axes": '[!$(*#*)&!D1]-!@[!$(*#*)&!D1]', 
+        "sp3-sp2 torsional axes": '[!$(*#*)&!D1]=!@[!$(*#*)&!D1]'
+        }
 
-"""
-    INPUT: file name, mol objects, and SMILES as separate, equally sized lists
+""" INPUT: file name, mol objects, and SMILES as separate, equally sized lists
     OUTPUT: flat dictionary of molecular info.
 """
 class BytesPDB:
@@ -106,10 +109,14 @@ class MoleculeSorter:
         for hybrid, hybrid_vals in motif_dict.items():
             analyzer_dict[hybrid] = hybrid_vals
        
-        # parsing count_dihedral() dict output; appending to analyzer dict
-        torsions_dict = self.count_dihedral(mol)
+        # passing the Mol object, and torsional templates key and value to count_dihedral()
+        for key, val in TEMPLATES.items():
+            torsions_dict = self.count_dihedral(template_key=key, template_val=val, mol=mol)
+
         for tor, tor_vals in torsions_dict.items():
             analyzer_dict[tor] = tor_vals
+        # parsing count_dihedral() dict output; appending to analyzer dict
+
 
         return analyzer_dict
 
@@ -195,12 +202,10 @@ class MoleculeSorter:
 
                 #pair_count_dict = dict(Counter(bond["Bond Pair ID"] for bond in bond_list))
 
-    def count_dihedral(self, mol, smiles: Optional[str] = None):
+    def count_dihedral(self, mol, template_key: str, template_val: str, smiles: Optional[str] = None):
         # Template for rotatable bonds
-        #ROT_BONDS = str('[!$(*#*)&!D1]-&!@[!$(*#*)&!D1]')
-        ROT_BONDS = str('[!$(*#*)&!D1]-!@[!$(*#*)&!D1]') 
-        ROT_BONDS_SMARTS = Chem.MolFromSmarts(ROT_BONDS)
-
+        ROT_BONDS_SMARTS = Chem.MolFromSmarts(template_val)
+        
         rot_matches = mol.GetSubstructMatches(ROT_BONDS_SMARTS)
         confs = mol.GetConformer() 
         traversed = set() 
@@ -246,12 +251,6 @@ class MoleculeSorter:
                 phi = rdMolTransforms.GetDihedralDeg(confs, m, j, k, n) 
                 atoms = [mol.GetAtomWithIdx(idx) for idx in (m, j, k, n)]
                 atom_symbols = tuple(a.GetSymbol() for a in atoms) 
-
-                torsions.append({
-                    "Atoms": atom_symbols,
-                    "Phi": round(phi, 4),
-                    "Torsion Indices": (m, j, k, n),
-                }) 
                 
                 # label being X-X-X-X, a key for torsion_counts dict. 
                 label = "-".join(atom_symbols) 
@@ -266,7 +265,7 @@ class MoleculeSorter:
         torsions_result = {}
 
         for label, val in torsion_counts.items():
-            torsions_result[f"Torsions {label}"] = val 
-        torsions_result["Torsional Axes Count"] = rotatable_bonds 
+            torsions_result[f"{template_key} {label}"] = val 
+        torsions_result["{template_key} Count"] = rotatable_bonds 
 
         return torsions_result
