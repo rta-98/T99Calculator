@@ -149,10 +149,6 @@ class MoleculeSorter:
             cnt[E] += 1
         return dict(cnt) 
 
-    def rev_tor_label(label: str, sep='-') -> str:
-        reverse_label = sep.join(label.split(sep)[::-1])
-        return reverse_label
-
     def count_motif(self, mol): 
         # creates a map
         bo_map = {
@@ -270,35 +266,36 @@ class MoleculeSorter:
                 # if label/key exists, append increment
                 torsion_counts[label] = torsion_counts.get(label, 0) + 1 
 
-        mirror_labels_templates = ['F-C-C-C', 'C-C-C-F', 'H-C-C-C', 'C-C-C-H'] 
-        mirror_labels_templates = {'F-C-C-C': [],
-                                   'C-C-C-F': [],
-                                   'H-C-C-C': [], 
-                                   'C-C-C-H': []}
-
-#        for label_outer, val_out in torsion_counts.items():
-#            reverse_label_outer = rev_tor_label(label_outer) 
-#            for label_inner, val_in in torsion_counts.items():
-#                if label_inner == reverse_label_outer:
-#                    mirror_labels_dict["forward"][label_outer] = val_out
-#                    mirror_labels_dict["reverse"][label_inner] = val_in 
-#                    mirror_labels_dict["combined"][f"{label_inner}*"] = val_in + val_out
-
-#            for mirror_dict_key, mirror_inner_dict in mirror_labels_dict.items():
-#                for mirror_inner_key, mirror_inner_label in mirror_inner_dict.items();
-#                    if label == mirror_dict_key["forward"]["
-
         # final return dictionary 
-        torsions_result = {}
-        for label, val in torsion_counts.items(): 
-            reverse_label = rev_tor_label(label)
-            for temp_label in mirror_labels_templates: 
-                if label == temp_label 
-            if label in mirror_labels_templates and reverse_label in mirror_labels_templates: 
-                torsions_result[f"Local Sum: {label} {template_key}"] = val 
+        updated_F_labels = {} 
+        for label_out, val_out in torsion_counts.items():
+            rev_label_out = rev_tor_label(label_out) 
+            if label_out == 'F-C-C-C' and rev_label_out == 'C-C-C-F':
+                for label_in, val_in in torsion_counts.items():
+                    if label_in == rev_label_out: 
+                        updated_F_labels['*F-C-C-C'] = val_in + val_out
+                            
+        updated_H_labels = {} 
+        for label_out, val_out in torsion_counts.items():
+            rev_label_out = rev_tor_label(label_out) 
+            if label_out == 'H-C-C-C' and rev_label_out == 'C-C-C-H':
+                for label_in, val_in in torsion_counts.items():
+                    if label_in == rev_label_out: 
+                        updated_H_labels['*H-C-C-C'] = val_in + val_out
+        
+#        torsion_counts.pop('F-C-C-C')
+#        torsion_counts.pop('C-C-C-F') 
+#        torsion_counts.pop('H-C-C-C')
+#        torsion_counts.pop('C-C-C-H') 
+        torsion_counts.update(updated_F_labels) 
+        torsion_counts.update(updated_H_labels) 
 
+        torsions_result = {}
+        for label, val in torsion_counts.items():
+            torsions_result[f"Local Sum: {label} {template_key}"] = val 
         if num_torsions != 0:
             torsions_result[f"Global Sum: {template_key}"] = num_torsions
-        return mirror_labels_dict
+
+        return torsions_result
 
 
