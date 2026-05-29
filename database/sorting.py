@@ -270,27 +270,35 @@ class MoleculeSorter:
                 # if label/key exists, append increment
                 torsion_counts[label] = torsion_counts.get(label, 0) + 1 
 
-        mirror_labels_dict = {
-                "forward" : {},
-                "reverse" : {}, 
-                "combined": {}, 
-        } 
+        mirror_labels_templates = ['F-C-C-C', 'C-C-C-F', 'H-C-C-C', 'C-C-C-H'] 
+        mirror_labels_templates = {'F-C-C-C': [],
+                                   'C-C-C-F': [],
+                                   'H-C-C-C': [], 
+                                   'C-C-C-H': []}
 
-        for label_outer, val_out in torsion_counts.items():
-            reverse_label_outer = rev_tor_label(label_outer) 
-            for label_inner, val_in in torsion_counts.items():
-                if label_inner == reverse_label_outer:
-                    mirror_labels_dict["forward"][label_outer] = val_out
-                    mirror_labels_dict["reverse"][label_inner] = val_in 
-                    mirror_labels_dict["combined"][f"{label_inner}*"] = val_in + val_out
+#        for label_outer, val_out in torsion_counts.items():
+#            reverse_label_outer = rev_tor_label(label_outer) 
+#            for label_inner, val_in in torsion_counts.items():
+#                if label_inner == reverse_label_outer:
+#                    mirror_labels_dict["forward"][label_outer] = val_out
+#                    mirror_labels_dict["reverse"][label_inner] = val_in 
+#                    mirror_labels_dict["combined"][f"{label_inner}*"] = val_in + val_out
+
+#            for mirror_dict_key, mirror_inner_dict in mirror_labels_dict.items():
+#                for mirror_inner_key, mirror_inner_label in mirror_inner_dict.items();
+#                    if label == mirror_dict_key["forward"]["
 
         # final return dictionary 
         torsions_result = {}
         for label, val in torsion_counts.items(): 
-            torsions_result[f"Local Sum: {label} {template_key}"] = val 
+            reverse_label = rev_tor_label(label)
+            for temp_label in mirror_labels_templates: 
+                if label == temp_label 
+            if label in mirror_labels_templates and reverse_label in mirror_labels_templates: 
+                torsions_result[f"Local Sum: {label} {template_key}"] = val 
+
         if num_torsions != 0:
             torsions_result[f"Global Sum: {template_key}"] = num_torsions
-
         return mirror_labels_dict
 
 
