@@ -1,29 +1,28 @@
-# ---
-# jupyter:
-#   jupytext:
-#     text_representation:
-#       extension: .py
-#       format_name: percent
-#       format_version: '1.3'
-#       jupytext_version: 1.19.1
-#   kernelspec:
-#     display_name: chem480a5
-#     language: python
-#     name: chem480a5
-# ---
-
-# %% [markdown]
-# ## 0. Data preparation
-
-# %%
 import pandas as pd
+import os 
 import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
 from scipy import stats
 import math
+from pathlib import Path 
+from sklearn.model_selection import train_test_split, cross_validate, RepeatedKFold
+from sklearn.linear_model import LinearRegression, Ridge, Lasso, ElasticNet
+from sklearn.neighbors import KNeighborsRegressor
+from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor, HistGradientBoostingRegressor
+from sklearn.svm import SVR
+from sklearn.tree import DecisionTreeRegressor
+from sklearn.gaussian_process import GaussianProcessRegressor
+from sklearn.gaussian_process.kernels import RBF, ConstantKernel, WhiteKernel
+from sklearn.neural_network import MLPRegressor
+from sklearn import metrics
+from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
+# from sklearn.evaluation import plot
+from sklearn.inspection import permutation_importance
+#|%%--%%| <cHsimX9I2S|IVyZtyz2hJ>
+base = Path.cwd()
+sv = base 
 
-# %%
 pfas = pd.read_csv('PFAS_data_130.csv')
 pfas.head()
 
@@ -50,6 +49,7 @@ sns.heatmap(XY_corr, mask=mask, annot=True, cmap='coolwarm', vmin=-1, vmax=1, fm
 plt.title('Correlation Matrix')
 plt.show()
 
+#|%%--%%| <IVyZtyz2hJ|Tul2i4pvpT>
 # %%
 n_descps = len(X.columns) - 1
 high_threshold = 0.9
@@ -163,20 +163,8 @@ plt.gca().set_aspect('equal', 'datalim')
 # %% [markdown]
 # ## 3. Predicting a0 with Standard Scaling data, random split and some simple models
 
-# %%
-from sklearn.model_selection import train_test_split, cross_validate, RepeatedKFold
-from sklearn.linear_model import LinearRegression, Ridge, Lasso, ElasticNet
-from sklearn.neighbors import KNeighborsRegressor
-from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor, HistGradientBoostingRegressor
-from sklearn.svm import SVR
-from sklearn.tree import DecisionTreeRegressor
-from sklearn.gaussian_process import GaussianProcessRegressor
-from sklearn.gaussian_process.kernels import RBF, ConstantKernel, WhiteKernel
-from sklearn.neural_network import MLPRegressor
-from sklearn import metrics
-from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
-from sklearn_evaluation import plot
-from sklearn.inspection import permutation_importance
+#|%%--%%| <Tul2i4pvpT|nzW9G2XKVa>
+
 
 
 # %%
@@ -542,5 +530,9 @@ display(all_summaries)
 # ### Fact check: Is it true that only neural networks can predict multiple Y values?
 
 # %%
+
+
+#|%%--%%| <nzW9G2XKVa|vmzEUsL53i>
+
 
 

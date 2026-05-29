@@ -1,4 +1,4 @@
-from database.sorting import * 
+#from database.sorting import * 
 from utility.smiles import * 
 from utility.services import * 
 from utility.display import *
@@ -187,4 +187,10 @@ def csv_generator(df, fname: str, index: Optional[bool]=False):
     filename = f"{fname}.csv" 
     csvdf = df.to_csv(filename, index=index) # include index positional argument for to_csv() 
     return csvdf
+
+def check_reverse(ref1, ref2, sep='-') -> bool:
+    reverse_string = sep.join(ref1.split(sep)[::-1])
+    if reverse_string == ref2:
+        return None
+    
 

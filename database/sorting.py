@@ -1,6 +1,7 @@
 from utility.services import * 
 from utility.display import *
 from utility.smiles import * 
+from database.bridge import *
 from typing import Optional, List 
 from dataclasses import dataclass 
 from rdkit import Chem
@@ -13,15 +14,14 @@ from collections.abc import Collection
 
 FORBIDDEN = frozenset({ "S", "N" }) # molecules to exclude  
 TEMPLATES = {
-        "sp3-sp3 torsional axes": '[!$(*#*)&!D1]-!@[!$(*#*)&!D1]',
-        "sp3-sp2 torsional axes": '[!$(*#*)&!D1]=!@[!$(*#*)&!D1]'
+        #"sp3-sp2 torsional axes": '[!$(*#*)&!D1]=!@[!$(*#*)&!D1]',
+        "Torsional Axes": '[!$(*#*)&!D1]-&!@[!$(*#*)&!D1]',
         }
 
 """ INPUT: file name, mol objects, and SMILES as separate, equally sized lists
     OUTPUT: flat dictionary of molecular info.
 """
 class BytesPDB:
-
     def __init__(self, 
                  name: list, # Usually derived from Path(<file>).stem and contained in "Molecules"  
                  smiles: list, # Accepts non-canonical SMILES
@@ -59,9 +59,7 @@ class MoleculeSorter:
         self.non_rot_dict: dict = {} # non-rotatable bonds; S and N devoid
         self.custom_dict: dict = {} # 5/19: Viet wishes to combine non-rotatable bonds, with Sulfur & Nitrogen devoid dataset
         self.dud_list = [] # err 
-        self.stored_torsions = {
-                "results" : [], 
-                } 
+
 
     def analyze_all(self): 
         for i, (name, smiles, mol) in enumerate(
@@ -98,28 +96,45 @@ class MoleculeSorter:
             n_rot = rdMolDescriptors.CalcNumRotatableBonds(mol, strict=True) 
         return n_rot > 0 
 
+    def calc_rot(
+            self, 
+            mol: Optional[Mol] = None) -> int: 
+        try: 
+            n_rot = rdMolDescriptors.CalcNumRotatableBonds(
+                mol, rdMolDescriptors.NumRotatableBondsOptions.Strict
+            ) 
+        except AttributeError:
+            n_rot = rdMolDescriptors.CalcNumRotatableBonds(mol, strict=True) 
+        return n_rot 
+
     def analyzer(self, name, smiles, mol):
         analyzer_dict = {}
         analyzer_dict["Molecule"] = name
         analyzer_dict["SMILES"] = smiles
+        stored_torsions = {
+                "results" : [], 
+                } 
 
         # parsing count_atoms() dict output; appending to analyzer dict
         num_atoms_dict = self.count_atoms(mol) 
+        analyzer_dict["Global Sum: Rot Bonds"] = self.calc_rot(mol) 
         for atom, atom_count in num_atoms_dict.items():
             analyzer_dict[f"{atom} Count"] = atom_count
 
         # parsing count_motif() dict output; appending to analyzer dict
         motif_dict = self.count_motif(mol) 
-        for hybrid, hybrid_vals in motif_dict.items():
-            analyzer_dict[hybrid] = hybrid_vals
+        for bond, bond_vals in motif_dict.items():
+            analyzer_dict[bond] = bond_vals
        
         # passing the Mol object, and torsional templates key and value to count_dihedral()
-        for key, val in TEMPLATES: 
-            torsions_dict = self.count_dihedral(template_dict=TEMPLATES, mol=mol)
-        for tor, tor_vals in torsions_dict.items():
-            analyzer_dict[tor] = tor_vals
-        # parsing count_dihedral() dict output; appending to analyzer dict
+        for key, val in TEMPLATES.items(): 
+            torsions_dict = self.count_dihedral(template_key=key, template_val=val, mol=mol)
+            stored_torsions["results"].append(torsions_dict)
 
+        # parsing count_dihedral() dict output; appending to analyzer dict
+        for results in stored_torsions["results"]:
+            for tor, tor_vals in results.items():
+                analyzer_dict[tor] = tor_vals
 
         return analyzer_dict
 
@@ -136,33 +151,32 @@ class MoleculeSorter:
 
     def count_motif(self, mol): 
         # creates a map
-        bond_map = {
-            Chem.BondType.SINGLE: "sp3", 
-            Chem.BondType.DOUBLE: "sp2", 
-            Chem.BondType.TRIPLE: "sp",
-            Chem.BondType.AROMATIC: "Aromatic",
+        bo_map = {
+            Chem.BondType.SINGLE: "bo 1.0", 
+            Chem.BondType.DOUBLE: "bo 2.0", 
+            Chem.BondType.TRIPLE: "bo 3.0",
+            Chem.BondType.AROMATIC: "bo 1.5",
         }
-        # creates first dict. (the inner-most, ultimately set to nest inside result)
 
+        # creates first dict. (the inner-most, ultimately set to nest inside result)
         bonds_in_mol = {
-            "sp3": [],
-            "sp2": [],
-            "sp" : [],
-            "Aromatic": [],
-            "Unk": []
+            "bo 1.0": [],
+            "bo 2.0": [],
+            "bo 3.0" : [],
+            "bo 1.5": [],
+            "Unk": [],
         } 
 
         mol_h = Chem.AddHs(mol) # mol but with added H's
-
         for mol_bond in mol_h.GetBonds():
 
             # GetBondType() also produces: GetBeginAtom() and GetEndAtom() as options
-            bond_type_mapped = bond_map.get(mol_bond.GetBondType(), "Unk") 
+            bond_type_mapped = bo_map.get(mol_bond.GetBondType(), "Unk") 
 
             # defining two points
             atom1 = mol_bond.GetBeginAtom()
             atom2 = mol_bond.GetEndAtom() 
-
+            
             # convert two points to atomic numbers (Z)
             z1 = atom1.GetAtomicNum() 
             z2 = atom2.GetAtomicNum() 
@@ -179,15 +193,15 @@ class MoleculeSorter:
         # The nested dictionary result is initialized
         motif_result = {} 
 
-        # Loop over the key (hybrid) and the value (bond_idx) in bonds_in_mol dict.  
-        # first for loop simply takes the list associated with one of the 4 hybridization 
+        # Loop over the key (bond) and the value (bond_idx) in bonds_in_mol dict.  
+        # first for loop simply takes the list associated with one of the 4 bondization 
         # values, and iterates over the total number of entries, i.e., 
         # for a given sp3 you get 
         # [Bond Pair ID: C-C, Bond Pair ID: C-C, Bond Pair ID: C-N], which has length 3.
 
-        for hybrid_key, bond_list in bonds_in_mol.items():
+        for bond_key, bond_list in bonds_in_mol.items():
             if bond_list:
-                motif_result[f"Total {hybrid_key} Count"] = len(bond_list) 
+                motif_result[f"Global Sum: {bond_key}"] = len(bond_list) 
                 pair_list = []
                 pair_count_dict = {}
                 for bonds_in_mol_dict in bond_list: 
@@ -196,88 +210,72 @@ class MoleculeSorter:
                     if name in pair_list:
                         pair_count_dict[name] = pair_count_dict.get(name, 0) + 1 # alternative to dict[key] += 1 
                     else:
-                        pair_count_dict[name] = 1
+                        pair_count_dict[name] = 0
                         
                 for pair_name, pair_count in pair_count_dict.items():
-                    motif_result[f"{hybrid_key} {pair_name} Count"] = pair_count
+                    motif_result[f"Local Sum: {bond_key} {pair_name}"] = pair_count
 
         return motif_result 
 
                 #pair_count_dict = dict(Counter(bond["Bond Pair ID"] for bond in bond_list))
 
 
-    def count_dihedral(self, mol, template_dict: dict):
+    def count_dihedral(self, mol, template_key: str, template_val: str):
         # Template for rotatable bonds
+        ROT_BONDS_SMARTS = Chem.MolFromSmarts(template_val)
+        rot_matches = mol.GetSubstructMatches(ROT_BONDS_SMARTS)
+        confs = mol.GetConformer() 
+        traversed = set() 
+        unique_rot_matches = []
+        for j, k in rot_matches:  
+            bond = (min(j, k), max(j, k)) # e.g., min(7, 3), max(7, 3) -> (3, 7) 
+            if bond not in traversed:
+                traversed.add(bond) # object of type set naturally removes duplicates
+                unique_rot_matches.append(bond) # now append to list  
 
-        for key, val in template_dict.items():
-            template_key = key
-            template_val = val 
-            
-            ROT_BONDS_SMARTS = Chem.MolFromSmarts(template_val)
-            rot_matches = mol.GetSubstructMatches(ROT_BONDS_SMARTS)
-            confs = mol.GetConformer() 
-            traversed = set() 
-            unique_rot_matches = []
+        torsions = []
+        bonds = []
+        torsion_counts = {} 
+        num_torsions = 0
+        for j, k in unique_rot_matches:
+            #ipdb.set_trace()
+            atom_j = mol.GetAtomWithIdx(j)
+            atom_k = mol.GetAtomWithIdx(k)
 
-            for j, k in rot_matches:  
-                bond = (min(j, k), max(j, k)) # e.g., min(7, 3), max(7, 3) -> (3, 7) 
-                if bond not in traversed:
-                    traversed.add(bond) # object of type set naturally removes duplicates
-                    unique_rot_matches.append(bond) # now append to list  
+            # Neighbor atoms not including k (left side)
+            i = [n.GetIdx() for n in atom_j.GetNeighbors() if n.GetIdx() != k and n.GetAtomicNum()]
 
-            torsions = []
-            bonds = []
-            torsion_counts = {} 
+            # Neighbor atoms not including j (right side)
+            l = [n.GetIdx() for n in atom_k.GetNeighbors() if n.GetIdx() != j and n.GetAtomicNum()]
 
-            for j, k in unique_rot_matches:
-                #ipdb.set_trace()
-                atom_j = mol.GetAtomWithIdx(j)
-                atom_k = mol.GetAtomWithIdx(k)
+            num_tbond = 0 # counter for num. torsions around central bond
+            for m, n in product(i, l): # All possible combinations via cartesian product 
+                if m != n: # skips identical indices 
+                    num_tbond += 1 
+            for m, n in product(i, l):
+                if m == n:
+                    continue
 
-                # Neighbor atoms not including k (left side)
-                i = []
-                for n in atom_j.GetNeighbors():
-                    if n.GetAtomicNum() in [1, 9]:
-                        continue 
-                    if n.GetIdx() != k:
-                        i.append(n.GetIdx())
+                num_torsions += 1
+                atoms = [mol.GetAtomWithIdx(idx) for idx in (m, j, k, n)]
+                atom_symbols = tuple(a.GetSymbol() for a in atoms) 
 
-                # Neighbor atoms not including j (right side)
-                l = []
-                for n in atom_k.GetNeighbors():
-                    if n.GetAtomicNum() in [1, 9]:
-                        continue 
-                    if n.GetIdx() != j:
-                        l.append(n.GetIdx())
+                # label being X-X-X-X, a key for torsion_counts dict. 
+                label = "-".join(atom_symbols) 
 
-                num_tbond = 0 # counter for num. torsions around central bond
+                # if label/key exists, append increment
+                torsion_counts[label] = torsion_counts.get(label, 0) + 1 
 
-                for m, n in product(i, l): # All possible combinations via cartesian product 
-                    if m != n: # skips identical indices 
-                        num_tbond += 1 
+        is_rot = self.has_rot(mol) 
+        #rotatable_bonds = len(unique_rot_matches) if is_rot else 0
+        # final return dictionary 
+        
+        torsions_result = {}
+        for label, val in torsion_counts.items():
+            torsions_result[f"Local Sum: {label} {template_key}"] = val 
+        if num_torsions != 0:
+            torsions_result[f"Global Sum: {template_key}"] = num_torsions
 
-                    phi = rdMolTransforms.GetDihedralDeg(confs, m, j, k, n) 
-                    atoms = [mol.GetAtomWithIdx(idx) for idx in (m, j, k, n)]
-                    atom_symbols = tuple(a.GetSymbol() for a in atoms) 
-                    
-                    # label being X-X-X-X, a key for torsion_counts dict. 
-                    label = "-".join(atom_symbols) 
-                    
-                    # if label/key exists, append increment 
-                    torsion_counts[label] = torsion_counts.get(label, 0) + 1 
-            
-            is_rot = self.has_rot(mol) 
-            rotatable_bonds = len(unique_rot_matches) if is_rot else 0
+        return torsions_result
 
-            # final return dictionary 
-            torsions_result = {}
 
-            for label, val in torsion_counts.items():
-                torsions_result[f"{label} {template_key} Count"] = val 
-            torsions_result[f"Total {template_key} Count"] = rotatable_bonds 
-            self.stored_torsions["results"].append(torsions_result) 
-
-        for results in self.stored_torsions["results"]:
-            return_dict = results 
-
-        return return_dict
