@@ -193,4 +193,7 @@ def check_reverse(ref1, ref2, sep='-') -> bool:
     if reverse_string == ref2:
         return None
     
+def rev_tor_label(label: str, sep='-') -> str:
+    reverse_label = sep.join(label.split(sep)[::-1])
+    return reverse_label
 

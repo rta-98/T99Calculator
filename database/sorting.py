@@ -149,6 +149,10 @@ class MoleculeSorter:
             cnt[E] += 1
         return dict(cnt) 
 
+    def rev_tor_label(label: str, sep='-') -> str:
+        reverse_label = sep.join(label.split(sep)[::-1])
+        return reverse_label
+
     def count_motif(self, mol): 
         # creates a map
         bo_map = {
@@ -266,16 +270,27 @@ class MoleculeSorter:
                 # if label/key exists, append increment
                 torsion_counts[label] = torsion_counts.get(label, 0) + 1 
 
-        is_rot = self.has_rot(mol) 
-        #rotatable_bonds = len(unique_rot_matches) if is_rot else 0
+        mirror_labels_dict = {
+                "forward" : {},
+                "reverse" : {}, 
+                "combined": {}, 
+        } 
+
+        for label_outer, val_out in torsion_counts.items():
+            reverse_label_outer = rev_tor_label(label_outer) 
+            for label_inner, val_in in torsion_counts.items():
+                if label_inner == reverse_label_outer:
+                    mirror_labels_dict["forward"][label_outer] = val_out
+                    mirror_labels_dict["reverse"][label_inner] = val_in 
+                    mirror_labels_dict["combined"][f"{label_inner}*"] = val_in + val_out
+
         # final return dictionary 
-        
         torsions_result = {}
-        for label, val in torsion_counts.items():
+        for label, val in torsion_counts.items(): 
             torsions_result[f"Local Sum: {label} {template_key}"] = val 
         if num_torsions != 0:
             torsions_result[f"Global Sum: {template_key}"] = num_torsions
 
-        return torsions_result
+        return mirror_labels_dict
 
 

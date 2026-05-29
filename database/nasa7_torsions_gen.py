@@ -133,7 +133,7 @@ merged_no_rot_df = merger(no_rot_202_T_df, name_nasa7_202_df)
 no_rot_df = merged_no_rot_df.fillna(0) # 55 rows 
 
 merged_custom_df = merger(custom_202_T_df, name_nasa7_202_df)
-merged_custom_df.drop_duplicates()
+#merged_custom_df.drop_duplicates()
 custom_202_df = merged_custom_df.fillna(0) 
 custom_202_df_dedup = custom_202_df.drop_duplicates(subset=['Molecule'])
 
@@ -143,20 +143,18 @@ csv_generator(no_rot_df, "no_rot_202")
 csv_generator(custom_202_df_dedup, "custom_202_df")
 
 
-#|%%--%%| <6ACPR3mAhL|d0QQhZWxhU>
+#|%%--%%| <ZqRoqLWWBa|d0QQhZWxhU>
 custom_202_df_dedup.filter(like="torsional")
 
+custom_202_df_dedup["forward"]
+
 # columns that contain "Global" and "torsional" at once
-custom_202_df_dedup.filter(regex=r"(?=.*Global)(?=.*torsional)")
+custom_202_df_dedup.filter(regex=r"(?=.*Global)(?=.*Torsional)")
 
 # columns that contain "Local" and "torsional" at once
-custom_202_df_dedup.filter(regex=r"(?=.*Local)(?=.*torsional)")
-
-custom_202_df.columns
+torsions_labels_subset = custom_202_df_dedup.filter(regex=r"(?=.*Local)(?=.*Torsional)")
+#custom_202_df.columns
 #|%%--%%| <d0QQhZWxhU|hdJhochXjC>
-torsions_labels_subset = custom_202_df_dedup.filter(regex=r"(?=.*Local)(?=.*Torsional)") 
-
-torsions_labels_subset.to_dict().items()
 
 def check_reverse(ref1, ref2, sep='-') -> bool:
     reverse_string = sep.join(ref1.split(sep)[::-1])
@@ -167,6 +165,9 @@ def rev_tor_label(label: str, sep='-') -> str:
     reverse_label = sep.join(label.split(sep)[::-1])
     return reverse_label
 
+
+
+#|%%--%%| <hdJhochXjC|P6YYY6LvII>
 new_torsions_dict = {
         "forward" : {},
         "reverse" : {}, 
@@ -174,7 +175,6 @@ new_torsions_dict = {
 } 
 
 for label_out, val_out in torsions_labels_subset.to_dict().items():
-    breakpoint()
     reverse_label_out = rev_tor_label(label_out) 
     for label_in, val_in in torsions_labels_subset.to_dict().items():
         if label_in == reverse_label_out:
@@ -182,8 +182,7 @@ for label_out, val_out in torsions_labels_subset.to_dict().items():
             new_torsions_dict["reverse"][label_in] = val_in 
             new_torsions_dict["combined"][f"{label_in}*"] = val_in + val_out
 
-
-#|%%--%%| <hdJhochXjC|HIfi43pLkT>
+#|%%--%%| <P6YYY6LvII|HIfi43pLkT>
             
 rev_torsions_dict = {} 
 for label_out, val_out in torsions_labels_subset.to_dict().items():
