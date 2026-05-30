@@ -266,39 +266,24 @@ class MoleculeSorter:
                 # if label/key exists, append increment
                 torsion_counts[label] = torsion_counts.get(label, 0) + 1 
 
-        # final return dictionary 
-        updated_F_labels = {} 
-        updated_H_labels = {} 
-        for label_out, val_out in torsion_counts.items():
-            breakpoint()
-            rev_label_out = rev_tor_label(label_out) 
-            if label_out == 'H-C-C-C' and rev_label_out == 'C-C-C-H':
-                for label_h, val_h in torsion_counts.items():
-                    if label_h == rev_label_out: 
-                        if val_out is not None and val_h is not None: 
-                            updated_H_labels['*H-C-C-C'] = val_h + val_out
-                        elif val_out is None:  
-                            updated_H_labels['*H-C-C-C'] = val_h
-                        elif val_h is None:  
-                            updated_H_labels['*H-C-C-C'] = val_out
-            if label_out == 'F-C-C-C' and rev_label_out == 'C-C-C-F':
-                for label_f, val_f in torsion_counts.items():
-                    if label_f == rev_label_out: 
-                        updated_F_labels['*F-C-C-C'] = val_f + val_out
-                        if val_out is not None and val_f is not None: 
-                            updated_H_labels['*F-C-C-C'] = val_f + val_out
-                        elif val_out is None: 
-                            updated_H_labels['*F-C-C-C'] = val_f
-                        elif val_f is None:  
-                            updated_H_labels['*F-C-C-C'] = val_out
+        # Combining superimposable molecular labels 
+        stored_H_labels = {} 
+        for label, val in torsion_counts.items():
+            if label == 'H-C-C-C' or label == 'C-C-C-H':
+                stored_H_labels['*H-C-C-C'] = stored_H_labels.get('*H-C-C-C', 0) + val 
 
+        stored_F_labels = {} 
+        for label, val in torsion_counts.items():
+            if label == 'F-C-C-C' or label == 'C-C-C-F':
+                stored_H_labels['*F-C-C-C'] = stored_H_labels.get('*F-C-C-C', 0) + val 
 
 #        torsion_counts.pop('F-C-C-C')
 #        torsion_counts.pop('C-C-C-F') 
 #        torsion_counts.pop('H-C-C-C')
 #        torsion_counts.pop('C-C-C-H') 
-        torsion_counts.update(updated_F_labels) 
-        torsion_counts.update(updated_H_labels) 
+
+        torsion_counts.update(stored_F_labels) 
+        torsion_counts.update(stored_H_labels) 
 
         torsions_result = {}
         for label, val in torsion_counts.items():

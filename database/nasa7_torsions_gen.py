@@ -144,12 +144,11 @@ csv_generator(custom_202_df_dedup, "custom_202_df")
 
 custom_202_df_dedup.columns
 custom_202_df_dedup.filter(regex=r"H-C-C-C|C-C-C-H").head(20)
-
 custom_202_df_dedup.filter(regex=r"F-C-C-C|C-C-C-F").head(20)
-custom_202_df_dedup.filter(regex=r"SMILES").head(20)
-no_rot_df
-no_rot_df.filter(regex=r"H-C-C-C|C-C-C-H").head(20)
 
+custom_202_df_dedup.filter(regex=r"SMILES").head(20)
+
+no_rot_df.filter(regex=r"H-C-C-C|C-C-C-H").head(20)
 no_rot_df.filter(regex=r"F-C-C-C|C-C-C-F").head(30)
 #|%%--%%| <Ro7OW3k33G|daKd1H6cUe>
 custom_202_df_dedup.filter(like="torsional")
