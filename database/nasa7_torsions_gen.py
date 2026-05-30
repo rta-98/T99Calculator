@@ -142,11 +142,38 @@ csv_generator(yes_sn_df, "yes_sn_202")
 csv_generator(no_rot_df, "no_rot_202")
 csv_generator(custom_202_df_dedup, "custom_202_df")
 
+custom_202_df_dedup.columns
+custom_202_df_dedup.filter(regex=r"H-C-C-C|C-C-C-H").head(20)
 
-#|%%--%%| <ZqRoqLWWBa|d0QQhZWxhU>
+custom_202_df_dedup.filter(regex=r"F-C-C-C|C-C-C-F").head(20)
+custom_202_df_dedup.filter(regex=r"SMILES").head(20)
+no_rot_df
+no_rot_df.filter(regex=r"H-C-C-C|C-C-C-H").head(20)
+
+no_rot_df.filter(regex=r"F-C-C-C|C-C-C-F").head(30)
+#|%%--%%| <Ro7OW3k33G|daKd1H6cUe>
 custom_202_df_dedup.filter(like="torsional")
 
-custom_202_df_dedup["forward"]
+rev_tor_label('H-C-C-C')
+mirror_labels_templates = {'F-C-C-C': [],
+                           'C-C-C-F': [],
+                           'H-C-C-C': [], 
+                           'C-C-C-H': []}
+for key in mirror_labels_templates:
+    print(key)
+
+#|%%--%%| <daKd1H6cUe|mADerLloVt>
+i = 0
+for key in custom_202_df_dedup["forward"]:
+    i += 1 
+    print(key)
+print(i)
+
+
+    for label, val in key['F-C-C-C'].items():
+        print(key)
+
+#|%%--%%| <mADerLloVt|d0QQhZWxhU>
 
 # columns that contain "Global" and "torsional" at once
 custom_202_df_dedup.filter(regex=r"(?=.*Global)(?=.*Torsional)")

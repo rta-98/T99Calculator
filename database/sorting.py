@@ -268,21 +268,31 @@ class MoleculeSorter:
 
         # final return dictionary 
         updated_F_labels = {} 
-        for label_out, val_out in torsion_counts.items():
-            rev_label_out = rev_tor_label(label_out) 
-            if label_out == 'F-C-C-C' and rev_label_out == 'C-C-C-F':
-                for label_in, val_in in torsion_counts.items():
-                    if label_in == rev_label_out: 
-                        updated_F_labels['*F-C-C-C'] = val_in + val_out
-                            
         updated_H_labels = {} 
         for label_out, val_out in torsion_counts.items():
+            breakpoint()
             rev_label_out = rev_tor_label(label_out) 
             if label_out == 'H-C-C-C' and rev_label_out == 'C-C-C-H':
-                for label_in, val_in in torsion_counts.items():
-                    if label_in == rev_label_out: 
-                        updated_H_labels['*H-C-C-C'] = val_in + val_out
-        
+                for label_h, val_h in torsion_counts.items():
+                    if label_h == rev_label_out: 
+                        if val_out is not None and val_h is not None: 
+                            updated_H_labels['*H-C-C-C'] = val_h + val_out
+                        elif val_out is None:  
+                            updated_H_labels['*H-C-C-C'] = val_h
+                        elif val_h is None:  
+                            updated_H_labels['*H-C-C-C'] = val_out
+            if label_out == 'F-C-C-C' and rev_label_out == 'C-C-C-F':
+                for label_f, val_f in torsion_counts.items():
+                    if label_f == rev_label_out: 
+                        updated_F_labels['*F-C-C-C'] = val_f + val_out
+                        if val_out is not None and val_f is not None: 
+                            updated_H_labels['*F-C-C-C'] = val_f + val_out
+                        elif val_out is None: 
+                            updated_H_labels['*F-C-C-C'] = val_f
+                        elif val_f is None:  
+                            updated_H_labels['*F-C-C-C'] = val_out
+
+
 #        torsion_counts.pop('F-C-C-C')
 #        torsion_counts.pop('C-C-C-F') 
 #        torsion_counts.pop('H-C-C-C')
@@ -293,6 +303,7 @@ class MoleculeSorter:
         torsions_result = {}
         for label, val in torsion_counts.items():
             torsions_result[f"Local Sum: {label} {template_key}"] = val 
+
         if num_torsions != 0:
             torsions_result[f"Global Sum: {template_key}"] = num_torsions
 
